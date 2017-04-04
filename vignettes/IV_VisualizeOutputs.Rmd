@@ -1,0 +1,243 @@
+---
+title: "GPoM : Visualization of the outputs"
+author: "Sylvain Mangiarotti & Mireille Huc"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    fig.caption: yes
+  pdf_document:
+    number_sections: no
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+load package: "`r library(GPoM)`"
+---
+
+## Model vizualization
+
+The GPoM package permits to explore large numbers
+of models in polynomial ODEs in order to identify
+what model is able to reproduce an observed
+behaviour.
+The present vignette aims to explain how to retrieve
+the information obtained from the `gPoMo` function.
+
+In practice, the `gPoMo` function will generate
+a list of variables hereafter called `outputGPoM`:
+
+```{r, eval = TRUE}
+  data("Ross76")
+  # time vector
+  tin <- Ross76[seq(1, 3000, by = 8), 1]
+  # single time series
+  data <- Ross76[seq(1, 3000, by = 8), 3]
+  # global modelling
+  # results are put in list outputGPoM
+  outputGPoM <- gPoMo(data, tin=tin, dMax = 2, nS=c(3),
+                      show = 0, method = 'rk4',
+                      nPmax = 12, IstepMin = 400, IstepMax = 401)
+```
+
+To test the potential of a given model to reproduce
+the observed dynamics, the numerical integrability
+of each model is tested and the resulting behaviour
+may either diverge, converge to a trivial attractor
+(fixed points, periodic cycles) or to a chaotic attractor.
+
+The aim of the present vignette is show how to have
+a rapid overview of the models explored or obtained
+with the `gPoMo` function.
+
+In order to keep a memory of the analyzed signal, the data
+used as an input are kept in `$tin` (for the input time)
+and `$inputdata` (for the input time series):
+
+```{r, eval = TRUE, fig.show='center'}
+  # plot data and models time series
+  plot(outputGPoM$tin, outputGPoM$inputdata,
+       xlab='t', ylab='y(t)', cex = 0.4, main = 'Original time series')
+```
+
+The filtered version obtained when computing
+the derivatives is in `$tfilt` (the vector time of
+the filtered time series which length is lower due
+to some lost at the boudaries) and `$filtdata`,
+a matrix with the filtered time series (first column)
+and its successive derivatives (second and next columns).
+
+```{r, eval = TRUE, fig.show='center'}
+  # plot data and models time series
+  plot(outputGPoM$tin, outputGPoM$inputdata,
+       xlab='t', ylab='y(t)', cex = 0.4, main = 'with filtered time series')
+  lines(outputGPoM$tfiltdata, outputGPoM$filtdata[,1], type='l', col='green')
+```
+
+The original differential phase portrait can thus
+be plotted as follows:
+
+```{r, eval = TRUE, fig.show='hold'}
+  # plot data and models time series
+  plot(outputGPoM$filtdata[,1], outputGPoM$filtdata[,2],
+       xlab='y', ylab='dy/dt', main = 'First projection',
+       type = 'l', cex = 0.4)
+  plot(outputGPoM$filtdata[,1], outputGPoM$filtdata[,3],
+       xlab='y', ylab='d²y/dt²', main = 'Second projection',
+       type = 'l', cex = 0.4)
+```
+
+The information about the tested models are in the other
+variables: `$okMod`, `$stockoutreg` and `$models`.
+
+Variable `$okMod` provides information about the obtained
+numerical ingration of all the tested models: values are
+chosen equal to zero when the integrated trajectory
+diverged during the numerical integration,
+equal to 1 when the model could not be categorized
+(meaning that the model is still under categorizing
+test).
+
+Since we are mainly interested in non-diverging models,
+these should have been identified in the `$okMod` parameter
+such as: `$okMod != 0`. Note that diverging models may be
+identified as non-diverging if the numerical integration
+was not performed on a sufficiently long duration.
+The number of `$okMod` identified as non-diverging
+(based on the chosen maximum integration steps `IStepMax`)
+is obtained by:
+
+```{r, eval = TRUE}
+  ######################
+  # manual    ##########
+  ######################
+  # How many models could not be identified as non-diverging
+  sum(outputGPoM$okMod)
+```
+
+The reference number of the uncategorized models can be
+retrieved as follows:
+
+```{r, eval = TRUE}
+  # what is the reference number of these models?
+  which(outputGPoM$okMod == 1)
+```
+
+The numerical integration of the tested models is kept
+in variable `$stockoutreg`. For example, it can be plotted
+for models #7 and #9:
+
+```{r, eval = TRUE, fig.show='hold'}
+  # plot data and models time series
+  plot(outputGPoM$tin, outputGPoM$inputdata,
+       xlab='t', ylab='y(t)', cex = 0.7, main = 'Model 7')
+  lines(outputGPoM$tfiltdata, outputGPoM$filtdata[,1], type='l', col='green')
+  lines(outputGPoM$tout, outputGPoM$stockoutreg$model7[,1], type='l', col='red')
+  #
+  plot(outputGPoM$tin, outputGPoM$inputdata,
+       xlab='t', ylab='y(t)', cex = 0.7, main = 'Model 9')
+  lines(outputGPoM$tfiltdata, outputGPoM$filtdata[,1], type='l', col='green')
+  lines(outputGPoM$tout, outputGPoM$stockoutreg$model9[,1], type='l', col='red')
+```
+
+Note that only one iteration of the model test
+was performed (since `IstepMin` $* 2 <$ `IstepMax`).
+As a consequence, the same initial conditions
+are used for both filtered data and model reconstruction:
+
+```{r, eval = TRUE}
+  head(outputGPoM$filtdata[1:3], 1)
+  head(outputGPoM$stockoutreg$model7, 1)
+```
+
+(note that `$filtdata` has one more derivative
+which was necessary to identify the model
+parameters).
+
+Original and models phase portraits can also
+be plotted for comparison as follows:
+
+```{r, eval = TRUE, fig.show='hold'}
+  # plot data and models phase portraits
+  plot(outputGPoM$filtdata[,1], outputGPoM$filtdata[,2], type='l', col='green',
+       xlab='y(t)', ylab='dy(t)/dt', main = 'Model 7')
+  lines(outputGPoM$stockoutreg$model7[,1], outputGPoM$stockoutreg$model7[,2],
+        type='l', col='red')
+  #
+  plot(outputGPoM$filtdata[,1], outputGPoM$filtdata[,2], type='l', col='green',
+       xlab='y(t)', ylab='dy(t)/dt', main = 'Model 9')
+  lines(outputGPoM$stockoutreg$model9[,1], outputGPoM$stockoutreg$model9[,2],
+        type='l', col='red')
+```
+
+Finally, models coefficients are all kept in the sublist
+`$models`. These are separated in `$models$mToTest#`
+where `#` should be replaced by the model number
+(the list of the models that were tested with
+the `gPoMo` algorithm) and `$models$model#`
+(the list of uncategorized models).
+In both cases, models coefficients are in a matrix
+of dimension `pMax * nVar` with `pMax` the maximal
+number of parameter (see vignette `I_Generate`) and
+`nVar` the number of variables (also called model
+dimension).
+The corresponding equations can be edited directly
+using the `visuEq` function as:
+
+```{r, eval = TRUE}
+  nVar <- dim(outputGPoM$models$model7)[2]
+  pMax <- dim(outputGPoM$models$model7)[1]
+  dMax <- p2dMax(nVar,pMaxKnown = pMax)
+  # See equations
+  visuEq(nVar, dMax, outputGPoM$models$model7, approx = 2)
+  #
+  visuEq(nVar, dMax, outputGPoM$models$model9, approx = 2)
+```
+
+By default, a large number of digits is provided for each
+parameter.
+To make its reading easier, this number can be controlled
+by using the optinonal parameter `approx = TRUE`, 
+the minimum number of digit will be kept (the same for
+all the parameters) but keeping all the terms in the
+polynomial.
+The number of digits to add to the minimum number of digits
+required can also be chosen manually.
+
+The number of terms of each model can be obtained as follows:
+
+```{r, eval = TRUE}
+  # for model #7
+  sum(outputGPoM$models$model7 != 0)
+  # for model #9
+  sum(outputGPoM$models$model9 != 0)
+```
+
+Since these models have a canonical structure, it may also
+be interesting to know the number of terms in the last
+equation (which polynomial defines the model), such as:
+
+```{r, eval = TRUE}
+  # for model #7
+  colSums(outputGPoM$models$model7 != 0)
+  # for model #9
+  colSums(outputGPoM$models$model9 != 0)
+```
+
+Finally, to have an overview of the overall outputs
+of `gPoMo` at a glance for all the models, the following
+command can be used:
+
+```{r, eval = FALSE}
+  ######################
+  # automatic ##########
+  ######################
+  visuOutGP(outputGPoM)
+```
+
+## Next step
+
+An overview of all the main elements of the global
+modelling technique and GPoM tools were presented
+in the previous vignettes.
+An illustration of model validation will now be
+presented in the last vignette `V_Predictability`.

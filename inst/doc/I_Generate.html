@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Sylvain Mangiarotti &amp; Mireille Huc" />
+
+<meta name="date" content="2017-04-04" />
+
+<title>GPoM : Generate</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%7D%0Apre%20%7B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">GPoM : Generate</h1>
+<h4 class="author"><em>Sylvain Mangiarotti &amp; Mireille Huc</em></h4>
+<h4 class="date"><em>2017-04-04</em></h4>
+
+
+
+<p>The Generalized Global Polynomial Modelling (GPoM) package allows a generic formulation of any Ordinary Differential Equations (ODE) in polynomial form. The aim of the present vignette <code>I_Generate</code> is to introduce briefly the way to describe a set of polynomial ODEs in GPoM and how to perform its numerical integration.</p>
+<div id="convention-used-to-describe-a-polynomial" class="section level2">
+<h2>Convention used to describe a polynomial</h2>
+<p>The polynomial description is based on a convention defined in the function <code>regOrd</code> that provides the order of the polynomial terms. This convention depends on the model dimension (that is the number <code>nVar</code> of state variables), and on the maximum polynomial degree chosen for the formulation (defined by the parameter <code>dMax</code>). This order can be visualized with the <code>regLabs</code> function. For instance, for <code>nVar = 3</code> and <code>dMax = 2</code>, the convention used to formulate a polynomial will be as follows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">poLabs</span>(<span class="dt">nVar =</span> <span class="dv">3</span>, <span class="dt">dMax =</span> <span class="dv">2</span>)</code></pre>
+<pre><code>##  [1] &quot;ct&quot;     &quot;X3 &quot;    &quot;X3^2 &quot;  &quot;X2 &quot;    &quot;X2 X3 &quot; &quot;X2^2 &quot;  &quot;X1 &quot;   
+##  [8] &quot;X1 X3 &quot; &quot;X1 X2 &quot; &quot;X1^2 &quot;</code></pre>
+<p>This formulation has <code>pMax = 10</code> terms:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    pMax =<span class="st">  </span><span class="kw">d2pMax</span>(nVar, dMax)</code></pre>
+<p>Based on this convention, one single ordinary differential equation (ODE) in polynomial form with <code>nVar</code> variables and of maximum polynomial degree <code>dMax</code> can be formulated as one single vector using the convention given by <code>regOrd(nVar, dMax)</code>. As an example, the equation :</p>
+<p><span class="math">\(dX_1/dt = 1 + 2 X_1 - 3 X_1X_3 + 4 X_2^2\)</span></p>
+<p>has three variables (it requires at least <code>nVar = 3</code>) and is of maximum polynomial degree two (it requires at least <code>dMax = 2</code>). Following the convention defined by <code>regLabs(nVar = 3, dMax = 2)</code>, it will require the definition of the following vector of parameter:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">2</span>, -<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">0</span>)</code></pre>
+<p>Indeed:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    nVar =<span class="st"> </span><span class="dv">3</span>
+    dMax =<span class="st"> </span><span class="dv">2</span>
+    <span class="kw">cbind</span>(param, <span class="kw">poLabs</span>(nVar, dMax))</code></pre>
+<pre><code>##       param         
+##  [1,] &quot;1&quot;   &quot;ct&quot;    
+##  [2,] &quot;0&quot;   &quot;X3 &quot;   
+##  [3,] &quot;0&quot;   &quot;X3^2 &quot; 
+##  [4,] &quot;0&quot;   &quot;X2 &quot;   
+##  [5,] &quot;0&quot;   &quot;X2 X3 &quot;
+##  [6,] &quot;4&quot;   &quot;X2^2 &quot; 
+##  [7,] &quot;2&quot;   &quot;X1 &quot;   
+##  [8,] &quot;-3&quot;  &quot;X1 X3 &quot;
+##  [9,] &quot;0&quot;   &quot;X1 X2 &quot;
+## [10,] &quot;0&quot;   &quot;X1^2 &quot;</code></pre>
+<p>The same convention will be used for any other equations. Note that, by default, notation is <code>X</code>. However, to facilitate the analysis, alternative notations may also be used using the optional parameter <code>Xnote</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">poLabs</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dt">Xnote =</span> <span class="st">'y'</span>)</code></pre>
+<pre><code>##  [1] &quot;ct&quot;     &quot;y3 &quot;    &quot;y3^2 &quot;  &quot;y2 &quot;    &quot;y2 y3 &quot; &quot;y2^2 &quot;  &quot;y1 &quot;   
+##  [8] &quot;y1 y3 &quot; &quot;y1 y2 &quot; &quot;y1^2 &quot;</code></pre>
+<p>or also:</p>
+<pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">poLabs</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dt">Xnote =</span> <span class="kw">c</span>(<span class="st">'x'</span>,<span class="st">'W'</span>,<span class="st">'y'</span>))</code></pre>
+<pre><code>##  [1] &quot;ct&quot;     &quot;y3 &quot;    &quot;y3^2 &quot;  &quot;W2 &quot;    &quot;W2 y3 &quot; &quot;W2^2 &quot;  &quot;x1 &quot;   
+##  [8] &quot;x1 y3 &quot; &quot;x1 W2 &quot; &quot;x1^2 &quot;</code></pre>
+</div>
+<div id="definition-of-a-set-of-polynomial-ode" class="section level2">
+<h2>Definition of a set of polynomial ODE</h2>
+<p>A set of <span class="math">\(N\)</span> equations will thus require the definition of <span class="math">\(N\)</span> parameter vectors and will thus be represented as a matrix of <code>pMax</code> lines by <code>nVar</code> columns. For example, the Rössler system<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> is defined by a set of three equations</p>
+<p><span class="math">\(dx/dt = - y - z\)</span></p>
+<p><span class="math">\(dy/dt = x + a y\)</span></p>
+<p><span class="math">\(dz/dt = b + z (x - c)\)</span>.</p>
+<p>For <span class="math">\((a = 0.52, b = 2, c = 4)\)</span>, this system can be decribed by a matrix <code>M</code> built as follows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="co"># parameters</span>
+    a =<span class="st"> </span><span class="fl">0.52</span>
+    b =<span class="st"> </span><span class="dv">2</span>
+    c =<span class="st"> </span><span class="dv">4</span>
+    <span class="co"># equations</span>
+    Eq1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,-<span class="dv">1</span>, <span class="dv">0</span>,-<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)
+    Eq2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, a, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)
+    Eq3 &lt;-<span class="st"> </span><span class="kw">c</span>(b,-c, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</code></pre>
+<p>The model formulation is obtained by concatenating the vectors of the three equations into the matrix <code>K</code> that contains all the coefficients of the model:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    K =<span class="st"> </span><span class="kw">cbind</span>(Eq1, Eq2, Eq3)</code></pre>
+<p>The corresponding model equations can be edited in a mathematical form using the function <code>visuEq()</code></p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">visuEq</span>(nVar, dMax, K)</code></pre>
+<pre><code>## dX1/dt = -X3  -X2  
+## 
+## dX2/dt = 0.52 X2  + X1  
+## 
+## dX3/dt = 2  -4 X3  + X1 X3</code></pre>
+<p>By default, the notation used in <code>GPoM</code> is <code>X</code> with an index, such as <code>X1</code>, <code>X2</code>, etc. Alternative notation can be used to edit the equations with the <code>visuEq</code> function by using the option parameter <code>substit</code>. For <code>substit = 1</code>, single letters are automatically chosen such as</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">visuEq</span>(nVar, dMax, K, <span class="dt">substit =</span> <span class="dv">1</span>)</code></pre>
+<pre><code>## dx/dt = -z  -y  
+## 
+## dy/dt = 0.52 y  + x  
+## 
+## dz/dt = 2  -4 z  + x z</code></pre>
+<p>The notation can be defined also manually, such as:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">visuEq</span>(nVar, dMax, K, <span class="dt">substit =</span> <span class="kw">c</span>(<span class="st">&quot;U&quot;</span>, <span class="st">&quot;V&quot;</span>, <span class="st">&quot;W&quot;</span>))</code></pre>
+<pre><code>## dU/dt = -W  -V  
+## 
+## dV/dt = 0.52 V  + U  
+## 
+## dW/dt = 2  -4 W  + U W</code></pre>
+</div>
+<div id="numerical-integration" class="section level2">
+<h2>Numerical integration</h2>
+<p>The numerical integration of model <code>M</code> can be done using the <code>numicano</code> function that requires the use of the external package <code>deSolve</code>. The following parameters are required:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="co"># The initial conditions of the system variables</span>
+    v0 &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="fl">0.6</span>, <span class="fl">0.6</span>, <span class="fl">0.4</span>)
+    <span class="co"># the model formulation K (see former section)</span>
+    <span class="co"># the number of integration steps `Istep`</span>
+    <span class="co"># the time step length `onestep`</span>
+    <span class="co"># the model dimension `nVar`</span>
+    <span class="co"># the maximum polynomial degree `dMax`</span></code></pre>
+<p>The numerical integration is launched as follows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    outNumi &lt;-<span class="st"> </span><span class="kw">numicano</span>(nVar, dMax, <span class="dt">Istep =</span> <span class="dv">5000</span>, <span class="dt">onestep =</span> <span class="dv">1</span>/<span class="dv">50</span>, <span class="dt">KL =</span> K, <span class="dt">v0 =</span> v0)</code></pre>
+<p>The output of the function <code>numicano</code> is a list that contains (1) <code>$K</code> a memory of the model parameters</p>
+<pre class="sourceCode r"><code class="sourceCode r">    outNumi$K</code></pre>
+<p>from which <code>nVar</code> and <code>dMax</code> (required to reformulate the equations) can be retrieved</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="co"># nVar</span>
+    <span class="kw">dim</span>(outNumi$K)[<span class="dv">2</span>]
+    <span class="co"># dMax</span>
+    pMax &lt;-<span class="st"> </span><span class="kw">dim</span>(outNumi$K)[<span class="dv">1</span>]
+    <span class="kw">p2dMax</span>(nVar, <span class="dt">pMaxKnown =</span> pMax)</code></pre>
+<p>and (2) the simulations <code>$reconstr</code>. This matrix contains <code>nVar + 1</code> columns. The first one is the time, the other ones correspond to the variables of the system <span class="math">\((X_1, X_2, X_3, ...)\)</span> that is <span class="math">\((x,y,z)\)</span> in our case.</p>
+<p>Note that all other input parameters used in <code>numicano</code> can be retrieved from these output conditions:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="co"># initial conditions</span>
+    <span class="kw">head</span>(outNumi$reconstr, <span class="dv">1</span>)[<span class="dv">2</span>:(nVar<span class="dv">+1</span>)]
+    <span class="co"># time step</span>
+    <span class="kw">diff</span>(outNumi$reconstr[<span class="dv">1</span>:<span class="dv">2</span>,<span class="dv">1</span>])
+    <span class="co"># number of integration time step</span>
+    <span class="kw">dim</span>(outNumi$reconstr)[<span class="dv">1</span>]</code></pre>
+<p>The simulated time series can be plotted as follows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">plot</span>(outNumi$reconstr[,<span class="dv">1</span>], outNumi$reconstr[,<span class="dv">2</span>], <span class="dt">type=</span><span class="st">'l'</span>,
+          <span class="dt">main=</span><span class="st">'time series'</span>, <span class="dt">xlab=</span><span class="st">'t'</span>, <span class="dt">ylab =</span> <span class="st">'x(t)'</span>)</code></pre>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>and the plot of the phase portrait aswell:</p>
+<pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">plot</span>(outNumi$reconstr[,<span class="dv">2</span>], outNumi$reconstr[,<span class="dv">3</span>], <span class="dt">type=</span><span class="st">'l'</span>,
+     <span class="dt">main=</span><span class="st">'phase portrait'</span>, <span class="dt">xlab=</span><span class="st">'x(t)'</span>, <span class="dt">ylab =</span> <span class="st">'y(t)'</span>)</code></pre>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+</div>
+<div id="next-steps" class="section level2">
+<h2>Next steps</h2>
+<p>The aim of the GPoM package is to retreive ODEs from time series using global modelling. Such type of modelling can require a careful data preprocessing. Simple examples of preprocessing are given in the next vignette <code>II_Preprocessing</code>. Examples for applying global modelling from time series will be presented in vignette <code>III_Modelling</code>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>O. Rössler, An Equation for Continuous Chaos, Physics Letters, vol. 57A, no 5, 1976, p. 397-398<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

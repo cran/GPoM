@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Sylvain Mangiarotti &amp; Mireille Huc" />
+
+<meta name="date" content="2017-04-04" />
+
+<title>GPoM : General introduction</title>
+
+
+
+
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%7D%0Apre%20%7B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">GPoM : General introduction</h1>
+<h4 class="author"><em>Sylvain Mangiarotti &amp; Mireille Huc</em></h4>
+<h4 class="date"><em>2017-04-04</em></h4>
+
+
+
+<div id="generalized-global-polynomial-modelling-gpom" class="section level2">
+<h2>Generalized Global Polynomial Modelling (GPoM)</h2>
+<p>Didactic file to learn how to use GPoM package</p>
+<p>GPoM is an R package dedicated to global modelling. The aim of global modelling is to obtain Ordinary Differential Equations for dynamical systems, directly from time series and without any other a priori knowledge. Global modelling was developped to model low-dimensional chaos. For this reason, it is well adapted to model deterministic behaviours from linear to strongly nonlinear. And it is also well designed to model dynamical behaviour characterized by a high sentivity to the initial conditions.</p>
+<p>The global modelling technique was initiated in the early 1990s<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, and its first illustrations were obained thanks to a formalism developped by G. Gouesbet and his colleagues<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>, <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. It is observed that our ability to obtain equations for one chosen system may be very different depending on what variable is used to reconstruct the equations. This property plays a very important role when trying to retrieve governing equations for any dynamical system. This question was investigated during the last decades<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>.</p>
+<p>Although its developments started in the early 1990s, it is only in middle of the 2000s that a set of ordinary differential equations could be obtained from real world data set<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>. New algorithms were developped at the begining of the 2010s<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> that proved to have very good skills to model dynamical behaviors observed under real environmental conditions: cereal crops cycles, snow area cycles, eco-epidemiology, etc.<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>, <a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a>, etc.</p>
+<p>All these developments were initialy developped to model dynamical behavior from single time series. Recent developments have shown that the global modelling technique could also be applied to model multivariate couplings<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a>, <a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a>.</p>
+<p>The present package provides global modeling tools for modelling linear and nonlinear behaviors from observed time series.</p>
+<p>To introduce the package, five other illustrative <code>vignettes</code> are provided to introduce how to apply the global modelling technique from observational data. These are as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p><code>I_Generate</code> aims to introduce the convention used to formulate sets of Ordinary Differential Equations (ODEs) of polynomial form with GPoM and to show how to integrate it numerically.</p></li>
+<li><p><code>II_PreProcessing</code> provides some simple examples of time series preprocessing before applying the global modelling technique.</p></li>
+<li><p><code>III_Modelling</code> is dedicated to the global modelling itself. Several case studies are presented considering single and multiple time series, both for modelling or detecting causal couplings.</p></li>
+<li><p><code>IV_VisuOutput</code> shows how to get an overview of the output results obtained with global modelling functions and how outputs are organised.</p></li>
+<li><p><code>V_Predictability</code> aims to provide basic examples of validation considering the models skills in term of predictability.</p></li>
+</ol>
+<p>The present GPoM package is made available to whom would like to use it. It includes most of the latest developments presently available to apply the global modelling technique, and we are happy to share it with you. Please refer to the following publications When using the present tools:</p>
+<p>[1] Mangiarotti et al. 2012 for the univariate time series modelling,</p>
+<p>[2] Mangiarotti 2015 for infering causality and for detecting or analysing multivariate couplings,</p>
+<p>[3] Mangiarotti et al. 2016 when using the generalized formulation of global modelling technique (that is combining multiariate time series and derivatives).</p>
+<p>The authors of the package decline any responsability about the results and interpretations obtained and made by other users.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>J. P. Crutchfield and B. S. McNamara, 1987. Equations of motion from a data series, Complex Syst. 1, 417-452.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>G. Gouesbet &amp; J. Maquet, 1992. Construction of phenomenological models from numerical scalar time series, Physica D, 58, 202-215.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>G. Gouesbet &amp; C. Letellier, 1994. Global vector-field reconstruction by using a multivariate polynomial L2 approximation on nets, Phys. Rev. E 49, 4955-4972.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>C. Letellier, L. A. Aguirre, &amp; J. Maquet, 2005. Relation between observability and differential embeddings for nonlinear dynamics, Phys. Rev. E 71, 066213.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>J. Maquet, C. Letellier &amp; L. A. Aguirre 2007. Global models from the Canadian Lynx cycles as a first evidence for chaos in real ecosystems, J. Math. Biol. 55(1), 21-39.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>S. Mangiarotti, R. Coudret, L. Drapeau &amp; L. Jarlan, 2012. Polynomial search and global modeling: Two algorithms for modeling chaos,” Phys. Rev. E, 86(4), 046205.<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>S. Mangiarotti, L. Drapeau &amp; C. Letellier, 2014. Two chaotic global models for cereal crops cycles observed from satellite in Northern Morocco, Chaos, 24, 023130.<a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>S. Mangiarotti, Modélisation globale et caractérisation topologique de dynamiques environnementales: de l’analyse des enveloppes fluides et du couvert de surface de la Terre à la caractérisation topolodynamique du chaos, Habilitation to Direct Researches, Université de Toulouse 3, 2014.<a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p>S. Mangiarotti, 2015. Low dimensional chaotic models for the plague epidemic in Bombay, Chaos, Solitons &amp; Fractals, 81(A), 184-196.<a href="#fnref9">↩</a></p></li>
+<li id="fn10"><p>S. Mangiarotti, M. Peyre &amp; M. Huc, 2016. A chaotic model for the epidemic of Ebola virus disease in West Africa (2013–2016). Chaos, 26, 113112.<a href="#fnref10">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

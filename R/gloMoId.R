@@ -1,0 +1,250 @@
+#' @title gloMoId :  global Model Identification
+#'
+#' @seealso \code{\link{gPoMo}}, \code{\link{autoGPoMoSearch}},
+#'          \code{\link{autoGPoMoTest}}, \code{\link{poLabs}}
+#'
+#' @description Algorithm for global modelling in
+#' a Polynomial and canonical formulation of Ordinary
+#' Differential Equations.
+#' Univariate Global modeling aims to obtain multidimensional
+#' models from single time series (Gouesbet & Letellier 1994,
+#' Mangiarotti et al. 2012).
+#' An example of such application can be found in
+#' Mangiarotti et al. (2014)
+#' For a multivariate application, see \code{GPoMo}
+#' (Mangiarotti 2015, Mangiarotti et al. 2016).
+#'
+#' Example:\cr
+#' For a model dimension nVar=3, the global model will read: \cr
+#' \eqn{dX1/dt = X2}\cr
+#' \eqn{dX2/dt = X3}\cr
+#' \eqn{dX3/dt = P(X1,X2,X3).}\cr
+#'
+#' @references
+#' [1] Gouesbet G., Letellier C.,
+#' Global vector-field reconstruction by using a multivariate polynomial
+#' L2 approximation on nets,
+#' Physical Review E, 49 (6), 4955-4972, 1994. \cr
+#' [2] Mangiarotti S., Coudret R., Drapeau L., & Jarlan L.,
+#' Polynomial search and global modeling : Two algorithms for modeling chaos,
+#' Physical Review E, 86, 046205, 2012. \cr
+#' [3] Mangiarotti S., Drapeau L. & Letellier C.,
+#' Two chaotic models for cereal crops observed from satellite in northern Morocco.
+#' Chaos, 24(2), 023130, 2014. \cr
+#' [4] Mangiarotti S.,
+#' Low dimensional chaotic models for the plague epidemic in Bombay (18961911),
+#' Chaos, Solitons & Fractals, 81(A), 184-196, 2015. \cr
+#' [5] Mangiarotti S., Peyre M. & Huc M.,
+#' A chaotic model for the epidemic of Ebola Virus Disease in West Africa (2013-2016).
+#' Chaos, 26, 113112, 2016. \cr
+#'
+#' @param series The original data set: either a single vector
+#' corresponding to the original variable; Or a matrix containing
+#' the original variable in the first column and its successive
+#' derivatives in the next columns. In the latter case, for the
+#' construction of n-dimensional model, \code{series} should have
+#' \eqn{nVar+1} columns since one more derivative will be necessary
+#' to identify the model parameters. Variable nVar will be set
+#' equal to n.
+#' In the former case, that is when only a single vector is provided,
+#' the derivatives will be automatically recomputed. Therefore, the
+#' dimension nVar expected for the model has to be provided.
+#' @param tin Input date vector which length should correspond to the variables of
+#' the input data (same number of lines).
+#' @param dMax Maximum degree of the polynomial functions allowed
+#' in the model (see \code{poLabs}).
+#' @param dt The time sampling of the input series.
+#' @param nVar The model dimension expected. This parameter will be
+#' deduced from the input data (\code{series}) if \code{series} is
+#' a matrix. If \code{series} is a vector, the expected dimension nVar
+#' should be provided.
+#' @param weight Weighting function of input data series. By default uniform
+#' weight is applied. This weighting function can also be used to apply
+#' the analysis piecewise using zeros and ones.
+#' @param show Indicates (2) or not (0-1) the algorithm progress
+#' @param filterReg A vector that specifies the a priori structure of
+#' the the function of the output model in canonical form.
+#' The organisation of the filter follows the convention defined in
+#' \code{poLabs} and can be obtained using \code{poLabs(nVar,dMax)}.
+#' Value is 1 if the regressor is available, 0 if it is not.
+#' @param winL Total number of points used for computing the derivatives of the input
+#' time series (data). This parameter will be used as an input in function \code{drvSucc}.
+#'
+#' @return \code{A} list of five elements : \cr
+#' @return \code{init} Initial time series and the successive derivatives used
+#' in the modeling. \cr
+#' @return \code{filterReg}	Structure of the output model. Value is 1 if the
+#' regressor is available, 0 if it is not. The corresponding terms can
+#' be obtained with poLabs(dMax,dMax). \cr
+#' @return \code{codereconstr} Simulated trajectory: the initial variable and
+#' its derivatives obtained by integrating the equations of the
+#' identified model. \cr
+#' @return \code{codeK}	Values of the identified coefficients corresponding to
+#' the regressors defined in filterReg. \cr
+#' @return \code{coderesTot} Residual signal of the model. \cr
+#' @return \code{coderesSsMod} Residual signal of the closer submodels. \cr
+#'
+#' @author Sylvain Mangiarotti, Laurent Drapeau, Mireille Huc
+#'
+#' @examples
+#'
+#' #############
+#' # Example 1 #
+#' #############
+#' # load data
+#' #Example 2
+#' data("Ross76")
+#' tin <- Ross76[,1]
+#' data <- Ross76[,2:3]
+#'
+#' # Application with a simplified structure
+#' reg <- gloMoId(data[0:500,2], dt=1/100, nVar=2, dMax=2, show=0)
+#'
+#' #############
+#' # Example 2 #
+#' #############
+#' # load data
+#' data(NDVI)
+#'
+#' # Definition of the Model structure
+#' terms <- c(1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1)
+#' poLabs(3,3,terms==1)
+#' reg <- gloMoId(NDVI [,1:1], dt=1/125, nVar=3, dMax=3,
+#'                show=0, filterReg=terms==1)
+#'
+#'
+#'\dontrun{
+#' #############
+#' # Example 3 #
+#' #############
+#' # load data
+#' data("Ross76")
+#' # time vector
+#' tin <- Ross76[1:500,1]
+#' # single time series
+#' series <- Ross76[1:500,3]
+#' # some noise is added
+#' series[1:100] <- series[1:100] + 0.01 * runif(1:100, min = -1, max = 1)
+#' series[301:320] <- series[301:320] + 0.05 * runif(1:20, min = -1, max = 1)
+#' # weighting function
+#' W <- tin * 0 + 1
+#' W[1:100] <- 0  # the first fourty values will not be considered
+#' W[301:320] <- 0  # twenty other values will not be considered either
+#' reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
+#' visuEq(3, 2, reg$K, approx = 4)
+#' # first weight which value not equal to zero:
+#' i1 = which(reg$finalWeight == 1)[1]
+#' v0 <-  reg$init[i1,1:3]
+#'
+#' reconstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250, PolyTerms=reg$K,
+#'                      v0=v0, method="ode45")
+#' plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l', lwd = 3,
+#'                             main='phase portrait', xlab='time t', ylab = 'x(t)', col='orange')
+#' # original data:
+#' lines(reg$init[,1], reg$init[,2], type='l',
+#'       main='phase portrait', xlab='x', ylab = 'dx/dt', col='black')
+#' # initial condition
+#' lines(v0[1], v0[2], type = 'p', col = 'red')
+#'
+#'}
+#' @export
+gloMoId <- function(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1,
+                    weight = NULL, show = 1, filterReg = NULL, winL = 9) {
+
+  # If not provided, weight is set to one everywhere
+  if (is.null(weight)) {
+    weight <- rep(1, dim(as.matrix(series))[1])
+  }
+  # start to prepare the output weight series
+  finalWeight <- weight
+
+  ##########
+  # Series #
+  ##########
+  if (!is.matrix(series)) {
+    # Prepare the derivatives if not provided
+    if (is.null(nVar)) {
+      stop("If the number of variables 'nVar' is not defined, the other variables must be included in a matrix 'series'.")
+    } else {
+      if (nVar < 2) {
+        stop("Insufficient number of derivatives.")
+      } else {
+        if (is.null(tin)) {
+          if (is.null(dt)) {
+            stop("either time vector 'tin' or time step 'dt' should be given")
+          }
+          else {
+            tin = 0:(length(series)[1]-1)*dt
+          }
+        }
+        derivserie <- drvSucc(tin, series, nDeriv=nVar, weight = weight,
+                              tstep = dt, winL = winL)
+        seriesObs <- derivserie$seriesDeriv
+        finalWeight <- derivserie$Wout
+      }
+    }
+  } else {
+    # Check the coherence and estimate nVar if several series
+    # are provided (in the `series` matrix)
+    if (!is.null(nVar)) {
+      message("Ignoring 'nVar' ('series' already contains several series)")
+    }
+    seriesObs <- as.matrix(series)
+    # compute nVar considering that one more derivative is required
+    nVar <- dim(seriesObs)[2] - 1
+  }
+  # the supplementary derivative is provided in the last column
+  drvS <- seriesObs[,nVar+1]
+  # the other time series (which can derivative or other variables)
+  # are provided in the nVar first columns
+  seriesObs <- seriesObs[,1:nVar]
+  # polynomyal regressor
+  nomPoly <- poLabs(nVar, dMax)
+  # maximum number of regressor
+  nReg <- d2pMax(nVar, dMax)
+  # by default, all the regressor are considered
+  if (length(filterReg) == 0) {
+    filterReg <- rep(1,nReg)
+  }
+  if (nReg != length(filterReg))  {
+    stop("Polynomial maximum degree 'dMax' does not match the regressor filter length 'filterReg'.")
+  }
+
+  #############################
+  # Equation parameterization #
+  #############################
+
+  # Series length
+  N <- dim(seriesObs)[1]
+  # Number of regressor
+  nRegModif <- sum(filterReg)
+
+  # prepare regressors
+    allForK <- list(phi = matrix(0, nrow = N, ncol = nRegModif),
+                     A = matrix(0, nrow = nRegModif, ncol = nRegModif))
+    allForK$Y <- regSeries(nVar, dMax, seriesObs)[,filterReg==1]
+
+  # Parameter estimation
+    allForK <- paramId(allForK = allForK, drv = drvS, weight = finalWeight)
+
+  # Submodels residues
+    resSsMod <- vector("numeric", nRegModif)
+    for (i in 1:nRegModif) {
+      KTemp <- allForK$K * ((1:nRegModif) != i)
+      resSsMod[i] <- sum((drvS - allForK$Y %*% as.matrix(KTemp))^2)
+    }
+    KFinal <- vector("numeric",length=nReg)
+    KFinal[filterReg == 1] <- allForK$K
+
+  # outputs
+  outGloMoId <- list(init = cbind(seriesObs, drvS),
+                     weight = weight,
+                     finalWeight = finalWeight,
+                     K = KFinal,
+                     resTot = allForK$resTot,
+                     resSsMod = resSsMod,
+                     filterReg = filterReg)
+  # return
+  invisible(outGloMoId)
+}
+

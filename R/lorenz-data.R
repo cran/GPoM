@@ -1,0 +1,30 @@
+#' Data included in package GPoM
+#'
+#' @name lorenz-1963 time series
+#' @docType data
+#' 
+#' @description
+#' The Lorenz system is the 3-dimensional chaotic system \cr
+#' \eqn{dx/dt = \sigma y - \sigma z} \cr
+#' \eqn{dy/dt = - x z + r x - y} \cr
+#' \eqn{dz/dt = x y - b z}, \cr
+#' discovered by Edouard N. Lorenz in 1963 [1].
+#' The following parameters and initial conditions
+#' were used in the present data set:\cr
+#' \eqn{\sigma = 10, b = 8/3, r = 28} \cr
+#' and \eqn{(x0, y0, z0) = (0, 1, 1.05)}.\cr
+#' The following four columns are provided:\cr
+#' (1) time t, (2) x(t), (3) y(t) and (4) z(t).\cr
+#' For this parameterization, the Lorenz system produces
+#' a chaotic behavior.
+#' 
+#' @author Sylvain Mangiarotti, Flavie Le Jean,
+#' Malika Chassan, Mireille Huc.
+#' 
+#' @references
+#' [1] Lorenz, Edward Norton (1963). "Deterministic
+#' nonperiodic flow". Journal of the Atmospheric
+#' Sciences. 20 (2): 130-141.
+#' 
+#' @keywords data
+"lorenz"

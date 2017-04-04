@@ -1,0 +1,142 @@
+---
+title: "GPoM : General introduction"
+author: "Sylvain Mangiarotti & Mireille Huc"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    fig.caption: yes
+  pdf_document:
+    number_sections: no
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Generalized Global Polynomial Modelling (GPoM)
+
+Didactic file to learn how to use GPoM package
+
+GPoM is an R package dedicated to global modelling.
+The aim of global modelling is to obtain Ordinary
+Differential Equations
+for dynamical systems, directly from time series
+and without any other a priori knowledge.
+Global modelling was developped to model
+low-dimensional chaos.
+For this reason, it is well adapted to model
+deterministic behaviours from linear to strongly
+nonlinear. And it is also well designed to model
+dynamical behaviour characterized by a high sentivity
+to the initial conditions.
+
+The global modelling technique was initiated in
+the early 1990s^[J. P. Crutchfield and B. S. McNamara, 1987. Equations 
+of motion from a data series, Complex Syst. 1, 417-452.],
+and its first illustrations were obained thanks to
+a formalism developped by G. Gouesbet and his
+colleagues^[G. Gouesbet & J. Maquet, 1992. Construction
+of phenomenological models from numerical scalar time
+series, Physica D, 58, 202-215.], ^[G. Gouesbet & C. Letellier,
+1994. Global vector-field reconstruction by using a multivariate
+polynomial L2 approximation on nets, Phys. Rev. E 49, 4955-4972.].
+It is observed that our ability to obtain equations
+for one chosen system may be very different depending
+on what variable is used to reconstruct the equations.
+This property plays a very important role when
+trying to retrieve governing equations for any
+dynamical system.
+This question was investigated during
+the last decades^[C. Letellier, L. A. Aguirre, &
+J. Maquet, 2005. Relation between observability
+and differential embeddings for nonlinear dynamics,
+Phys. Rev. E 71, 066213.].
+
+Although its developments started in the early
+1990s, it is only in middle of the 2000s that
+a set of ordinary differential equations could be
+obtained from real world data set^[J. Maquet,
+C. Letellier & L. A. Aguirre 2007. Global models
+from the Canadian Lynx cycles as a first evidence
+for chaos in real ecosystems, J. Math. Biol.
+55(1), 21-39.].
+New algorithms were developped at the begining
+of the 2010s^[S. Mangiarotti, R. Coudret, L. Drapeau
+& L. Jarlan, 2012. Polynomial search and global modeling:
+Two algorithms for modeling chaos,” Phys. Rev. E, 86(4),
+046205.] that proved to have very good skills to model
+dynamical behaviors observed under real environmental
+conditions: cereal crops cycles, snow area cycles,
+eco-epidemiology, etc.^[S. Mangiarotti, L. Drapeau &
+C. Letellier, 2014. Two chaotic global models for cereal
+crops cycles observed from satellite in Northern Morocco,
+Chaos, 24, 023130.], ^[S. Mangiarotti, Modélisation globale
+et caractérisation topologique de dynamiques environnementales:
+de l'analyse des enveloppes fluides et du couvert de surface
+de la Terre à la caractérisation topolodynamique du
+chaos, Habilitation to Direct Researches, Université de
+Toulouse 3, 2014.], etc.
+
+All these developments were initialy developped
+to model dynamical behavior from single time series.
+Recent developments have shown that the global
+modelling technique could also be applied to
+model multivariate couplings^[S. Mangiarotti, 2015. Low
+dimensional chaotic models for the plague epidemic in
+Bombay, Chaos, Solitons & Fractals, 81(A), 184-196.], ^[S.
+Mangiarotti, M. Peyre & M. Huc, 2016.
+A chaotic model for the epidemic of Ebola virus disease
+in West Africa (2013–2016). Chaos, 26, 113112.].
+
+The present package provides global modeling
+tools for modelling linear and nonlinear behaviors
+from observed time series.
+
+To introduce the package, five other illustrative
+`vignettes` are provided to introduce how to apply
+the global modelling technique from observational
+data. These are as follows:
+
+1) `I_Generate` aims to introduce the convention
+used to formulate sets of Ordinary Differential Equations (ODEs)
+of polynomial form with GPoM and to show how to integrate
+it numerically.
+
+2) `II_PreProcessing` provides some simple
+examples of time series preprocessing before applying
+the global modelling technique.
+
+3) `III_Modelling` is dedicated to the global
+modelling itself. Several case studies are presented
+considering single and multiple time series, both for
+modelling or detecting causal couplings.
+
+4) `IV_VisuOutput` shows how to get an overview
+of the output results obtained with global modelling
+functions and how outputs are organised.
+
+5) `V_Predictability` aims to provide basic examples
+of validation considering the models skills in term of
+predictability.
+
+The present GPoM package is made available to whom
+would like to use it.
+It includes most of the latest developments presently
+available to apply the global modelling technique,
+and we are happy to share it with you.
+Please refer to the following publications When 
+using the present tools:
+
+[1] Mangiarotti et al. 2012 for the univariate time
+series modelling,
+
+[2] Mangiarotti 2015 for infering causality and for
+detecting or analysing multivariate couplings,
+
+[3] Mangiarotti et al. 2016 when using the generalized
+formulation of global modelling technique (that is
+combining multiariate time series and derivatives).
+
+The authors of the package decline any responsability
+about the results and interpretations obtained and made
+by other users.
