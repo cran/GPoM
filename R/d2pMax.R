@@ -1,13 +1,17 @@
-#' @title d2pMax : provides pMax given dMax and nVar
+#' @title Provides the number of polynomial terms \code{pMax}
+#' given \code{dMax} and \code{nVar}
 #'
-#' @description Gives the maximum polynomial degree pMax
-#'              given the number of polynomial terms dMax
-#'              and the system dimension nVar
+#' @description Computes the number of polynomial terms \code{pMax}
+#'              used to formulate an equation given
+#'              the maximal polynomial degree \code{dMax}
+#'              and the number of variables \code{nVar}
+#'              following the conventions as defined by fuction \code{poLabs}.
 #'
 #' @inheritParams gloMoId
-#' @param dMaxKnown The number of polynoms terms to retrieve
+#' @param dMaxKnown The maximum polynomial degree \code{dMax}
 #'
-#' @return The maximum polynomial degree \code{dMax} used to code the polynomial
+#' @return The number \code{pMax} of polynomial terms used to code
+#' a polynomial equation
 #'
 #' @author Sylvain Mangiarotti
 #'

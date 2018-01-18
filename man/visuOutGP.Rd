@@ -10,15 +10,17 @@ visuOutGP(ogp, selecmod = NULL, id = 1, prioMinMax = "data",
 \arguments{
 \item{ogp}{The output list obtained from gPoMo.}
 
-\item{selecmod}{a vector of the model selected.}
+\item{selecmod}{A vector of the selected model. Maximum 24 models can be
+presented at the same time.}
 
-\item{id}{the type of model to identify. id = 1 correspond to the unidentified
-models, that is, potentialy chaotic models).}
+\item{id}{The type of model to identify. \code{id = 1} corresponds to
+the unidentified models, that is, potentialy chaotic models).}
 
-\item{prioMinMax}{gives the priority for the plots among: "data", "model",
-"dataonly" and "modelonly".}
+\item{prioMinMax}{Gives the priority for the plots among: \code{"data"},
+\code{"model"}, \code{"dataonly"} and \code{"modelonly"}.}
 
-\item{opt3D}{provides a 3D plot (x,y,z) when 'TRUE' (rgl library required).}
+\item{opt3D}{Provides a 3D plot (x,y,z) when \code{opt = 'TRUE'}
+(the \code{rgl} library is required).}
 }
 \value{
 A Matrix describing the terms composing each model by row. The first
@@ -49,4 +51,3 @@ visuOutGP(outputGPoM)
 \author{
 Sylvain Mangiarotti
 }
-

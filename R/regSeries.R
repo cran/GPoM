@@ -1,21 +1,21 @@
-#' @title regSeries : Estimate regressors time series
+#' @title Estimates the monomial time series
 #'
-#' @description Creates series by multiplying given time series among them.
+#' @description Creates time series by multiplying given time series among them.
 #'
 #' @inheritParams autoGPoMoSearch
 #' @param series A matrix containing the original time series from which
-#' the regressors ones are built. One time series by column
+#' the monomials are built. Each column corresponds to one given variable.
 #' @param pReg A matrix filled, for each column, with powers of time series
-#' used to create
+#' used to create.
 #'
-#' @return rpFull A matrix of time series. Each column correspond to one
+#' @return \code{rpFull} A matrix of time series. Each column corresponds to one
 #' regressor such as \eqn{X_1^2 X_3 X_4}
 #'
 #' @author Sylvain Mangiarotti
 #'
 #' @examples
-#' data(sprottK)
-#' sprottK <- as.matrix(sprottK)
+#' data(TSallMod_nVar3_dMax2)
+#' sprottK <- as.matrix(TSallMod_nVar3_dMax2$SprK$reconstr)[,2:4]
 #' dMax <- 2
 #' nVar <- dim(sprottK)[2]
 #'

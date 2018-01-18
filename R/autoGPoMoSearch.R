@@ -1,33 +1,41 @@
-#' @title autoGPoMoSearch : automatic search of polynomial Equations
+#' @title Automatic search of polynomial Equations
 #'
-#' @description The algorithm aims to get an ensemble of equations
-#' to be tested from a given template of allowed terms.
-#' The maximum size of the equation depends on the model dimension nVar,
-#' and on the maximum polynomial degree dMax.
-#' The algorithm remove polynomial terms one by one, considering
-#' that a term is poorly useful when removing it leads to the
-#' smaller fitting degradation.
+#' @description This algorithm aims to get an ensemble of possible
+#' models which integrability will be tested later with function
+#' \code{autoGPoMoTest}. By default, all the terms are considered
+#' available (Some of the terms can be excluded intentionally
+#' using the option \code{filterReg}).
+#' The maximum size of the equation depends on the model dimension
+#' \code{nVar}, and on the maximum polynomial degree \code{dMax}.
+#' The algorithm removes polynomial terms one by one using a
+#' leave-one-out method.
 #'
 #' @inheritParams  gloMoId
 #' @inheritParams  drvSucc
 #' @inheritParams  poLabs
 #'
-#' @param data Input Time series: Each column corresponds to one input variable.
+#' @param data Input Time series: Each column is one time series
+#' that corresponds to one variable.
 #' @param dt Time sampling of the input series.
-#' @param underSamp Points used for undersampling the data. For undersamp = 1
-#' the complete time series is used. For undersamp = 2, only one data out of
-#' two is kept, etc.
+#' @param underSamp Number of points used for undersampling the data.
+#' For \code{undersamp = 1} the complete time series is used.
+#' For \code{undersamp = 2}, only one data out of two is kept, etc.
 #'
 #' @return A list of two matrices:
 #' @return \code{$filtMemo} describes the selected terms
 #' (1 if the term is used, 0 if not)
-#' @return \code{$KMemo} provides the correspoing coefficients
+#' @return \code{$KMemo} provides the corresponding coefficients
 #'
 #' @author Sylvain Mangiarotti, Flavie Le Jean
 #'
+#' @seealso \code{\link{autoGPoMoTest}}, \code{\link{gPoMo}},
+#'          \code{\link{findAllSets}}, \code{\link{poLabs}}
+#' 
 #' @export
 #' @examples
+#' # Load data
 #' data('RosYco')
+#' # Search for potential models
 #' filt = autoGPoMoSearch(RosYco[,2], nVar = 3, dMax = 2,
 #'                        dt = 1/125, show = 1)
 #' # As an example, the equations of the fourth line has the following terms:

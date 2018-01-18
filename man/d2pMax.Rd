@@ -2,25 +2,26 @@
 % Please edit documentation in R/d2pMax.R
 \name{d2pMax}
 \alias{d2pMax}
-\title{d2pMax : provides pMax given dMax and nVar}
+\title{Provides the number of polynomial terms \code{pMax}
+given \code{dMax} and \code{nVar}}
 \usage{
 d2pMax(nVar, dMaxKnown)
 }
 \arguments{
-\item{nVar}{The model dimension expected. This parameter will be
-deduced from the input data (\code{series}) if \code{series} is
-a matrix. If \code{series} is a vector, the expected dimension nVar
-should be provided.}
+\item{nVar}{Number of variables considered in the polynomial formulation.}
 
-\item{dMaxKnown}{The number of polynoms terms to retrieve}
+\item{dMaxKnown}{The maximum polynomial degree \code{dMax}}
 }
 \value{
-The maximum polynomial degree \code{dMax} used to code the polynomial
+The number \code{pMax} of polynomial terms used to code
+a polynomial equation
 }
 \description{
-Gives the maximum polynomial degree pMax
-             given the number of polynomial terms dMax
-             and the system dimension nVar
+Computes the number of polynomial terms \code{pMax}
+             used to formulate an equation given
+             the maximal polynomial degree \code{dMax}
+             and the number of variables \code{nVar}
+             following the conventions as defined by fuction \code{poLabs}.
 }
 \examples{
 #############
@@ -35,10 +36,9 @@ dMax <- 3
 d2pMax(nVar,dMax)
 
 }
-\author{
-Sylvain Mangiarotti
-}
 \seealso{
 \code{\link{gloMoId}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
 }
-
+\author{
+Sylvain Mangiarotti
+}

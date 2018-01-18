@@ -1,16 +1,18 @@
-#' @title poLabs : polynomial Labels
+#' @title Polynomial labels order
 #'
-#' @description Edits the polynomial labels for chosen dimension
-#' nVar and maximum polynomial degree dMax.
+#' @description Defines the order of the polynomial labels given
+#' the number of variables \code{nVar} and the maximum polynomial
+#' degree \code{dMax}.
 #' @seealso \code{\link{visuEq}}
 #'
 #' @inheritParams regOrd
 #'
-#' @param Xnote Notation used for the variable, by default Xnote = 'X'.
+#' @param Xnote Enables to defines the notation used for the variable,
+#' by default \code{Xnote = 'X'}.
 #' @param findIt A vector of selected terms.
 #'
-#' @return \code{lbls} A vector of characters. Each element is the expression of a regressor
-#' such as \eqn{X_1^2 X_3 X_4}
+#' @return \code{lbls} A vector of characters. Each element is the
+#' expression of one polynomial term, such as \eqn{X_1^2 X_3 X_4}
 #'
 #' @author Sylvain Mangiarotti
 #'
@@ -36,7 +38,12 @@
 poLabs <- function(nVar, dMax, findIt = NULL, Xnote = 'X') {
 
   # notation
-  if (length(Xnote) == 1) Xnote <- rep(Xnote, nVar)
+  if (length(Xnote) == 1) {
+    Xnote <- rep(Xnote, nVar)
+    for (j in 1:nVar) {
+      Xnote[j] <- paste(Xnote[j],j, sep="")
+    }
+  }
   # test Xnote length
   if (length(Xnote) != nVar) {
     stop('Xnote should be either one single character or a  nVar length vector of character')
@@ -57,13 +64,11 @@ poLabs <- function(nVar, dMax, findIt = NULL, Xnote = 'X') {
     for (j in 1:nVar) {
       if (pExpo[j,i] != 0) {
         # exponent equal to 1 are eluded
-        if (pExpo[j,i] == 1) {
-          lbls[i] <- paste(lbls[i],Xnote[j],j," ",sep="")
-        }
+        if (pExpo[j,i] == 1)
+            lbls[i] <- paste(lbls[i],Xnote[j]," ",sep="")
         # exponent greater than 1 are noted
-        if (pExpo[j,i] > 1) {
-          lbls[i] <- paste(lbls[i],Xnote[j],j,"^",pExpo[j,i]," ",sep="")
-        }
+        if (pExpo[j,i] > 1)
+           lbls[i] <- paste(lbls[i],Xnote[j],"^",pExpo[j,i]," ",sep="")
       }
     }
   }

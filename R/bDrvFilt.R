@@ -1,9 +1,9 @@
-#' @title bDrvFilt : Build Derivative Filter
+#' @title Builds the derivative filter
 #'
 #' @description Build the Savitzky-Golay derivative filter (Savitzky-Golay, 1964).
 #'
 #' @param nDrv The number of derivatives to be computed.
-#' @param tstep Time sampling.
+#' @param tstep Sampling time.
 #' @param winL The local window length to be used for computing the derivatives [1].
 #'
 #' @references

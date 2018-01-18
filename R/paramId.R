@@ -1,13 +1,13 @@
-#' @title paramId : parameter Identification
+#' @title For parameter Identification
 #'
-#' @description Estimate polynomial coefficients.
+#' @description Estimate the polynomial coefficients.
 #'
 #' @param allForK The list of input parameters
-#' @param drv the derivative (on the equation left hand)
+#' @param drv The derivative (on the equation left hand)
 #' @param weight The weighting series
 #'
 #' @importFrom stats lsfit
-#' @return allForK The initial list completed with the model parameters.
+#' @return \code{allForK} The initial list completed with the model parameters.
 #'
 #' @author Sylvain Mangiarotti
 #'

@@ -1,4 +1,4 @@
-#' @title gPoMo: Generalized Polynomial Modeling
+#' @title Generalized Polynomial Modeling
 #'
 #' @seealso \code{\link{gloMoId}}, \code{\link{autoGPoMoSearch}},
 #'          \code{\link{autoGPoMoTest}}
@@ -11,13 +11,13 @@
 #' function, it can also be applied to multivariate time series [3-4].
 #'
 #' Example:\cr
-#' Note that nS provides the number of dimensions used from each variable
+#' Note that \code{nS} provides the number of dimensions used from each variable
 #'
 #' case I \cr
-#' For nS=c(2,3) means that 2 dimensions are reconstructed from variable 1:
-#' the original variable X1 and its first derivative X2), and
+#' For \code{nS=c(2,3)} means that 2 dimensions are reconstructed from variable 1:
+#' the original variable \code{X1} and its first derivative \code{X2}), and
 #' 3 dimensions are reconstructed from variable 2: the original
-#' variable X3 and its first and second derivatives X4 and X5.
+#' variable \code{X3} and its first and second derivatives \code{X4} and \code{X5}.
 #' The generalized model will thus be such as: \cr
 #' \eqn{dX1/dt = X2}\cr
 #' \eqn{dX2/dt = P1(X1,X2,X3,X4,X5)}\cr
@@ -26,8 +26,8 @@
 #' \eqn{dX5/dt = P2(X1,X2,X3,X4,X5).}\cr
 #'
 #' case II\cr
-#' For nS=c(1,1,1,1) means that only the original variables
-#' X1, X2, X3 and X4 will be used.
+#' For \code{nS=c(1,1,1,1)} means that only the original variables
+#' \code{X1}, \code{X2}, \code{X3} and \code{X4} will be used.
 #' The generalized model will thus be such as:\cr
 #' \eqn{dX1/dt = P1(X1,X2,X3,X4)}\cr
 #' \eqn{dX2/dt = P2(X1,X2,X3,X4)}\cr
@@ -77,19 +77,26 @@
 #'
 #'\dontrun{
 #' #Example 4
-#' data(sprottK)
-#' data(rossler)
-#' data <- cbind(rossler,sprottK)[1:400,]
+#' # load data
+#' data("TSallMod_nVar3_dMax2")
+#' #multiple (six) time series
+#' tin <- TSallMod_nVar3_dMax2$SprK$reconstr[1:400,1]
+#' TSRo76 <- TSallMod_nVar3_dMax2$R76$reconstr[,2:4]
+#' TSSprK <- TSallMod_nVar3_dMax2$SprK$reconstr[,2:4]
+#' data <- cbind(TSRo76,TSSprK)[1:400,]
 #' dev.new()
-#' out4 <- gPoMo(data, dt=1/20, dMax = 2, nS=c(1,1,1,1,1,1),
-#'              show = 1, method = 'rk4',
-#'              IstepMin = 2, IstepMax = 3, nPmin = 13, nPmax = 13)
-#' # the original Rossler (variables x, y and z) and Sprott (variables X, Y and Z)
+#' # generalized Polynomial modelling
+#' out4 <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1,1,1,1),
+#'               show = 0, method = 'rk4',
+#'               IstepMin = 2, IstepMax = 3,
+#'               nPmin = 13, nPmax = 13)
+#'
+#' # the original Rossler (variables x, y and z) and Sprott (variables u, v and w)
 #' # systems are retrieved:
 #' visuEq(6, 2, out4$models$model347, approx = 4,
-#'            substit = c('x', 'y', 'z', 'X', 'Y', 'Z'))
-#'    # to check the robustness of the model, the integration duration
-#'    # should be chosen longer (at least IstepMax = 4000)
+#'        substit = c('x', 'y', 'z', 'u', 'v', 'w'))
+#' # to check the robustness of the model, the integration duration
+#' # should be chosen longer (at least IstepMax = 4000)
 #'}
 #'
 #' @author Sylvain Mangiarotti, Flavie Le Jean, Mireille Huc
@@ -113,22 +120,22 @@
 #' @inheritParams  autoGPoMoSearch
 #' @inheritParams  autoGPoMoTest
 #'
-#' @param dtFixe Time step used for the analysis. In principle, it should correspond
-#' to the time step of the input data. Modification of this time step may be used to
-#' stabilize the numerical computation. Such modification should be performed in full
-#' consciouness that it will lead to change the time scale accordingly.
-#' @param nS A vector providing the number of dimensions that will be used for each
-#' input variables (see Examples 1 and 2). The dimension of the resulting model will
-#' be nVar = sum(nS).
+#' @param dtFixe Time step used for the analysis. It should correspond
+#' to the sampling time of the input data.
+#' Note that for very large and very small time steps, alternative units
+#' may be used in order to stabilize the numerical computation.
+#' @param nS A vector providing the number of dimensions used for each
+#' input variables (see Examples 1 and 2). The dimension of the resulting
+#' model will be \code{nVar = sum(nS)}.
 #' @param EqS Model template including all allowed regressors.
 #' Each column corresponds to one equation. Each line corresponds to one
-#' regressor following the convention given by \code{poLabs(nVar,dMax)}.
+#' polynomial term as defined by function \code{poLabs}.
 #' @param nPmin Corresponds to the minimum number of parameters (and thus
-#' of regressor) of the model
+#' of polynomial term) allowed.
 #' @param nPmax Corresponds to the maximum number of parameters (and thus
-#' of regressor) of the model
-#' @param verbose Gives information (if set to 1) about the algorithm progress
-#' and keeps silent if set to 0
+#' of polynomial) allowed.
+#' @param verbose Gives information (if set to 1) about the algorithm
+#' progress and keeps silent if set to 0.
 #'
 #' @return A list containing:
 #' @return \code{$tin}        The time vector of the input time series
@@ -143,11 +150,14 @@
 #' @return \code{$tout}       The time vector of the output time series (vector length
 #' corresponding to the longest numerical integration duration)
 #' @return \code{$stockoutreg} A list of matrices with the integrated trajectories
-#' (variable \code{X1} in column 1, \code{X2} in 2, etc.) of all the models \code{$model1}, \code{$model2}, etc.
+#' (variable \code{X1} in column 1, \code{X2} in 2, etc.) of all the models \code{$model1},
+#' \code{$model2}, etc.
 #'
 #' @import deSolve
 #' @export
 #'
+#' @seealso \code{\link{autoGPoMoSearch}}, \code{\link{autoGPoMoTest}}, \code{\link{visuOutGP}},
+#'          \code{\link{poLabs}}, \code{\link{predictab}}, \code{\link{drvSucc}}
 #'
 gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
                    weight = NULL, show = 1, verbose = 1,

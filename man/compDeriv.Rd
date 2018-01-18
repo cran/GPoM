@@ -2,7 +2,7 @@
 % Please edit documentation in R/compDeriv.R
 \name{compDeriv}
 \alias{compDeriv}
-\title{compDeriv : Computes the successive derivatives of a time series vector}
+\title{Computes the successive derivatives of a time series}
 \usage{
 compDeriv(TS, nDrv, tstep, winL = 9)
 }
@@ -10,26 +10,23 @@ compDeriv(TS, nDrv, tstep, winL = 9)
 \item{TS}{A single time series provided as a single vector.}
 
 \item{nDrv}{The number of derivatives to be computed from the input
-\code{series}. The resulting number of time series obtained as an output
-will thus be nVar = nDrv + 1.}
+\code{series}. The resulting number of outpout time series
+will thus be \code{nVar = nDrv + 1}.}
 
-\item{tstep}{Time sampling of the input \code{series}.}
+\item{tstep}{Sampling Time of the input time series \code{TS}.}
 
-\item{winL}{The local window length to be used for computing
+\item{winL}{The local window length used for computing
 the derivatives [1-2].}
 }
 \value{
-A matrix containing the original variable (as smoothed by the
-filtering process) and its \code{nDrv} first derivatives (note that winL
-values of the original time series will be lost both at the begining and
-the end of the time series due to boundary effect).
+A matrix containing the original variable (smoothed by the
+filtering process) and its \code{nDrv} first derivatives (note that
+\code{winL} values of the original time series will be lost both
+at the begining and the end of the time series due to boundary effect).
 }
 \description{
-Compute the successive derivatives from one single time series,
+Computes the successive derivatives from one single time series,
 with the Savitzky-Golay approach (1964).
-}
-\author{
-Sylvain Mangiarotti
 }
 \references{
 [1] Savitzky, A.; Golay, M.J.E.,
@@ -42,4 +39,6 @@ Analytical Chemistry 44 (11): 1906-1909, 1972. \cr
 \seealso{
 \code{\link{gloMoId}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
 }
-
+\author{
+Sylvain Mangiarotti
+}

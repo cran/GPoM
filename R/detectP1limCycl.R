@@ -1,13 +1,14 @@
-#' @title detectP1limCycl : Detect limit cycles of period-1
+#' @title Detection of limit cycles of period-1
 #'
-#' @description Detects the limit cycle from trajectories
-#' in a bidimensional projection
+#' @description This algorithm aim to detect period-1 limit cycles
+#' from trajectories in the phase sapce considered in a
+#' bidimensional projection.
 #'
 #' @inheritParams autoGPoMoSearch
 #' @inheritParams autoGPoMoTest
 #'
-#' @param data A matrix of the trajectory in a 2D space (only
-#' the two first column are considered)
+#' @param data A matrix of the trajectory in a 2D space (if more than
+#' two columns are provided, only the two first columns are considered)
 #' @param LimCyclThreshold The detection threshold
 #' @param show Indicates the deepness of the feedback (from 0 to 2)
 #'
@@ -16,7 +17,9 @@
 #'
 #' @author Sylvain Mangiarotti
 #'
-#' @return indicates if a limit cycle is detected (1) or not (0)
+#' @return Indicates if a limit cycle is detected (1) or not (0)
+#'
+#' @seealso \code{\link{autoGPoMoTest}}
 #'
 # ###########
 # # Example #

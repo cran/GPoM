@@ -1,14 +1,13 @@
 ---
-title: "GPoM: Modelling"
+title: "GPoM : III Modelling"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_vignette:
-    fig.caption: yes
   pdf_document:
     number_sections: no
+    latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{GPoM : III Modelling}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -18,57 +17,57 @@ load package: "`r library(GPoM)`"
 
 This document gives an illustration on how to apply
 the global modelling technique.
-The aim of global modelling is to obtain
+The aim of the `GPoM` package is to obtain
 models of Ordinary Differential Equations (ODEs)
-of polynomial form from either single or multiple
-time series.
+of polynomial form from time series (either single
+or multiple).
 Such type of modelling requires a careful
 time series preprocessing.
 Such data preprocessing was sketched in
 the vignette `II_PreProcessing`.
 In the present vignette, it is assumed that
-a careful and adapted preprocessing was already
-applied to the studied time series, so that
-the modelling tools can be applied directly.
+the studied time series has already been carefully
+preprocessed, so that the modelling tools can now
+be applied without anymore preprocessing.
 
 
 ## Single time series modelling
 
-The chaotic system introduced Rössler in 1976^[O. Rössler,
-An Equation for Continuous Chaos, Physics Letters,
-vol. 57A, no 5, 1976, p. 397-398.]
-is well adapted to illustrate the high skills of the approach
-to model nonlinear dynamics.
-Simulations from this chaotic system are available in the GPoM
+The chaotic system introduced by Rössler in 1976^[O. Rössler,
+An Equation for Continuous Chaos, *Physics Letters*,
+**57A**(5), 1976, 397-398.]
+is well adapted to test and illustrate the performances of
+the approach to model nonlinear dynamics.
+Simulations of this chaotic system are available in the GPoM
 package and can be directly loaded as follows:
 ```{r, eval = TRUE}
-    # load data
-    data("Ross76")
+# load data
+data("Ross76")
 ```
 
 (note that the GPoM package can easily be used to produce such
 chaotic data set, see vignette `I_Generate`).
 
 The loaded variable `Ross76` is a matrix. The time
-vector is in the first column and the variables $x$, $y$ and $z$
+vector is in the first column and the time series
+$x(t)$, $y(t)$ and $z(t)$ of the three variables are
 in the next columns two to four.
-The global modelling from one single time series
-is presented in the present section.
+The global modelling technique from one single time series
+is introduced in the present section.
 The variable $y$ will be considered here:
 ```{r, eval = TRUE, fig.align='center'}
-    # time vector
-    tin <- Ross76[,1]
-    # single time series
-    data <- Ross76[,3]
-    # plot
-    plot(tin, data, type='l',
-         xlab = 't', ylab = 'y(t)', main = 'Original time series')
+# time vector
+tin <- Ross76[,1]
+# single time series
+data <- Ross76[,3]
+# plot
+plot(tin, data, type='l', xlab = 't', ylab = 'y(t)', main = 'Original time series')
 ```
 
 Starting from single time series, the following canonical
-form of equations may be expected^[G. Gouesbet & C. Letellier, 1994.
+form of equations can be expected^[G. Gouesbet & C. Letellier, 1994.
 Global vector-field reconstruction by using a multivariate
-polynomial L2 approximation on nets. Phys Rev E, 49(6), 4955-4972.]:
+polynomial L2 approximation on nets. *Physical Review E*, **49**(6), 4955-4972.]:
 
 $dX_1/dt = X_2$
 
@@ -78,70 +77,101 @@ $...$
 
 $dX_n/dt = P(X_1, X_2, ..., X_n)$
 
+where the modeled variable $X_1$ will correspond to
+the observed variable $y$, and $X_2$ to $X_n$ are
+its successive derivatives $dy/dt$ and $dy^2/dt^2$.
 To apply the global modelling technique to the time series
 presented above, it is necessary to choose a trial model
-dimension `nVar` and maximal polynomial degree `dMax`.
-To restrict the model search, the minimum and maximum
-number of parameters can be chosen manually with `nPmin`
-and `nPmax`.
-`IstepMax` corresponds to the maximum iterations of
-the numerical integration.
+dimension `nVar` (corresponding to $n$ in the previous
+equation) and a maximal polynomial degree `dMax`.
+To restrict the model search to a smaller ensemble of models,
+the minimum and maximum numbers of parameters for the model
+can be chosen manually using `nPmin` and `nPmax`.
+`IstepMax` corresponds to the maximum number of iterations
+to be used for the numerical integration.
 
-```{r, eval = TRUE, echo = TRUE}
-    # model dimension
-    nVar = 3
-    # maximum polynomial degree
-    dMax = 2
-    # generalized Polynomial modelling
-    out1 <- gPoMo(data, tin=tin, dMax = dMax, nS = nVar, show = 0,
-                  nPmin = 9, nPmax = 11, verbose = FALSE, IstepMax = 3000)
+```{r, echo = TRUE}
+# model dimension
+nVar = 3
+# maximum polynomial degree
+dMax = 2
+```
+```{r, eval = FALSE, echo = TRUE}
+# generalized Polynomial modelling
+out1 <- gPoMo(data, tin = tin, dMax = dMax, nS = nVar, show = 0,
+              nPmin = 9, nPmax = 11, verbose = FALSE, IstepMax = 3000)
 ```
 
-Note that, to follow the model search during the searching process,
-parameter `show` should be set on such as `show = 1`.
-In practice, the model size (that is, its number of parameters)
-is generally unknwown. It is then necessary to extend this range.
-In practice, `nPmax` cannot be chosen too large in order to keep
-the computation time reasonable.
+Note that, to follow the search process in real time,
+parameter `show` should be set on (`show = 1`).
+In practice, the model size (that is, its number of parameters which is 
+bounded by `nPmin` and `nPmax`)
+is generally unknwown. It may thus be necessary to extend its range
+(be default `nPmin = 1` and `nPmax = 14`).
+However, in practice, `nPmax` cannot be chosen too large in order
+to keep the computation time reasonable.
 
 With the parameterization chosen here, two models are obtained:
 
-```{r, eval = TRUE}
-    which(out1$okMod == 1)
+```{r, eval = FALSE}
+which(out1$okMod == 1)
+```
+```{r, eval = TRUE, echo = FALSE}
+which(data_vignetteIII$out1okMod == 1)
 ```
 
-The model #3 shows a quite good skill to reproduce
+The model #3 shows a quite good performance to reproduce
 the original phase portrait:
 
-```{r, eval = TRUE, fig.align='center'}
-      # obtained model #3
-      plot(out1$stockoutreg$model3[,1], out1$stockoutreg$model3[,2],
-           type='l', col = 'red',
-           xlab = 'y(t)', ylab = 'dy(t)/dt', main = 'Phase portrait')
-      # original phase portrait
-      lines(out1$filtdata[,1], out1$filtdata[,2])
+```{r, eval = FALSE, fig.align='center', fig.width=4, fig.height=4}
+# obtained model #3
+plot(out1$stockoutreg$model3[,1], out1$stockoutreg$model3[,2], type='l', col = 'red',
+     xlab = 'y(t)', ylab = 'dy(t)/dt', main = 'Phase portrait')
+# original phase portrait
+lines(out1$filtdata[,1], out1$filtdata[,2])
+legend(3,2,c("model", "original"), col=c('red', 'black'), lty=c(1,1), cex=0.6)
+
 ```
+```{r, eval = TRUE, echo = FALSE, fig.align='center', fig.width=4, fig.height=4}
+# obtained model #3
+library(float)
+plot(dbl(data_vignetteIII$out1_stockoutreg_m3[,1]), dbl(data_vignetteIII$out1_stockoutreg_m3[,2]),
+     type='l', col = 'red',
+     xlab = 'y(t)', ylab = 'dy(t)/dt', main = 'Phase portrait')
+# original phase portrait
+lines(dbl(data_vignetteIII$out1_filtdata[,1]), dbl(data_vignetteIII$out1_filtdata[,2]))
+legend(3,2,c("model", "original"), col=c('red', 'black'), lty=c(1,1), cex=0.6)
 
-The equations of the obtained model can be edited as follows:
-
-```{r, eval = TRUE}
-      # obtained model #3
-      visuEq(nVar, dMax, out1$models$model3)
 ```
+The equations of the obtained model can be edited as follows
+(more precision in the digits can be obtained choosing a larger
+value of `approx`):
 
+```{r, eval = FALSE}
+# obtained model #3
+visuEq(nVar, dMax, out1$models$model3, approx = 1)
+```
+```{r, eval = TRUE, echo = FALSE}
+# obtained model #3
+visuEq(nVar, dMax, data_vignetteIII$out1_m3, approx = 1)
+```
 Various methods may be used to validate such a model.
 In practice, note that validation may depend on the
-objective of the model.
-One way to validate the model can be based on predictability
-(see vignette `V_Predictability`).
+objective of the model (characterization, forecasting, etc.).
+One way to validate the model can be done by considering
+the forecasting performances of the model.
+A code dedicated to such a type of validation
+is presented in vignette `V_Predictability`.
 
 
-## Causal couplings detection and retro-modelling
+## Detection of causal couplings and retro-modelling
 
-One interest of this approach is (1) to permit
-the detection of nonlinear dynamical couplings,
-(2) to obtain an analytical formulation of the
-couplings, and (3) to infer causal relations.
+One interest of the global modelling technique is
+(1) to enable the detection of nonlinear dynamical couplings
+between observed variables,
+and potentially even (2) to obtain an analytical
+formulation of this couplings in order
+(3) to help for the inference of the causal relations.
 
 Here again, the Rössler-1976 chaotic system is used
 to illustrate the purpose.
@@ -150,21 +180,22 @@ are used this time.
 
 
 ```{r, eval = TRUE}
-    # multiple (three) time series
-    data <- Ross76[,2:4]
+# multiple (three) time series
+data <- Ross76[,2:4]
 ```
 
 The three time series are as follows:
 
 ```{r, eval = TRUE, fig.align='center'}
-      # x(t)
-      plot(tin, data[,1], ylim = c(-6.5,12),
-           type='l', col = 'blue',
-           xlab = 't', ylab = 'x(t)', main = 'Original time series')
-      # y(t)
-      lines(tin, data[,2], type = 'l', col = 'brown')
-      # z(t)
-      lines(tin, data[,3], type = 'l', col = 'orange')
+# x(t)
+plot(tin, data[,1], ylim = c(-6.5,12), type='l', col = 'blue',
+     xlab = 't', ylab = '', main = 'Original time series')
+# y(t)
+lines(tin, data[,2], type = 'l', col = 'orange')
+# z(t)
+lines(tin, data[,3], type = 'l', col = 'brown')
+legend(35,12,c("x(t)", "y(t)", "z(t)"), col=c('blue', 'orange', 'brown'), lty=1, cex=0.8)
+
 ```
 
 A set of three equations is expected, one for each
@@ -176,35 +207,50 @@ $dy/dt = P_y(x,y,z)$
 
 $dz/dt = P_z(x,y,z)$
 
-To define such structure, the number `nS` of equation
+To define such a structure, the number `nS` of equations
 for each series must be defined as a vector such as:
-`nS = c(1,1,1)`. (note that not to get information about
-the curent number of model under test, the optional
-parameter `verbose` can be set to `verbose = false`).
+`nS = c(1,1,1)`. (note that to discard information about
+the current number of models under test, the optional
+parameter `verbose` can be set to `verbose = FALSE`).
 
 
-```{r, eval = TRUE}
-    # generalized Polynomial modelling
-    out2 <- outGP <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1),  show = 0,
-                           IstepMin = 10, IstepMax = 3000, nPmin = 7, nPmax = 8)
+```{r, eval = FALSE}
+# generalized Polynomial modelling
+out2 <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1),  show = 0,
+              IstepMin = 10, IstepMax = 3000, nPmin = 7, nPmax = 8)
 ```
 
 The simplest obtained model able to reproduce
 the observed dynamics is the model #5:
 
-```{r, eval = TRUE, fig.align='center'}
-      # obtained model #5
-      plot(out2$stockoutreg$model5[,1], out2$stockoutreg$model5[,2],
-           type='l', col = 'red',
-           xlab = 'y(t)', ylab = 'dy(t)/dt', main = 'Phase portrait')
-      # original phase portrait
-      lines(out2$filtdata[,1], out2$filtdata[,2])
+```{r, eval = FALSE, fig.align='center', fig.width=4, fig.height=4}
+# obtained model #5
+plot(out2$stockoutreg$model5[,1], out2$stockoutreg$model5[,2],
+     type='l', col = 'red',
+     xlab = 'x(t)', ylab = 'y(t)', main = 'Phase portrait')
+# original phase portrait
+lines(out2$filtdata[,1], out2$filtdata[,2])
+legend(3,2,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
+
+```
+```{r, eval = TRUE, echo = FALSE, fig.align='center', fig.width=4, fig.height=4}
+# obtained model #5
+plot(dbl(data_vignetteIII$out2_stockoutreg_m5[,1]), dbl(data_vignetteIII$out2_stockoutreg_m5[,2]),
+     type='l', col = 'red',
+     xlab = 'x(t)', ylab = 'y(t)', main = 'Phase portrait')
+# original phase portrait
+lines(dbl(data_vignetteIII$out2_filtdata[,1]), dbl(data_vignetteIII$out2_filtdata[,2]))
+legend(3,2,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
+
 ```
 
 The equations of the obtained model are given by:
 
-```{r, eval TRUE}
-    visuEq(3, 2, outGP$models$model5, approx = 4)
+```{r, eval = FALSE}
+visuEq(3, 2, out2$models$model5, approx = 4)
+```
+```{r, eval = TRUE, echo = FALSE}
+visuEq(3, 2, data_vignetteIII$out2_m5, approx = 4)
 ```
 
 The original Rössler system is thus retrieved.
@@ -214,69 +260,82 @@ under real world conditions was done for modelling
 the plague epidemic of Bombay by the end of 19th century
 and its coupling to the epizootics among black and brown
 rats^[S. Mangiarotti, 2015. Low dimensional chaotic models
-for the plague epidemic in Bombay (1896–1911). Chaos,
-Solitons & Fractals, 81A, 184–196.].
+for the plague epidemic in Bombay (1896–1911).
+*Chaos, Solitons & Fractals*, **81A**, 184–196.].
+This analysis enabled not only the detection of
+the couplings but also to obtain an algebraic
+formulation of this coupling.
+An interpretation could be proposed for all the terms
+of the obtained model.
 
 
-## Generalized global modelling from bivariate time series
+## Generalized global modelling and polynomial a priori structure
 
-The GPoM package permits a generalized formulation
-of the global modelling technique that combines canonical
-and multivariate forms (see the two previous sections).
+The GPoM package enables a generalized formulation
+of the global modelling technique combining the canonical
+formulation -- one single observed variables and its
+derivatives -- and the multivariate formulation -- several
+observed variables considered together.
+Examples are given in the two previous sections.
 The two variables $x$ and $y$ of the Rössler-1976
 chaotic system are considered here to illustrate
 the purpose.
 
-```{r, eval = FALSE}
-    # time vector
-    tin <- Ross76[,1]
-    # multiple (two) time series
-    data <- Ross76[,2:3]
-````
+```{r, eval = TRUE}
+# time vector
+tin <- Ross76[,1]
+# multiple (two) time series
+data <- Ross76[,2:3]
+```
 
 The two time series are as follows:
 
 ```{r, eval = TRUE, fig.align='center'}
-      # obtained model #5
-      plot(tin, data[,1], ylim = c(-6.5,6.5),
-           type='l', col = 'blue',
-           xlab = 't', ylab = 'x(t)', main = 'Original time series')
-      # original phase portrait
-      lines(tin, data[,2], type = 'l', col = 'brown')
+# x(t)
+plot(tin, data[,1], ylim = c(-6.5,6.5),
+     type='l', col = 'blue',
+     xlab = 't', ylab = '', main = 'Original time series')
+# y(t)
+lines(tin, data[,2], type = 'l', col = 'brown')
+legend(30,6,c("x(t)", "y(t)"), col=c('blue', 'brown'), lty=1, cex=0.8)
+
 ```
 
 Obviously, the correlation between the two time series
-is poor (close to 0.5 in magnitude):
+is not very high since close to 0.5 in magnitude
+(Note that alternative examples with very low levels
+of correlations will also be considered in vignette
+`VII_Retro-modelling`):
 
 ```{r, eval = TRUE, fig.align='center'}
-      # correlation between Rössler-x and Rössler-y
-      cor(data[,1], data[,2])
+# correlation between Rössler-x and Rössler-y
+cor(data[,1], data[,2])
 ```
 
 Though, their dynamics are linked in a causal way
-since dynamically coupled as defined (and obtained
-from) the following fully deterministic system:
+since dynamically coupled as expressed by the original
+(fully deterministic) system:
 
 $dx/dt = - y - z$
 
 $dy/dt = x + ay$
 
-$dz/dt = b + z(x - c)$
+$dz/dt = b + z(x - c)$.
 
 Because $x$ and $y$ are coupled to the third variable $z$
 (assumed not to be observed in the present example),
 and because of the presence of a nonlinear term
 ($xz$ in the last equation), the relation between
 $x$ and $y$ can only be poorly detected using
-a correlation technique.
+a simple statistical technique such as the correlation.
 This difficulty directly results from the complex
 coevolution between these two variables as
 illustrated by the following scatter plot (x,y):
 
-```{r, eval = TRUE, fig.align='center'}
-      plot(data[,1], data[,2],
-           type='p', cex = 0.01, col = 'blue',
-           xlab = 'x', ylab = 'y', main = 'Scatter plot (x,y)')
+```{r, eval = TRUE, fig.align='center', fig.width=4, fig.height=4}
+plot(data[,1], data[,2],
+     type='p', cex = 0.2, col = 'blue',
+     xlab = 'x', ylab = 'y', main = 'Scatter plot (x,y)')
 ```
 
 In its principle, the global modelling technique
@@ -285,8 +344,11 @@ couplings.
 
 As the Rössler-1976 system is three-dimensional,
 a three-dimensional system can be expected,
-that is, such as `sum(nS) = 3`.
-Two formulations may thus be expected, either:
+that is, such as `sum(nS) = 3` (in practice, this
+dimension is generally unknown and a trial dimension
+can be used).
+Two formulations may thus be expected,
+either based on variables ($X_1$, $X_2$, $Y_1$):
 
 $dX_1/dt = X_2$
 
@@ -297,9 +359,9 @@ $dY_1/dt = P_Y(X_1, X_2, Y_1)$,
 which general structure will be defined
 by `nS = c(2,1)` (two equations of canonical
 form will be generated from the observed 
-variable $x$, a single one from $y$);
+time series $x(t)$, a single one from $y(t)$);
 
-or
+or based on variables ($X_1$, $Y_1$, $Y_2$):
 
 $dX_1/dt = P_X(X_1, Y_1, Y_2)$
 
@@ -308,269 +370,349 @@ $dY_1/dt = Y_2$
 $dY_2/dt = P_Y(X_1, Y_1, Y_2)$
 
 which general structure will be defined
-by `nS = c(1,2)` (one equation generated from $x$,
-two ones of canonical form from $y$).
+by `nS = c(1,2)` (one equation generated from $x(t)$,
+two ones of canonical form from $y(t)$).
 
-The former formulation is considered
-in the present illustration.
-In some cases, the model structure can be
-partly known.
-It is then possible to constrain the model
-formulation in more details by allowing some
-terms of the formulation and forbidding others.
-This structure can be defined as an input of
-the `GPoMo` function through the optional
+For a tutorial purpose, we will assume here
+that some *a priori* information is available
+about the model sructure telling us that
+the former formulation based on variables
+$X_1$, $X_2$ and $Y_1$ is more suited
+and that specific polynomial terms should
+be excluded (e.g. $Y_1^2$ and $X_2Y_1$
+should be excluded from polynomial $P_X$,
+and only the terms $Y_1$, $X_1$ and $X_1Y_1$
+should be accepted in polynomial $P_Y$).
+It is then possible to provide a template
+for the model formulation allowing some
+terms and forbidding others.
+This template structure can be provided as an
+input of the `gPoMo` function through the optional
 parameter `EqS`.
 In the present case, the following structure
 will be used as a template:
 
 ```{r, eval = TRUE}
-    # model template:
-    EqS <- matrix(1, ncol = 3, nrow = 10)
-    EqS[,1] <- c(0,0,0,1,0,0,0,0,0,0)
-    EqS[,2] <- c(1,1,0,1,0,1,1,1,1,1)
-    EqS[,3] <- c(0,1,0,0,0,0,1,1,0,0)
-    visuEq(3, 2, EqS, substit = c('X','Y','Z'))
+# model template:
+EqS <- matrix(1, ncol = 3, nrow = 10)
+EqS[,1] <- c(0,0,0,1,0,0,0,0,0,0)
+EqS[,2] <- c(1,1,0,1,0,1,1,1,1,1)
+EqS[,3] <- c(0,1,0,0,0,0,1,1,0,0)
+visuEq(3, 2, EqS, substit = c('X1','X2','Y1'))
 ```
 
-Each term of this template may be used (or not) in
-the global model. Other terms will not.
+Each term of this template can be used by the global model
+if set to 1 and cannot if set to 0.
+In other words, terms that are not included in this template
+cannot be added, but terms that are included may be removed.
 
 The search for a Generalized Global Model will be launched
 as follows:
 
-```{r, eval = TRUE}
-    # generalized Polynomial modelling
-    out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), EqS = EqS,
-                  show = 0, verbose = FALSE,
-                  IstepMin = 10, IstepMax = 2000, nPmi = 9, nPmax = 11)
+```{r, eval = FALSE}
+# generalized Polynomial modelling
+out3 <- gPoMo(data, tin = tin, dMax = 2, nS=c(2,1), EqS = EqS,
+              show = 0, verbose = FALSE,
+              IstepMin = 10, IstepMax = 2000, nPmin = 9, nPmax = 11)
 ```
 
 The simplest obtained model able to reproduce the observed
-dynamics is found to be model #2:
+dynamics is found to be the model #2:
 
-```{r, eval = TRUE, fig.align='center'}
-      # obtained model #2
-      plot(out3$stockoutreg$model2[,1], out3$stockoutreg$model2[,2],
-           type='l', col = 'red',
-           xlab = 'y(t)', ylab = 'dy(t)/dt', main = 'Phase portrait')
-      # original phase portrait
-      lines(out3$filtdata[,1], out3$filtdata[,2])
+```{r, eval = FALSE, fig.align='center', fig.width=4, fig.height=4}
+# obtained model #2
+plot(out3$stockoutreg$model2[,1], out3$stockoutreg$model2[,2],
+     type='l', col = 'red',
+     xlab = 'X1', ylab = 'X2', main = 'Phase portrait')
+# original phase portrait
+lines(out3$filtdata[,1], out3$filtdata[,2])
+legend(-3,-5,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
+
 ```
+```{r, echo = FALSE, eval = TRUE, fig.align='center', fig.width=4, fig.height=4}
+# obtained model #2
+plot(dbl(data_vignetteIII$out3_stockoutreg_m2[,1]), dbl(data_vignetteIII$out3_stockoutreg_m2[,2]),
+     type='l', col = 'red',
+     xlab = 'y(t)', ylab = 'dy(t)/dt', main = 'Phase portrait')
+# original phase portrait
+lines(dbl(data_vignetteIII$out3_filtdata[,1]), dbl(data_vignetteIII$out3_filtdata[,2]))
+legend(-3,-5,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
 
-The equations of the obtained model are the following
-
-```{r, eval = TRUE}
-    visuEq(3, 2, out3$models$model2, approx = 4)
 ```
+The equations of the obtained model are the following :
 
-Note that a practical application of the generalized
+```{r, eval = FALSE}
+visuEq(3, 2, out3$models$model2, approx = 4, substit = c('X1','X2','Y1'))
+```
+```{r, eval = TRUE, echo = FALSE}
+visuEq(3, 2, data_vignetteIII$out3_m2, approx = 4, substit = c('X1','X2','Y1'))
+```
+When no information is available about the polynomial
+structure, the model search can be launched without using
+the option `EqS`. In this situation, all the terms
+are considered as possible terms (all the terms are
+set to 1 in `EqS`).
+When there is no reason to choose one formulation
+rather than the other,
+then all the formulations may be tested one by one.
+In the present case, models can actually be obtained with both
+sets of variables ($X_1$,$Y_1$,$Y_2$) and ($X_1$,$X_2$,$Y_1$)).
+
+A practical application of the generalized
 global modelling technique 
-could be done from observational data under real world conditions
-for the modelling of the West-Africa epidemic
+could be performed from observational data under real world
+conditions for the modelling of the West-Africa epidemic
 of Ebola Virus Desease^[S. Mangiarotti, M. Peyre & M. Huc, 2016.
 A chaotic model for the epidemic of Ebola virus disease in West
-Africa (2013–2016). Chaos, 26, 113112.].
+Africa (2013–2016). *Chaos*, **26**, 113112.].
 
 
 ## Blind separation and modelling of two independant sets of equations
 
-Finally, since able in its principle to detect nonlinear couplings,
-the global modelling technique may also be used to detect separated
-sets of equations.
+Finally, since the approach enables -- in its principle -- 
+to detect nonlinear couplings, it may also be used to detect
+separated sets of equations.
 Two separated systems are considered here:
 the Rössler-1976 system already presented upper
 and the Sprott-K system^[J.C. Sprott, 1994. Some simple chaotic
-flows. Physical Review E, 50(2), 647-650].
+flows. *Physical Review E*, **50**(2), 647-650].
 
 ```{r, eval = TRUE}
-    # load data
-    data(sprottK)
-    data(rossler)
-    # multiple (six) time series
-    data <- cbind(rossler,sprottK)[1:400,]
+# load data
+data("TSallMod_nVar3_dMax2")
+# multiple (six) time series
+tin <- TSallMod_nVar3_dMax2$SprK$reconstr[1:400,1]
+TSRo76 <- TSallMod_nVar3_dMax2$R76$reconstr[,2:4]
+TSSprK <- TSallMod_nVar3_dMax2$SprK$reconstr[,2:4]
+data <- cbind(TSRo76,TSSprK)[1:400,]
 ```
 
-Six time series are thus considered in the present
-illustration:
+Six time series are thus considered in this
+illustration, three for each system:
 ```{r, eval = TRUE, fig.align='center'}
-      tin = (0:(dim(data)[1] - 1)) * 1/20
-      # For the Rössler-1976 system
-      # x(t)
-      plot(tin, data[,1], ylim = c(-6.5,8.5),
-           type='l', col = 'red',
-           xlab = 't', ylab = 'x(t)', main = 'Original time series')
-      # y(t)
-      lines(tin, data[,2], type = 'l', col = 'brown')
-      # z(t)
-      lines(tin, data[,3], type = 'l', col = 'orange')
-      # For the Sprott-K system
-      # u(t)
-      lines(tin, data[,4], type = 'l', col = 'green')
-      # v(t)
-      lines(tin, data[,5], type = 'l', col = 'darkgreen')
-      # w(t)
-      lines(tin, data[,6], type = 'l', col = 'lightgreen')
+# For the Rössler-1976 system
+# x(t)
+plot(tin, data[,1], ylim = c(-6.5,8.5), type='l', col = 'red',
+     xlab = 't', ylab = '', main = 'Original time series')
+# y(t)
+lines(tin, data[,2], type = 'l', col = 'brown')
+# z(t)
+lines(tin, data[,3], type = 'l', col = 'orange')
+# For the Sprott-K system
+# u(t)
+lines(tin, data[,4], type = 'l', col = 'green')
+# v(t)
+lines(tin, data[,5], type = 'l', col = 'darkgreen')
+# w(t)
+lines(tin, data[,6], type = 'l', col = 'lightgreen')
+legend(3, 8,title = 'Rössler', c("x(t)", "y(t)", "z(t)"),
+       col=c('red', 'brown', 'orange'), lty=1, cex=0.8)
+legend(17, 8,title='Sprott-K', c("u(t)", "v(t)", "w(t)"),
+       col=c('green', 'darkgreen', 'lightgreen'), lty=1, cex=0.8)
+
 ```
 
 Since one equation is expected from each variable,
 vector `nS` is defined as `nS = c(1,1,1,1,1,1)`.
-To speed up the computation, Runge-Kutta numerical
-integration is chosen^[package `deSolve` is used
-for this purpose.].
+To speed up the computation, the fourth order Runge-Kutta
+numerical integration `method = 'rk4'` is
+preferred^[package `deSolve` is used for this purpose.].
 
-```{r, eval = TRUE}
-    # generalized Polynomial modelling
-    out4 <- gPoMo(data, dtFixe = 1/20, dMax = 2, nS = c(1,1,1,1,1,1),
-                  show = 0, method = 'rk4',
-                  IstepMin = 2, IstepMax = 3,
-                  nPmin = 13, nPmax = 13)
+```{r, eval = FALSE}
+# generalized Polynomial modelling
+out4 <- gPoMo(data, dtFixe = 1/20, dMax = 2, nS = c(1,1,1,1,1,1),
+              show = 0, method = 'rk4',
+              IstepMin = 2, IstepMax = 3,
+              nPmin = 13, nPmax = 13)
 ```
 
 Due to the huge number of models to be tested,
 numerical integration is sketched here on
 a quite short duration and the model search
-is focused on models of 13-parameter size.
-A larger range of model size and a longer
-numerical integration should be chosen to
-illustrate the ability of the technique
+is directly focused on models of 13-parameter size.
+A larger range of model sizes and a longer
+numerical integration can be applied to
+check the ability of the technique
 to retrieve the original models.
-This can easily be done, except that the
-run time will be much longer.
+This can easily be done, except that a
+much longer running time will be required.
 
 However, to distinguish between integrable
 and non integrable models (in a numerical
-sense), it is thus necessary to consider
-the numerical integration of long lengths.
-Considering longer integration durations
+sense), it is necessary to consider
+the numerical integration of large lengths.
+With longer integration durations
 (e.g. from `IstepMin = 10` to `IstepMax = 10000`),
 many of the models will be rejected or lead
 to trivial solutions (fixed points, periodic
 cycles)
 
 In the present case, only one obtained set of equations
-corresponding to model #347
-is found able to reproduce the phase portraits
-of the two original systems (Rössler-1976 and Sprott-K):
+(model #347) able to reproduce the original
+phase portraits of the two original systems
+(Rössler-1976 and Sprott-K) is found:
 
-```{r, eval = TRUE, fig.show='hold'}
-      KL <- out4$models$model347
-      v0 <- as.numeric(head(data,1))
-      outNumi <- numicano(nVar = 6, dMax = 2, Istep=5000, onestep=1/20, KL=KL, v0=v0)
-      # obtained model #347
-      plot(outNumi$reconstr[,2], outNumi$reconstr[,3],
-           type='l', col = 'red',
-           xlab = 'x(t)', ylab = 'y(t)', main = 'Phase portrait')
-      # original phase portrait
-      lines(out4$filtdata[,1], out4$filtdata[,2])
-      # original phase portrait
-      plot(outNumi$reconstr[,5], outNumi$reconstr[,6],
-           type='l', col = 'green',
-           xlab = 'u(t)', ylab = 'v(t)', main = 'Phase portrait')
-      # original phase portrait
-      lines(out4$filtdata[,4], out4$filtdata[,5])
+```{r, eval = FALSE, fig.show='hold', fig.width=4, fig.height=4}
+KL <- out4$models$model347
+v0 <- as.numeric(head(data,1))
+outNumi <- numicano(nVar = 6, dMax = 2, Istep=5000, onestep=1/20, KL=KL, v0=v0)
+# obtained model #347
+plot(outNumi$reconstr[,2], outNumi$reconstr[,3],
+     type='l', col = 'red',
+     xlab = 'x(t)', ylab = 'y(t)', main = 'Phase portrait')
+# original phase portrait
+lines(out4$filtdata[,1], out4$filtdata[,2])
+legend(4,2,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
+
+# original phase portrait
+plot(outNumi$reconstr[,5], outNumi$reconstr[,6],
+     type='l', col = 'green',
+     xlab = 'u(t)', ylab = 'v(t)', main = 'Phase portrait')
+# original phase portrait
+lines(out4$filtdata[,4], out4$filtdata[,5])
+legend(-3,1,c("original", "model"), col=c('black', 'green'), lty=1, cex=0.5)
+
 ```
+```{r, eval = TRUE, echo = FALSE, fig.show='hold', fig.width=4, fig.height=4}
+KL <- data_vignetteIII$out4_m347
+v0 <- as.numeric(head(data,1))
+outNumi <- numicano(nVar = 6, dMax = 2, Istep=5000, onestep=1/20, KL=KL, v0=v0)
+# obtained model #347
+plot(outNumi$reconstr[,2], outNumi$reconstr[,3],
+     type='l', col = 'red',
+     xlab = 'x(t)', ylab = 'y(t)', main = 'Phase portrait')
+# original phase portrait
+lines(dbl(data_vignetteIII$out4_filtdata[,1]), dbl(data_vignetteIII$out4_filtdata[,2]))
+legend(4,2,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
 
+# original phase portrait
+plot(outNumi$reconstr[,5], outNumi$reconstr[,6],
+     type='l', col = 'green',
+     xlab = 'u(t)', ylab = 'v(t)', main = 'Phase portrait')
+# original phase portrait
+lines(dbl(data_vignetteIII$out4_filtdata[,4]), dbl(data_vignetteIII$out4_filtdata[,5]))
+legend(-3,1,c("original", "model"), col=c('black', 'green'), lty=1, cex=0.5)
+
+```
 The estimated model reads
 
-```{r, eval = TRUE}
-    visuEq(6, 2, out4$models$model347, approx = 2, substit = 1)
+```{r, eval = FALSE}
+visuEq(6, 2, out4$models$model347, approx = 2, 
+       substit = c("x", "y", "z", "u", "v", "w"))
+```
+```{r, eval = TRUE, echo = FALSE}
+visuEq(6, 2, data_vignetteIII$out4_m347, approx = 2, 
+       substit = c("x", "y", "z", "u", "v", "w"))
 ```
 
-This global modelling permits to distinguish two
-independant sets of equations: one for the Rössler-1976
-system, the other one for the Sprott-K system.
-Moreover, the obtained equations are very close
-to the original equations from which time series
-were derived.
+The global modelling technique enables to distinguish
+two independant sets of equations: one for the Rössler-1976
+system (equations one to three), the other one for
+the Sprott-K system  (equations four to six).
+Moreover, the obtained equations are identical in their
+structure and very close in their parameterization
+to the original equations from which the observed
+time series were derived.
 This latter point is interesting since it shows
-that - in the present case at least - not only
+that -- in the present case at least -- not only
 the couplings, but also each of the nonlinear terms
 of the equations can be retrieved.
-The approach may thus be used as an retro-modelling
-technique in order to interpret the the model terms.
+The approach may thus be used as a retro-modelling
+technique in order to interpret the model terms.
+This problem will be investigated in more details
+in vignette  `VII_Retromodelling`.
 
 ## Time series with gaps and associate modelling
 
 When measurements are gathered under real environmental
-conditions, it can happend that the time series have gaps,
-or that temporary perturbations may have to be removed,
-or that equivalent records may be the result of the same
-dynamical behavior, but were performed at different
-locations (concurently or not).
-The `GPoM` can be used to model such types of data
-set^[S. Mangiarotti, F. Le Jean, M. Huc, C. Letellier,
+conditions, the time series may have gaps,
+or may be contaminated by temporary perturbations
+which should be removed.
+In other cases, equivalent records of the same dynamical behavior
+may have been performed at different locations (concurently
+or not) and it may be useful to considered these time
+series simultaneously in the modelling process.
+The `GPoM` package can be applied to such types of data
+sets^[S. Mangiarotti, F. Le Jean, M. Huc, C. Letellier,
 2016. Global modeling of aggregated and associated chaotic
-dynamics. Chaos, Solitons & Fractals 83, 82-96].
+dynamics. *Chaos, Solitons & Fractals*, **83**, 82-96].
 
-An example of this type of situation is given in the present
+An example of this kind of situation is given in the present
 section. The Rössler system is used again in this example:
 
-```{r, eval = TRUE}
-    # load data
-    data("Ross76")
-    # time vector
-    tin <- Ross76[1:500,1]
-    # single time series
-    series <- Ross76[1:500,3]
-    # plot
-    plot(tin, series, type = 'l', col = 'gray')
+```{r, eval = TRUE, fig.align='center'}
+# load data
+data("Ross76")
+# time vector
+tin <- Ross76[1:500,1]
+# single time series
+series <- Ross76[1:500,3]
+# plot
+plot(tin, series, type = 'l', col = 'gray', xlab = 'time', ylab = 'Observational data')
 ```
 
 To illustrate our purpose, some noise is added to the original
-time series and a weight function is defined to distinguish
-on what part of the signal the anaysis should focus.
-This weighing function is defined equal to 1 when free of noise,
-equal to 0 where noise-contaminated.
+time series and a weighting function is defined to indicate
+on what part of the signal the analysis should focus.
+This function is equal to 1 when the time series is free of noise,
+and equal to 0 when it is noise-contaminated.
 
 
-```{r, eval = TRUE}
-    # some noise is added
-    series[1:100] <- series[1:100] + 0.1 * runif(1:100, min = -1, max = 1)
-    series[301:320] <- series[301:320] + 0.5 * runif(1:20, min = -1, max = 1)
-    plot(tin, series, type = 'l', col = 'black')
-    #
-    # weighting function
-    W <- tin * 0 + 1
-    W[1:100] <- 0  # the first fourty values will not be considered
-    W[301:320] <- 0  # twenty other values will not be considered either
-    lines(tin, W, type = 'l', col = 'brown')
+```{r, eval = TRUE, fig.align='center'}
+# some noise is added
+series[1:100] <- series[1:100] + 0.1 * runif(1:100, min = -1, max = 1)
+series[301:320] <- series[301:320] + 0.5 * runif(1:20, min = -1, max = 1)
+plot(tin, series, ylab='', type = 'l', col = 'black')
+#
+# weighting function
+W <- tin * 0 + 1
+W[1:100] <- 0  # the first fourty values will be discarded
+W[301:320] <- 0  # twenty other values will be discarded too
+lines(tin, W, type = 'l', col = 'brown')
+legend(0, -2,c("observed data", "weighting function"),
+       col=c('black', 'brown'), lty=1, cex=0.8)
+
 ```
 
 The global modeling is then applied:
 
 ```{r, eval = TRUE}
-    reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
+reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
 ```
 
-The following equations are retrieved:
+The following equations are retrieved (the option `weight`
+indicates when the observations provides in `series` should
+be considered in the analysis, or not):
 
 ```{r, eval = TRUE}
-    visuEq(3, 2, reg$K, approx = 4)
+visuEq(3, 2, reg$K, approx = 2)
 ```
 
-This set of equations can thus be integrated numerically.
-Integration will be started from the first
+This set of equations can then be integrated numerically.
+Integration will be launched from the first
 state for which weight is equal to 1.
 
 ```{r, eval = TRUE}
-    # first weight which value not equal to zero:
-    i1 = which(reg$finalWeight == 1)[1]
-    v0 <-  reg$init[i1,1:3]
-    reconstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250, PolyTerms=reg$K,
-                          v0=v0, method="rk4")
+# first weight which value not equal to zero:
+i1 = which(reg$finalWeight == 1)[1]
+v0 <-  reg$init[i1,1:3]
+reconstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250, PolyTerms=reg$K,
+                     v0=v0, method="rk4")
 ```
 
 The Rössler model is correctly retrieved:
 
-```{r, eval = TRUE}
-    plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l', lwd = 3,
-         main='phase portrait', xlab='time t', ylab = 'x(t)', col='orange')
-    # original data:
-    lines(reg$init[,1], reg$init[,2], type='l',
-          main='phase portrait', xlab='x', ylab = 'dx/dt', col='black')
-    # initial condition
-    lines(v0[1], v0[2], type = 'p', col = 'red')
+```{r, eval = TRUE, fig.align='center', fig.width=4, fig.height=4}
+plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l', lwd = 3,
+     main='phase portrait', xlab='y', ylab = 'dy/dt', col='orange')
+# original data:
+lines(reg$init[,1], reg$init[,2], type='l',
+      main='phase portrait', col='black')
+# initial condition
+lines(v0[1], v0[2], type = 'p', col = 'red')
+legend(-2,1,c("original", "model"), col=c('black', 'orange'), lty=1, cex=0.5)
+legend(-2.1,-0.7,"initial conditions : ", cex = 0.5,  bty="n")
+
 ```
 
 ## Output visualization and global models validation
@@ -578,6 +720,6 @@ The Rössler model is correctly retrieved:
 The outputs of the `gPoMo` function are gathered in one
 single list.
 The next vignette `IV_VisualizeOutputs` aims to show
-how results are organized in this list.
+how the results are organized in this list.
 Examples of model validation are then presented in the
-last vignette `V_Predictability`.
+vignette `V_Predictability`.

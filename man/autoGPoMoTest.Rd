@@ -2,94 +2,98 @@
 % Please edit documentation in R/autoGPoMoTest.R
 \name{autoGPoMoTest}
 \alias{autoGPoMoTest}
-\title{autoGPoMoTest: Test models numerical integrability & classify the attractor
-reached at the convergence (from chosen initial conditions)}
+\title{Tests the numerical integrability of models and
+classify their dynamical regime}
 \usage{
 autoGPoMoTest(data, tin = NULL, dt = NULL, nVar = nVar, dMax = dMax,
   show = 1, verbose = 1, allKL = allKL, IstepMin = 10,
   IstepMax = 10000, tooFarThreshold = 4, LimCyclThreshold = 0,
-  fixedPtThreshold = 1e-08, method = "lsoda")
+  fixedPtThreshold = 1e-08, method = "rk4")
 }
 \arguments{
-\item{data}{Input Time series: Each column corresponds to one input variable.}
+\item{data}{Input Time series: Each column is one time series
+that corresponds to one variable.}
 
-\item{tin}{Input date vector which length should correspond to the variables of
-the input data (same number of lines).}
+\item{tin}{Input date vector which length should correspond to
+the input time series.}
 
-\item{dt}{The time sampling of the input series.}
+\item{dt}{Sampling time of the input time series.}
 
-\item{nVar}{The model dimension expected. This parameter will be
-deduced from the input data (\code{series}) if \code{series} is
-a matrix. If \code{series} is a vector, the expected dimension nVar
-should be provided.}
+\item{nVar}{Number of variables considered in the polynomial formulation.}
 
-\item{dMax}{Maximum degree of the polynomial functions allowed
-in the model (see \code{poLabs}).}
+\item{dMax}{Maximum degree of the polynomial formulation.}
 
-\item{show}{Indicates (2) or not (0-1) the algorithm progress}
+\item{show}{Provide (2) or not (0-1) visual output during
+the running process.}
 
-\item{verbose}{Gives information (if set to 1) about the algorithm progress
-and keeps silent if set to 0}
+\item{verbose}{Gives information (if set to 1) about the algorithm
+progress and keeps silent if set to 0.}
 
-\item{allKL}{A list of the all the models \code{$mToTest1},
+\item{allKL}{A list of all the models \code{$mToTest1},
 \code{$mToTest2}, etc. to be tested. Each model is provided
 as a matrix.}
 
-\item{IstepMin}{Minimum step of integration at the beginning
-of the analysis (by default IstepMin=10).}
+\item{IstepMin}{The minimum number of integration step to start
+of the analysis (by default \code{IstepMin = 10}).}
 
-\item{IstepMax}{Maximum step of integration before stopping the
-analysis, with the interface this value can be changed during
-the analysis}
+\item{IstepMax}{The maximum number of integration steps for
+stopping the analysis (by default \code{IstepMax = 10000}).}
 
-\item{tooFarThreshold}{Divergence threshold, maximum times number
-that the model can be greater than the data standard deviation,
-without being removed from the analysis}
+\item{tooFarThreshold}{Divergence threshold, maximum value
+of the model trajectory compared to the data standard
+deviation. By default a trjactory is too far if
+the distance to the center is larger than four times the variance
+of the input data.}
 
-\item{LimCyclThreshold}{Limit cycle threshold. Minimum neighbors
-distance between two integration steps, without being removed
-from the analysis}
+\item{LimCyclThreshold}{Threshold used to detect the limit cycle.}
 
-\item{fixedPtThreshold}{Limit cycle threshold. Minimum neighbors
-distance between two integration steps, without being removed
-from the analysis}
+\item{fixedPtThreshold}{Threshold used to detect fixed points.}
 
 \item{method}{The integration technique used for the numerical
-integration. Default is 'lsoda'. Others such as 'rk4' or 'ode45'
-may also be used. See package deSolve for details.}
+integration. By default, the fourth-order Runge-Kutta method
+(\code{method = 'rk4'}) is used. Other methods such as 'ode45'
+or 'lsoda' may also be chosen. See package \code{deSolve}
+for details.}
 }
 \value{
 A list containing:
 
-\code{$okMod}      A vector classifying the models: diverging models (0), periodic
-models of period-1 (-1), unclassified models (1).
+\code{$okMod}      A vector classifying the models: diverging models (0),
+periodic models of period-1 (-1), unclassified models (1).
 
 \code{$coeff}      A matrix with the coefficients of one selected model
 
 \code{$models}     A list of all the models to be tested \code{$mToTest1},
-\code{$mToTest2}, etc. and all selected models \code{$model1}, \code{$model2}, etc.
+\code{$mToTest2}, etc. and of all selected models \code{$model1}, \code{$model2}, etc.
 
 \code{$tout}       The time vector of the output time series (vector length
 corresponding to the longest numerical integration duration)
 
 \code{$stockoutreg} A list of matrices with the integrated trajectories
-(variable \code{X1} in column 1, \code{X2} in 2, etc.) of all the models \code{$model1}, \code{$model2}, etc.
+(variable \code{X1} in column 1, \code{X2} in 2, etc.) for all the models
+\code{$model1}, \code{$model2}, etc.
 }
 \description{
-Test the numerical integrability of models (of polynomial structure)
-possibly obtained with function autoGPoMoSearch, and classify these models as
-divergent, Fixed Points, Periodic or not classificable (potentially chaotic).
+Tests the numerical integrability of
+provided models (these may have been obtained with
+function \code{autoGPoMoSearch}),
+and classify these models as Divergent, Fixed Points,
+Periodic or not Unclassified (potentially chaotic).
 }
 \examples{
-#Examples
+#Example
+# Load data:
 data('RosYco')
 # Structure choice
 data('allToTest')
+# Test the models
 outGPT <- autoGPoMoTest(RosYco, nVar= 3, dMax = 2, dt = 1/125, show=1,
                         allKL = allToTest, IstepMax = 60)
 
 }
+\seealso{
+\code{\link{autoGPoMoSearch}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
+}
 \author{
 Sylvain Mangiarotti, Flavie Le Jean
 }
-

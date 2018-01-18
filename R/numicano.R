@@ -1,21 +1,22 @@
 #' @title Numerical Integration of models in ODE of polynomial form
 #'
 #' @description Function for the numerical integration
-#' of canonical Ordinary Differential Equations in polynomial form.
+#' of Ordinary Differential Equations of polynomial form.
 #'
 #' @inheritParams autoGPoMoSearch
-#' @param Istep Number of integration time steps
+#' @param Istep The number of integration time steps
 #' @param onestep Time step length
-#' @param KL Matricial formulation of the model to integrate numerically
+#' @param KL Matrix formulation of the model to integrate numerically
 #' @param PolyTerms Vectorial formulation of the model (only for models
 #' of canonical form)
-#' @param v0 Initial conditions (a vector which length should correspond
+#' @param v0 The initial conditions (a vector which length should correspond
 #' to the model dimension \code{nVar})
-#' @param method Integration method (See deSolve), by default \code{method = 'ode45'}.
+#' @param method The integration method (See package \code{deSolve}),
+#' by default \code{method = 'rk4'}.
 #'
 #' @return A list of two variables: \cr
-#' @return \code{$KL} the model in its matrix formulation \cr
-#' @return \code{$reconstr} the integrated trajectory (first column is the time,
+#' @return \code{$KL} The model in its matrix formulation \cr
+#' @return \code{$reconstr} The integrated trajectory (first column is the time,
 #' next columns are the model variables)
 #'
 #' @author Sylvain Mangiarotti
@@ -81,9 +82,11 @@
 #' visuEq(nVar, dMax, reconstr$KL)
 #'}
 #'
+#' @seealso \code{\link{derivODE2}}, \code{\link{numinoisy}}
+#'
 #' @export
 numicano = function(nVar, dMax, Istep=1000, onestep=1/125, KL=NULL, PolyTerms=NULL,
-                    v0=NULL, method="ode45") {
+                    v0=NULL, method="rk4") {
 
   pMax <- d2pMax(nVar, dMax)
   # check integer

@@ -2,38 +2,35 @@
 % Please edit documentation in R/autoGPoMoSearch.R
 \name{autoGPoMoSearch}
 \alias{autoGPoMoSearch}
-\title{autoGPoMoSearch : automatic search of polynomial Equations}
+\title{Automatic search of polynomial Equations}
 \usage{
 autoGPoMoSearch(data, dt, nVar = nVar, dMax = dMax, weight = NULL,
   show = 0, underSamp = NULL, filterReg = NULL)
 }
 \arguments{
-\item{data}{Input Time series: Each column corresponds to one input variable.}
+\item{data}{Input Time series: Each column is one time series
+that corresponds to one variable.}
 
 \item{dt}{Time sampling of the input series.}
 
-\item{nVar}{The model dimension expected. This parameter will be
-deduced from the input data (\code{series}) if \code{series} is
-a matrix. If \code{series} is a vector, the expected dimension nVar
-should be provided.}
+\item{nVar}{Number of variables considered in the polynomial formulation.}
 
-\item{dMax}{Maximum degree of the polynomial functions allowed
-in the model (see \code{poLabs}).}
+\item{dMax}{Maximum degree of the polynomial formulation.}
 
-\item{weight}{Weighting function of input data series. By default uniform
-weight is applied. This weighting function can also be used to apply
-the analysis piecewise using zeros and ones.}
+\item{weight}{A vector providing the binary weighting function
+of the input data series (0 or 1). By default, all the values
+are set to 1.}
 
-\item{show}{Indicates (2) or not (0-1) the algorithm progress}
+\item{show}{Provide (2) or not (0-1) visual output during
+the running process.}
 
-\item{underSamp}{Points used for undersampling the data. For undersamp = 1
-the complete time series is used. For undersamp = 2, only one data out of
-two is kept, etc.}
+\item{underSamp}{Number of points used for undersampling the data.
+For \code{undersamp = 1} the complete time series is used.
+For \code{undersamp = 2}, only one data out of two is kept, etc.}
 
-\item{filterReg}{A vector that specifies the a priori structure of
-the the function of the output model in canonical form.
-The organisation of the filter follows the convention defined in
-\code{poLabs} and can be obtained using \code{poLabs(nVar,dMax)}.
+\item{filterReg}{A vector that specifies the template for
+the equation structure (for one single equation).
+The convention defined by \code{poLabs} is used.
 Value is 1 if the regressor is available, 0 if it is not.}
 }
 \value{
@@ -42,19 +39,23 @@ A list of two matrices:
 \code{$filtMemo} describes the selected terms
 (1 if the term is used, 0 if not)
 
-\code{$KMemo} provides the correspoing coefficients
+\code{$KMemo} provides the corresponding coefficients
 }
 \description{
-The algorithm aims to get an ensemble of equations
-to be tested from a given template of allowed terms.
-The maximum size of the equation depends on the model dimension nVar,
-and on the maximum polynomial degree dMax.
-The algorithm remove polynomial terms one by one, considering
-that a term is poorly useful when removing it leads to the
-smaller fitting degradation.
+This algorithm aims to get an ensemble of possible
+models which integrability will be tested later with function
+\code{autoGPoMoTest}. By default, all the terms are considered
+available (Some of the terms can be excluded intentionally
+using the option \code{filterReg}).
+The maximum size of the equation depends on the model dimension
+\code{nVar}, and on the maximum polynomial degree \code{dMax}.
+The algorithm removes polynomial terms one by one using a
+leave-one-out method.
 }
 \examples{
+# Load data
 data('RosYco')
+# Search for potential models
 filt = autoGPoMoSearch(RosYco[,2], nVar = 3, dMax = 2,
                        dt = 1/125, show = 1)
 # As an example, the equations of the fourth line has the following terms:
@@ -63,7 +64,10 @@ poLabs(nVar = 3, dMax = 2)[filt$filtMemo[5,] != 0]
 cbind(filt$KMemo[5,], poLabs(nVar = 3, dMax = 2))[filt$filtMemo[5,] != 0,]
 
 }
+\seealso{
+\code{\link{autoGPoMoTest}}, \code{\link{gPoMo}},
+         \code{\link{findAllSets}}, \code{\link{poLabs}}
+}
 \author{
 Sylvain Mangiarotti, Flavie Le Jean
 }
-

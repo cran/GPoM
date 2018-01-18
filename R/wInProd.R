@@ -1,10 +1,10 @@
-#' @title wInProd : weighted inner product
+#' @title Weighted inner product
 #'
-#' @description Computes weighted inner product.
+#' @description Computes weighted inner products.
 #'
 #' @param A1 The input matrix 1.
 #' @param A2 The input matrix 2.
-#' @param weight : The weighting vector.
+#' @param weight The weighting vector.
 #'
 #' @return \code{inP} The weighted inner product.
 #'

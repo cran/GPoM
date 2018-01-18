@@ -7,25 +7,27 @@
 #'
 #' @param serie A single time series provided as a single vector.
 #' @param nDeriv The number of derivatives to be computed from
-#' the input \code{series}. The resulting number of time series
-#' obtained as an output will thus be nVar = nDeriv + 1.
-#' @param tstep Time sampling of the input \code{series}. Used
+#' the input time series. The resulting number of
+#' time series obtained in output will be \code{nDeriv + 1}.
+#' @param tstep Sampling time of the input time series. Used
 #' only if time vector \code{tin} is not provided.
-#' @param winL Number (odd) of points of the local window used
-#' for computing the derivatives along the input time series
-#' (\code{series}). The Savitzky-Golay filter is used for this
-#' purpose [1,2].
+#' @param winL Number (exclusively odd number) of points of
+#' the local window used for computing the derivatives along
+#' the input time series. The Savitzky-Golay filter is used for
+#' this purpose [1,2].
 #'
 #' @return A list containing:
-#' $serie The original time serie
-#' $tin The time vector corresponding to the original time series
-#' $tstep The time step (assumed to be invariant)
-#' $tout The time vector of the output series
-#' ^seriesDeriv A matrix containing the original variable (as smoothed
-#' by the filtering process) and its \code{nDeriv} + 1 first
-#' derivatives (note that winL values of the original time series
-#' will be lost both (winL - 1)/2 at the begining and at the end
-#' of the time series due to boundary effect).
+#' @return $serie The original time serie
+#' @return $tin The time vector containing the dates corresponding
+#' to the original time series
+#' @return $tstep The time step (assumed to be regular)
+#' @return $tout The time vector of the output series
+#' @return seriesDeriv A matrix containing the original time series
+#' (smoothed by the filtering process) in the first column
+#' and its \code{nDeriv + 1} successive derivatives in the next ones.
+#' Note that \code{winL} values of the original time series will be lost,
+#' that is \code{(winL - 1)/2} at the begining and \code{(winL - 1)/2}
+#' at the end of the time series due to a computation boundary effect).
 #'
 #' @references
 #' [1] Savitzky, A.; Golay, M.J.E.,
@@ -37,17 +39,18 @@
 #'
 #' @author Sylvain Mangiarotti, Mireille Huc
 #'
-#' @seealso \code{\link{gloMoId}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
+#' @seealso \code{\link{gloMoId}}, \code{\link{gPoMo}}, \code{\link{poLabs}}, \code{\link{compDeriv}}
 #'
 #' @examples
 #' #############
 #' # Example 1 #
 #' #############
+#' # Generate a time series:
 #' tin <- seq(0, 5, by = 0.01)
 #' data <- 2 * sin(5*tin)
 #' dev.new()
 #' par(mfrow = c(3, 1))
-#' # numerical derivation
+#' # Compute its derivatives:
 #' drv <- drvSucc(tin = tin, nDeriv = 2, serie = data, winL = 5)
 #' #
 #' # plot original and filtered series
@@ -69,12 +72,12 @@
 #' #############
 #' # Example 2 #
 #' #############
-#' # load data
+#' # load data:
 #' data("Ross76")
 #' tin <- Ross76[,1]
 #' data <- Ross76[,2]
 #'
-#' # Apply derivatives
+#' # Compute the derivatives
 #' drvOut <- drvSucc(tin, data, nDeriv=4)
 #' dev.new()
 #' par(mfrow = c(3, 1))
@@ -91,7 +94,6 @@
 #' plot(drvOut$tout, drvOut$seriesDeriv[,3],
 #'      type='p', col='red', xlab = 'time', ylab = 'd2x(t)/dt2')
 #' lines(drvOut$tout, drvOut$seriesDeriv[,3], type='l', col='red')
-#'
 #'
 #' @export
 drvSucc <- function(tin = NULL, serie, nDeriv, weight = NULL, tstep = NULL, winL=9) {

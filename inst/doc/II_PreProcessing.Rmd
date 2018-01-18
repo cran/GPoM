@@ -1,14 +1,13 @@
 ---
-title: "GPoM : PreProcessing"
+title: "GPoM : II PreProcessing"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_vignette:
-    fig.caption: yes
   pdf_document:
     number_sections: no
+    latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{GPoM : II PreProcessing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -16,28 +15,29 @@ load package: "`r library(GPoM)`"
 
 ## Pre-processing for global modelling
 
-To apply the global modelling approach,
-a careful preprocessing may be necessary
-because time series derivatives are required
-during the modelling process.
-Derivatives will be computed automatically
-when using the `gPoMo` function.
-To avoid problems, a careful preprocessing
-should be applied beforehand to have more chance
-to obtain global models.
+To obtain Ordinary Differential Equations (ODEs)
+from time series requires the computation
+of its derivative(s).
+A careful preprocessing of the observed time series
+may thus be necessary before starting the modelling process.
+Although derivatives will be computed automatically
+when using the `gPoMo` function, some preprocessing
+may generally be necessary.
 This vignette aims to show simple examples
 of time series preprocessing for global modelling
 application.
-In particular, we show the usefulness to resample
-the data (in order to improve the quality of the
-derivatives) and some of the limitations that may
-be found, especially when considering derivatives
-of high degree.
+In practice, various types of preprocessing may be
+necessary that will depend on the quality of the data set
+(time sampling and time series length, level of noise,
+presence of gaps, etc.).
+In the present vignette, we will mainly focus on
+the problem of subsampled time series.
+We will illustrate the usefulness to resample
+the data (with the aim to improve the quality of the
+derivatives) and some of the limitations
+that may be found, especially when considering
+derivatives of higher degree.
 
-In practice, other types of preprocessing may be necessary
-depending on the quality of the data set (time sampling
-and time series length length, level of noise, presence
-of gaps, etc.).
 The required preprocessing may also depend on other factors
 such as: the dimension of underlying dynamics, the number of
 observed time series, the degree of observability, etc.
@@ -45,7 +45,7 @@ observed time series, the degree of observability, etc.
 
 ## Single time series
 
-When only one single time series is observed,
+When only a single time series is observed,
 a global model of canonical form may be expected:
 
 $dX_1/dt = X_2$
@@ -54,27 +54,33 @@ $dX_2/dt = X_3$
 
 $...$
 
-$dX_n/dt = F(X_1, X_2, ..., X_n)$.
+$dX_n/dt = F(X_1, X_2, ..., X_n)$,
 
 with $X_1$ the observed variable,
-$X_2$, $X_3$, etc. its successive derivatives.
+and $X_2$, $X_3$, etc. its successive derivatives.
 The GPoM package is based on polynomial formulations.
-For the present formulation, its aim is to obtain a
+For the canonical formulation, its aim is to obtain a
 polynomial approximation of the function $F$.
 An approximation of $F$ can be obtained using the `gPoMo`
 function (see vignette `III_Modelling`).
 In practice, the canonical form will require the
-computations of $n$ derivatives to have the following
-$n + 1$ time series:
+computations of $n$ derivatives in order to have
+the following $n + 1$ time series:
 $(X_1, X_2, ..., X_n, dX_n/dt)$.
 
-Chaotic systems are well adapted to illustrate the skills
+Chaotic systems are well adapted to illustrate the performances
 of the global modelling approach because they are not trivial
-study cases: they are nonlinear and their behavior is unpredictable
-at long term.
+study cases: they are nonlinear and their behavior is
+unpredictable at long term ^[S. Mangiarotti, Modélisation globale
+et caractérisation topologique de dynamiques environnementales:
+de l'analyse des enveloppes fluides et du couvert de surface
+de la Terre à la caractérisation topolodynamique du
+chaos, Habilitation to Direct Researches, Université de
+Toulouse 3, 2014.].
 The Rössler system introduced by Otto Rössler in 1976
 is used here^[O. Rössler, 1976. An Equation for Continuous Chaos,
-Physics Letters, 57A(5), p. 397-398.].
+*Physics Letters*, **57A**(5), p. 397-398.] to illustrate
+the performances of the tool.
 This system is defined as:
 
 $dx/dt = - y - z$
@@ -85,49 +91,51 @@ $dz/dt = b + z (x - c)$.
 
 One of the interests of this system is to have
 different degrees of observability depending
-on the variable considered.
+on the considered variable.
 This degree of observability results from the system
 nonlinearities.
 The question of observability is of first importance
-for global modelling since, depending on it,
-the model reconstruction may be easy, hard
-or completely impossible^[C. Letellier, L. A. Aguirre,
+for global modelling since
+the model reconstruction may be either easy, hard
+or even completely impossible depending on the degree
+of observability^[C. Letellier, L. A. Aguirre,
 & J. Maquet, 2005. Relation between observability and
 differential embeddings for nonlinear dynamics,
-Phys. Rev. E 71(6), 066213.].
+*Physical Review E*, **71**(6), 066213.].
 Time series of such equations can be easily generated
 with the GPoM package (see vignette `I_Generate`).
-A ready to use data set of the Rössler-1976 system is
-also provided in the package that can be directly loaded:
+A ready-to-use data set of the Rössler-1976 system that
+can be directly loaded is also provided in the package:
 
 ```{r, eval = TRUE, fig.align='center'}
-    # load data
-    data("Ross76")
-    # plot
-    tin <- Ross76[,1]
-    data <- Ross76[,2:4]
-    plot(tin, data[,1],
-         xlab = 't', ylab = 'x(t)', main = 'Original time series',
-         type='l', col = 'lightgray')
+# load data
+data("Ross76")
+# plot
+tin <- Ross76[,1]
+data <- Ross76[,2:4]
+plot(tin, data[,1], xlab = 't', ylab = 'x(t)', main = 'Original time series',
+     type='l', col = 'gray')
 ```
 
-The time series $x(t)$ here plotted shows an irregular
+The time series $x(t)$ plotted above shows an irregular
 behavior and will be used hereafter to illustrate
-the global modelling in a canonical form.
+the global modelling with a canonical formulation.
 To illustrate the problem of time sampling, the time
-series is undersampled as follows:
+series is subsampled as follows:
 
 ```{r, eval = TRUE, fig.align='center'}
-    plot(tin, data[,1],
-         xlab = 't', ylab = 'x(t)', main = 'Undersampled time series',
-         type='l', col = 'lightgray')
-    # subsampling:
-    Ross76us <- Ross76[seq(1,4000,by=50),]
-    # plot
-    tus <- Ross76us[,1]
-    datus <- Ross76us[,2:4]
-    lines(tus, datus[,1], type='p', col='red', cex = 0.6)
-    lines(tus, datus[,1], type='l', col='red')
+plot(tin, data[,1], xlab = 't', ylab = 'x(t)', 
+     main = 'Subsampled time series', type='l', col = 'gray')
+# subsampling:
+Ross76us <- Ross76[seq(1,4000,by=50),]
+# plot
+tus <- Ross76us[,1]
+datus <- Ross76us[,2:4]
+lines(tus, datus[,1], type='p', col='red', cex = 0.6)
+lines(tus, datus[,1], type='l', col='red')
+legend(0,6.5,c("original", "subsampled"), col=c('gray', 'red'),
+       lty=c(1,1), pch=c(NA,1), cex=0.6)
+
 ```
 
 The subsampling leads to loose some information.
@@ -137,104 +145,108 @@ A spline can be used to resample the signal at the original
 sampling rate.
 
 ```{r, eval = TRUE, fig.align='center'}
-    plot(tin, data[,1],
-         xlab = 't', ylab = 'x(t)', main = 'Resampled time series',
-         type='l', col = 'lightgray')
-    # subsampling:
-    Ross76us <- Ross76[seq(1,4000,by=50),]
-    # plot
-    tus <- Ross76us[,1]
-    datus <- Ross76us[,2:4]
-    lines(tus, datus[,1], type='p', col='red', cex = 0.6)
-    lines(tus, datus[,1], type='l', col='red')
-    #
-    xout <- seq(min(tus), max(tus), by = 0.01)
-    rspl <- spline(tus, y = datus[,1], method = "fmm", xout = xout)
-    # plot resampled
-    lines(rspl$x, rspl$y, type='l', col='green')
+plot(tin, data[,1], xlab = 't', ylab = 'x(t)', 
+     main = 'Resampled time series', type='l', col = 'lightgray')
+# subsampling:
+Ross76us <- Ross76[seq(1,4000,by=50),]
+# plot
+tus <- Ross76us[,1]
+datus <- Ross76us[,2:4]
+lines(tus, datus[,1], type='p', col='red', cex = 0.6)
+lines(tus, datus[,1], type='l', col='red')
+#
+xout <- seq(min(tus), max(tus), by = 0.01)
+rspl <- spline(tus, y = datus[,1], method = "fmm", xout = xout)
+# plot resampled
+lines(rspl$x, rspl$y, type='l', col='green')
+legend(0,6.5,c("original", "subsampled", "resampled"), col=c('lightgray', 'red', 'green'), lty=c(1,1,1), pch=c(NA,1, NA), cex=0.6)
 ```
 
 In the present case, the spline resampling appears
 quite efficient to retrieve the original signal.
-Note that alternative methods may be preferred depending on 
+Note that alternative methods may be preferred (depending on 
 the dynamical behavior considered, on the rate of subsampling,
 on the signal quality, etc.)
 
 The `drvSucc` function of the GPoM package aims to
-estimate the derivatives. It is based on the algorithm
-introduced by Savitzky and Golay in 1964^[A. Savitzky & M. J. Golay, 1964.
+estimate temporal derivatives from a time series.
+It is based on the algorithm introduced by Savitzky & Golay
+in 1964^[A. Savitzky & M. J. Golay, 1964.
 Smoothing and differentiation of data by simplified least squares
-procedures, Anal. Chem. 36(8), 1627–1639.].
-This function is applied to the three time series
+procedures, *Analytical Chemistry*, **36**(8), 1627-1639.].
+This function is here applied to the three time series $x(t)$
 presented upper:
 (1) the original Rössler time series,
-(2) its undersampling,
+(2) its subsampling,
 and (3) its resampling to the original sampling using splines.
 
 ```{r, eval = TRUE, fig.align='center'}
-    # from original signal
-    drv1 <- drvSucc(tin, data[,1], nDeriv=2)
-    # from undersampled signal
-    drv2 <- drvSucc(tus, datus[,1], nDeriv=2)
-    # from resampled signal
-    drv3 <- drvSucc(rspl$x, rspl$y, nDeriv=2)
+# from original signal
+drv1 <- drvSucc(tin, data[,1], nDeriv=2)
+# from subsampled signal
+drv2 <- drvSucc(tus, datus[,1], nDeriv=2)
+# from resampled signal
+drv3 <- drvSucc(rspl$x, rspl$y, nDeriv=2)
 ```
 
-The obtained time series for the first and second derivatives
+The obtained time series of the first and second derivatives
 are plotted hereafter.
 Obviously, much of the original signal (in black) is lost when
-computing the derivatives from the undersampled time series
+computing the derivatives from the subsampled time series
 (in red).
 Contrarily, much of the original signal is retrieved when
-computed from the resampled signal (in green), which clearly
-illustate the usefulness to resample the signal with
-appropriate algorithms before the computation of the
-derivatives.
+estimated from the resampled signal (in green), which clearly
+illustates the usefulness to resample the signal with
+appropriate algorithms before computing the derivatives.
 
-```{r, eval = TRUE, fig.show='hold'}
-    # plot resulting output as a function of time
-    # output variable (smoothed) and its derivatives
-#    plot(drv1$tout, drv1$seriesDeriv[,1], type='l', xlab = 'time', ylab = 'x(t)')
-#    lines(drv2$tout, drv2$seriesDeriv[,1], type='p', cex = 0.6, col = 'red')
-#    lines(drv3$tout, drv3$seriesDeriv[,1], type='l', col = 'green')
-    # first derivative
-    plot(drv1$tout, drv1$seriesDeriv[,2], type='l', xlab = 'time', ylab = 'dx(t)/dt')
-    lines(drv2$tout, drv2$seriesDeriv[,2], type='p', cex = 0.6, col = 'red')
-    lines(drv3$tout, drv3$seriesDeriv[,2], type='l', col = 'green')
-    # second derivative
-    plot(drv1$tout, drv1$seriesDeriv[,3], type='l', xlab = 'time', ylab = 'd²x(t)/dt²')
-    lines(drv2$tout, drv2$seriesDeriv[,3], type='p', cex = 0.6, col = 'red')
-    lines(drv3$tout, drv3$seriesDeriv[,3], type='l', col = 'green')
+```{r, eval = TRUE, fig.show='hold', fig.align='center'}
+# plot resulting output as a function of time
+# first derivative
+plot(drv1$tout, drv1$seriesDeriv[,2], type='l', xlab = 'time', 
+     ylab= expression(dx/dt))
+lines(drv2$tout, drv2$seriesDeriv[,2], type='p', cex = 0.6, col = 'red')
+lines(drv3$tout, drv3$seriesDeriv[,2], type='l', col = 'green')
+legend(0,-5,c("original", "subsampled", "resampled"), 
+       col=c('black', 'red', 'green'), lty=c(1,NA,1), pch=c(NA,1, NA), cex=0.6)
+# second derivative
+plot(drv1$tout, drv1$seriesDeriv[,3], type='l', xlab = 'time', 
+     ylab= expression(d^2*x/dt^2))
+lines(drv2$tout, drv2$seriesDeriv[,3], type='p', cex = 0.6, col = 'red')
+lines(drv3$tout, drv3$seriesDeriv[,3], type='l', col = 'green')
+legend(0,-10,c("original", "subsampled", "resampled"), 
+       col=c('black', 'red', 'green'), lty=c(1,NA,1), pch=c(NA,1, NA), cex=0.6)
 ```
 
 Phase portraits can also be compared.
-Two projections are shown here after:
-$(x, dx/dt)$ and $(x, d²x/dt²)$.
+Two projections are shown hereafter:
+$(x, dx/dt)$ and $(x, d^2x/dt^2)$.
 Obviously, quite much of the information of the original
 phase portraits (plotted in black) is lost when the phase
-portrait is reconstructed from the undersampled time series
+portrait is reconstructed from the subsampled time series
 (in red).
 Contrarily, the projection $(x, dx/dt)$ of the phase portrait
 is retrieved almost perfectly when reconstructed from the
 resampled time series (in green). The second phase portrait
-$(x, d²x/dt²)$ shows that some drawbacks were introduced
+$(x, d^2x/dt^2)$ shows that some drawbacks were introduced
 by the resampling, although this processing clearly
-improved the signal compared to the undersampled
+improved the signal compared to the subsampled
 reconstruction.
 
-```{r, eval = TRUE, fig.show='hold'}
-    # output variable (smoothed) and its derivatives
-     plot(drv1$seriesDeriv[,1], drv1$seriesDeriv[,2], type='l', xlab = 'x(t)', ylab = 'dx(t)/dt')
-    lines(drv2$seriesDeriv[,1], drv2$seriesDeriv[,2], type='l', col = 'red')
-    lines(drv3$seriesDeriv[,1], drv3$seriesDeriv[,2], type='l', col = 'green')
-    # first derivative
-#     plot(drv1$seriesDeriv[,1], drv1$seriesDeriv[,3], type='l', xlab = 'x(t)', ylab = 'd²x(t)/dt²')
-#    lines(drv2$seriesDeriv[,1], drv2$seriesDeriv[,3], type='l', col = 'red')
-#    lines(drv3$seriesDeriv[,1], drv3$seriesDeriv[,3], type='l', col = 'green')
-    # second derivative
-     plot(drv1$seriesDeriv[,2], drv1$seriesDeriv[,3], type='l', xlab = 'dx(t)/dt', ylab = 'd²x(t)/dt²')
-    lines(drv2$seriesDeriv[,2], drv2$seriesDeriv[,3], type='l', col = 'red')
-    lines(drv3$seriesDeriv[,2], drv3$seriesDeriv[,3], type='l', col = 'green')
+```{r, eval = TRUE, fig.show='hold', fig.align='center', fig.width=4, fig.height=4}
+# output variable (smoothed) and its derivatives
+plot(drv1$seriesDeriv[,1], drv1$seriesDeriv[,2], type='l', xlab = 'x(t)', 
+     ylab= expression(dx/dt))
+lines(drv2$seriesDeriv[,1], drv2$seriesDeriv[,2], type='l', col = 'red')
+lines(drv3$seriesDeriv[,1], drv3$seriesDeriv[,2], type='l', col = 'green')
+legend(-3,-5,c("original", "subsampled", "resampled"), 
+       col=c('black', 'red', 'green'), lty=1, cex=0.5)
+# second derivative
+plot(drv1$seriesDeriv[,2], drv1$seriesDeriv[,3], type='l', xlab = 'dx(t)/dt', 
+     ylab= expression(d^2*x/dt^2))
+lines(drv2$seriesDeriv[,2], drv2$seriesDeriv[,3], type='l', col = 'red')
+lines(drv3$seriesDeriv[,2], drv3$seriesDeriv[,3], type='l', col = 'green')
+legend(1.3,18,c("original", "subsampled", "resampled"), 
+       col=c('black', 'red', 'green'), lty=1, cex=0.5)
 ```
 
 This preprocessing illustrates (1) the usefulness to have
@@ -243,13 +255,20 @@ to resample the observed time series at a better time sampling
 to improve the estimates of the derivatives;
 (3) some of the limitations reached for the derivatives of
 higher degree.
-Subsampling and resampling may have a direct impact when
-applying the global modelling techique and should thus be
-considered carefully when using the approach.
+Subsampling will have a direct and drastic impact when
+applying the global modelling technique.
+Resampling can be very efficient to retrieve the original
+signal and to obtain a good model^[S. Mangiarotti, 2018.
+The global modelling classification technique applied to
+the detection of chaotic attractors. *Supplementary Material A* to
+"Can the global modelling technique be used for crop classification?"
+by S. Mangiarotti, A.K. Sharma, S. Corgne, L. Hubert-Moy, L. Ruiz, M.
+Sekhar, Y. Kerr, 2018. *Chaos, Solitons & Fractals*, **106**, 363-378.]
+
 Since the derivatives will be computed automatically when
 using the `gPoMo` function, it is important to keep in mind
 that their quality will directly depend on the characteristic
-of the time series provided as an input.
+of the time series used as input.
 
 
 ## Multiple time series
@@ -268,24 +287,23 @@ $dX_n/dt = f_n(X_1, X_2, ..., X_n)$.
 where the $X_i$, are the observed variables.
 The GPoM package can be used to obtain a polynomial
 approximation of the functions $f_i$ (see vignette `III_Modelling`).
-This formulation will require the computations of the
+This formulation will thus require the computations of the
 first derivatives of each time series in order to have
 $(X_1, X_2, ..., X_n, dX_1/dt, dX_2/dt, ... dX_n/dt)$.
 
 Here again the Rössler system (1976) is used to
-illustrate the skills of the global modelling approach.
+illustrate the performances of the global modelling approach.
 
 ```{r, eval = TRUE, fig.align='center'}
-    # load
-    data("Ross76")
-    # plot
-    tin <- Ross76[,1]
-    data <- Ross76[,2:4]
-    plot(tin, data[,1],
-         ylim = c(-6.5,12),
-         type='l', col='blue', xlab = 'time', ylab = 'x(t), y(t), z(t)')
-    lines(tin, data[,2], type='l',  col='orange')
-    lines(tin, data[,3], type='l',  col='brown')
+# load
+data("Ross76")
+# plot
+tin <- Ross76[,1]
+data <- Ross76[,2:4]
+plot(tin, data[,1], ylim = c(-6.5,12), xlab = 'time', ylab = '', type='l', col='blue')
+lines(tin, data[,2], type='l',  col='orange')
+lines(tin, data[,3], type='l',  col='brown')
+legend(35,12,c("x(t)", "y(t)", "z(t)"), col=c('blue', 'orange', 'brown'), lty=1, cex=0.8)
 ```
 
 The phase space of the original Rössler system can be
@@ -293,45 +311,47 @@ reconstructed for the following set of time series
 $x(t)$, $y(t)$ and $z(t)$:
 The following reconstructions correspond to projections $(x,y)$ and $(x,z)$:
 
-```{r, eval = TRUE, fig.show='hold'}
-    plot(data[,1], data[,2], type='l', xlab = 'x(t)', ylab = 'y(t)')
-    #plot(data[,1], data[,3], type='l', xlab = 'y(t)', ylab = 'z(t)')
-    plot(data[,2], data[,3], type='l', xlab = 'x(t)', ylab = 'z(t)')
+```{r, eval = TRUE, fig.show='hold', fig.align='center', fig.width=4, fig.height=4}
+plot(data[,1], data[,2], type='l', xlab = 'x(t)', ylab = 'y(t)')
 ```
-
-For practical reasons, observations are often undersampled:
+```{r, eval = TRUE, fig.show='hold', fig.align='center', fig.width=4, fig.height=4}
+plot(data[,2], data[,3], type='l', xlab = 'x(t)', ylab = 'z(t)')
+```
+For practical reasons (noise reduction, memory size, etc.),
+observations may be subsampled:
 
 ```{r, eval = TRUE, fig.align='center'}
-    # plot
-    tin <- Ross76[,1]
-    data <- Ross76[,2:4]
-    plot(tin, data[,1],
-         ylim = c(-6.5,12),
-         type='l', col='lightgray', xlab = 'time', ylab = 'x(t)')
-    lines(tin, data[,2], type='l',  col='lightgray', xlab = 'time', ylab = 'y(t)')
-    lines(tin, data[,3], type='l',  col='lightgray', xlab = 'time', ylab = 'z(t)')
+# plot
+tin <- Ross76[,1]
+data <- Ross76[,2:4]
+plot(tin, data[,1], ylim = c(-6.5,12), type='l', col='lightgray', xlab = 'time', ylab = '')
+lines(tin, data[,2], type='l',  col='lightgray')
+lines(tin, data[,3], type='l',  col='lightgray')
 
-    # undersampled data
-    #
-    # subsampling:
-    Ross76us <- Ross76[seq(1,4000,by=75),]
-    # plot
-    tus <- Ross76us[,1]
-    datus <- Ross76us[,2:4]
-    lines(tus, datus[,1], type='p', cex = 0.5, col='blue')
-    lines(tus, datus[,2], type='p', cex = 0.5, col='orange')
-    lines(tus, datus[,3], type='p', cex = 0.5, col='brown')
+# subsampled data
+#
+# subsampling:
+Ross76us <- Ross76[seq(1,4000,by=75),]
+# plot
+tus <- Ross76us[,1]
+datus <- Ross76us[,2:4]
+lines(tus, datus[,1], type='p', cex = 0.5, col='blue')
+lines(tus, datus[,2], type='p', cex = 0.5, col='orange')
+lines(tus, datus[,3], type='p', cex = 0.5, col='brown')
+legend(35,12,c("x(t)", "y(t)", "z(t)"), col=c('blue', 'orange', 'brown'), pch=1, cex=0.8)
+
 ```
 
 Subsampling may lead to loose an important part of 
 the original signal.
-This lost may vary from one observable to another
-(for example, several picks of the time series are
-missrepresented by the undersampled signal), and
+This loss may vary according to the type of
+observed variable 
+(for example, several peaks of the time series are
+missrepresented by the subsampled signal), and
 this effect will become stronger when
 considering derivatives of higher degrees (see the
 first Section of the present vignette).
-It can be useful in such case to resample the time
+It can be useful in such a case to resample the time
 series at a higher time resolution.
 Resampling can be performed with splines as 
 exemplified upper for single time series.
@@ -342,72 +362,82 @@ Here, this resampling appears efficient enough to obtain
 a good reconstruction of the phase space as illustrated
 by the following projections $(x,y)$ and $(x,z)$.
 
-```{r, eval = TRUE, fig.show='hold'}
-    xout <- seq(min(tus), max(tus), by = 0.01)
-    rsplx <- spline(tus, y = datus[,1], method = "fmm", xout = xout)
-    rsply <- spline(tus, y = datus[,2], method = "fmm", xout = xout)
-    rsplz <- spline(tus, y = datus[,3], method = "fmm", xout = xout)
-    # plot resampled
-    plot(data[,1], data[,2], type='l', xlab = 'x(t)', ylab = 'y(t)')
-    lines(rsplx$y, rsply$y, type='l', col='green')
-#    plot(data[,1], data[,3], type='l', xlab = 'y(t)', ylab = 'z(t)')
-#    lines(rsplx$y, rsplz$y, type='l', col='green')
-    plot(data[,2], data[,3], type='l', xlab = 'x(t)', ylab = 'z(t)')
-    lines(rsply$y, rsplz$y, type='l', col='green')
+```{r, eval = TRUE, fig.show='hold', fig.align='center', fig.width=4, fig.height=4}
+xout <- seq(min(tus), max(tus), by = 0.01)
+rsplx <- spline(tus, y = datus[,1], method = "fmm", xout = xout)
+rsply <- spline(tus, y = datus[,2], method = "fmm", xout = xout)
+rsplz <- spline(tus, y = datus[,3], method = "fmm", xout = xout)
+# plot resampled
+plot(data[,1], data[,2], type='l', xlab = 'x(t)', ylab = 'y(t)')
+lines(rsplx$y, rsply$y, type='l', col='green')
+legend(3.5,2,c("original", "resampled"), col=c('black', 'green'), lty=1, cex=0.5)
+plot(data[,2], data[,3], type='l', xlab = 'x(t)', ylab = 'z(t)')
+lines(rsply$y, rsplz$y, type='l', col='green')
+legend(-0.5,12,c("original", "resampled"), col=c('black', 'green'), lty=1, cex=0.5)
+
 ```
 
 Discrepancies related to the derivatives
 can be easily observed considering the derivative
 phase portraits.
-The skills of resampling is obviously good for variable $y$:
+The performances of resampling is obviously good for variable $y$:
 
-```{r, eval = TRUE, fig.align='center'}
-    # derivatives
-    # from original signal
-    drv1x <- drvSucc(tin, data[,1], nDeriv=2)
-    drv1y <- drvSucc(tin, data[,2], nDeriv=2)
-    drv1z <- drvSucc(tin, data[,3], nDeriv=2)
-    # from resampled signal
-    drv3x <- drvSucc(rsplx$x, rsplx$y, nDeriv=2)
-    drv3y <- drvSucc(rsply$x, rsply$y, nDeriv=2)
-    drv3z <- drvSucc(rsplz$x, rsplz$y, nDeriv=2)
-    # phase portraits plot for y:
-    # (y, dy/dt) projection of the original signal (in black) and resampled signal (in green)
-    plot(drv1y$seriesDeriv[,1], drv1y$seriesDeriv[,2], type='l', xlab = 'y', ylab = 'dy/dt')
-    lines(drv3y$seriesDeriv[,1], drv3y$seriesDeriv[,2], type='l', col='green')
+```{r, eval = TRUE, fig.align='center', fig.align='center', fig.width=4, fig.height=4}
+# derivatives
+# from original signal
+drv1x <- drvSucc(tin, data[,1], nDeriv=2)
+drv1y <- drvSucc(tin, data[,2], nDeriv=2)
+drv1z <- drvSucc(tin, data[,3], nDeriv=2)
+# from resampled signal
+drv3x <- drvSucc(rsplx$x, rsplx$y, nDeriv=2)
+drv3y <- drvSucc(rsply$x, rsply$y, nDeriv=2)
+drv3z <- drvSucc(rsplz$x, rsplz$y, nDeriv=2)
+# phase portraits plot for y:
+# (y, dy/dt) projection of the original signal (in black) and resampled signal (in green)
+plot(drv1y$seriesDeriv[,1], drv1y$seriesDeriv[,2], type='l', xlab = 'y', ylab = 'dy/dt')
+lines(drv3y$seriesDeriv[,1], drv3y$seriesDeriv[,2], type='l', col='green')
+legend(0,-3,c("original", "resampled"), col=c('black', 'green'), lty=1, cex=0.5)
+
 ```
 
 Resampling appears less efficient for variables $x$ and $z$:
 
-```{r, eval = TRUE, fig.show='hold'}
-    # phase portraits plot for x and z:
-    # (x, dx/dt) projection of the original signal (in black) and resampled signal (in green)
-    plot(drv1x$seriesDeriv[,1], drv1x$seriesDeriv[,2], type='l', xlab = 'x', ylab = 'dx/dt')
-    lines(drv3x$seriesDeriv[,1], drv3x$seriesDeriv[,2], type='l', col='green')
-    # phase portraits plots
-    # (z, dz/dt) projection of the original signal (in black) and resampled signal (in green)
-    plot(drv1z$seriesDeriv[,1], drv1z$seriesDeriv[,2], type='l', xlab = 'z', ylab = 'dz/dt')
-    lines(drv3z$seriesDeriv[,1], drv3z$seriesDeriv[,2], type='l', col='green')
+```{r, eval = TRUE, fig.show='hold', fig.align='center', fig.width=4, fig.height=4}
+# phase portraits plot for x and z:
+# (x, dx/dt) projection of the original signal (in black) and resampled signal (in green)
+plot(drv1x$seriesDeriv[,1], drv1x$seriesDeriv[,2], type='l', xlab = 'x', ylab = 'dx/dt')
+lines(drv3x$seriesDeriv[,1], drv3x$seriesDeriv[,2], type='l', col='green')
+legend(-3,-5,c("original", "resampled"), col=c('black', 'green'), lty=1, cex=0.5)
+
+# phase portraits plots
+# (z, dz/dt) projection of the original signal (in black) and resampled signal (in green)
+plot(drv1z$seriesDeriv[,1], drv1z$seriesDeriv[,2], type='l', xlab = 'z', ylab = 'dz/dt')
+lines(drv3z$seriesDeriv[,1], drv3z$seriesDeriv[,2], type='l', col='green')
+legend(0,-10,c("original", "resampled"), col=c('black', 'green'), lty=1, cex=0.5)
+
 ```
 
+
+## Conclusion and next step
+
 Although resampling with splines may not permit to reconstruct
-the original signal perfectly, from a practical point of view,
-it appears necessary in many cases, and it is in practice a rather
-efficient way to deal with subsampling.
+the original signal perfectly, it is found that resampling
+can enable to obtain models producing a dynamical behavior
+very similar to the dynamics of the original dynamical
+system.
+In practice, it can be an efficient way to deal with subsampling.
 This type of resampling could be efficiently used for
-applying the global modelling technique both from single time
-series^[S. Mangiarotti, L. Drapeau, & C. Letellier, 2014.
+applying the global modelling technique both from
+single^[S. Mangiarotti, L. Drapeau, & C. Letellier, 2014.
 Two chaotic global models for cereal crops cycles observed from
-satellite in Northern Morocco, Chaos, 24, 023130.],
+satellite in Northern Morocco, *Chaos*, **24**, 023130.],
 and multiple time series^[S. Mangiarotti, 2015. Low dimensional
-chaotic models for the plague epidemic in Bombay (1896–1911),
-Chaos, Solitons, Fractals 81(A), 184–196.] ^[S. Mangiarotti,
+chaotic models for the plague epidemic in Bombay (1896-1911),
+*Chaos, Solitons & Fractals*, **81**(A), 184-196.]$^,$ ^[S. Mangiarotti,
 M. Peyre & M. Huc, 2016. A chaotic model for the epidemic
-of Ebola virus disease in West Africa (2013–2016).
-Chaos, 26, 113112.].
+of Ebola virus disease in West Africa (2013-2016).
+*Chaos*, **26**, 113112.].
 
-## Next step
-
-Once the time series have been carefuly prepared, the global
-modelling technique can be tried. This is presented in
-the next vignette `III_Modelling`.
+Once the time series have been carefully prepared, the global
+modelling technique can be applied. This next step will be
+presented in the following vignette `III_Modelling`.

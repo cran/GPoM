@@ -1,8 +1,9 @@
-#' @title canoToM : Converts canonical formulation into matricial formulation 
+#' @title cano2M : Converts a model in canonical form into a matrix form
 #'
 #' @description Converts the vectorial formulation of canonical models
-#' into a matricial formulation. For both input, the list of terms 
-#' follows the convention given in `poLabs`.
+#' into a matrix formulation (that is, including explicitely all the
+#' equations). For both input, the list of terms follows the convention
+#' defined by \code{poLabs}.
 #'
 #' @inheritParams poLabs
 #' @inheritParams derivODE2
@@ -13,9 +14,14 @@
 #'
 #' @author Sylvain Mangiarotti, Mireille Huc
 #'
+#' @seealso \code{\link{drvSucc}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
+#'
 #' @examples
+#' # A vector of polynomial terms corresponding to a canonical form:
 #' polyTerms <- c(0.2,0,-1,0.5,0,0,0,0,0,0)
+#' # Convert this vector into a matrix formulation with all the equations: 
 #' K <- cano2M(3,2,polyTerms)
+#' # Visualize the equations:
 #' visuEq(3,2,K)
 #' 
 #' @export

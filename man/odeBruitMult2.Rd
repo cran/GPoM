@@ -2,8 +2,8 @@
 % Please edit documentation in R/odeBruitMult2.R
 \name{odeBruitMult2}
 \alias{odeBruitMult2}
-\title{odeBruitMult2 : For the numerical integration of ordinary
-differential equations with multiplicative noise.}
+\title{For the numerical integration of ordinary
+differential equations with dynamical noise.}
 \usage{
 odeBruitMult2(x0, t, K, varData = NULL, txVarBruitM = NULL,
   varBruitM = NULL, method = NULL)
@@ -11,40 +11,39 @@ odeBruitMult2(x0, t, K, varData = NULL, txVarBruitM = NULL,
 \arguments{
 \item{x0}{Initial conditions}
 
-\item{t}{All the dates for which the result of the numerical integration
-of the model will have to be provided}
+\item{t}{All the dates for which the result of the numerical
+integration of the model must be provided}
 
-\item{K}{is the model: each column corresponds to one equation
-which organisation is following the convention given by function
-\code{poLabs} which requires the definition of the model dimension
-\code{nVar} (i.e. the number of variables) and the maximum polynomial
-degree \code{dMax} allowed.}
+\item{K}{A matrix providing the model description:
+each column corresponds to one equation which polynomial organisation
+is following the convention defined by function \code{poLabs}.}
 
-\item{varData}{A vector of size nVar providing the caracteristic variances
-of each variable of the dynamical systems in ODE defined by matrix K.
+\item{varData}{A vector of size \code{nVar} providing the caracteristic
+variances of each variable of the dynamical systems in ODE defined
+by matrix \code{K}.
 If not provided, this variance is automatically estimated.}
 
-\item{txVarBruitM}{A vector defining the ratio of MULTIPLICATIVE
-noise for each variable of the dynamical system in ODE. The multiplicative
+\item{txVarBruitM}{A vector defining the ratio of DYNAMICAL
+noise for each variable of the dynamical system in ODE. This
 noise is a perturbation added at each numerical integration step. The
 ratio is defined relatively to the signal variance of each variable.}
 
-\item{varBruitM}{A vector defining the ratio of MULTIPLICATIVE
-noise for each variable of the dynamical system in ODE. The multiplicative
+\item{varBruitM}{A vector defining the variance of DYNAMICAL
+noise for each variable of the dynamical system in ODE. This
 noise is a perturbation added at each numerical integration step.}
 
 \item{method}{Numerical method used in the integration process.
 (see \code{ode} function in \code{deSolve} package for details).}
 }
 \description{
-A function for the numerical integration of Ordinary
+A subfunction for the numerical integration of Ordinary
 Differential Equations provided in a generic polynomial form.
 Model formulation follows the convention defined
 by function \code{poLabs}.
 }
+\seealso{
+\code{\link{numinoisy}}
+}
 \author{
 Sylvain Mangiarotti, Malika Chassan
-
-#@export
 }
-

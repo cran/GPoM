@@ -2,26 +2,25 @@
 % Please edit documentation in R/bDrvFilt.R
 \name{bDrvFilt}
 \alias{bDrvFilt}
-\title{bDrvFilt : Build Derivative Filter}
+\title{Builds the derivative filter}
 \usage{
 bDrvFilt(nDrv, tstep, winL = 9)
 }
 \arguments{
 \item{nDrv}{The number of derivatives to be computed.}
 
-\item{tstep}{Time sampling.}
+\item{tstep}{Sampling time.}
 
 \item{winL}{The local window length to be used for computing the derivatives [1].}
 }
 \description{
 Build the Savitzky-Golay derivative filter (Savitzky-Golay, 1964).
 }
-\author{
-Sylvain Mangiarotti
-}
 \references{
 [1] Savitzky, A.; Golay, M.J.E.,
 Smoothing and Differentiation of Data by Simplified Least Squares Procedures.
 Analytical Chemistry 36 (8), 1627-1639, 1964.\cr
 }
-
+\author{
+Sylvain Mangiarotti
+}

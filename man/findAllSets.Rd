@@ -2,57 +2,70 @@
 % Please edit documentation in R/findAllSets.R
 \name{findAllSets}
 \alias{findAllSets}
-\title{findAllSets : find all potential systems (a set of
-equations) from a given ensemble of potential equations}
+\title{Find all possible sets of equation combinations
+considering an ensemble of possible equation.}
 \usage{
 findAllSets(allFilt, nS = c(3), nPmin = 1, nPmax = 14)
 }
 \arguments{
 \item{allFilt}{A list with:
-- a matrix allFilt$Xi of possible formulations for each variable Xi
-- a vector allFilt$Npi providing the number of parameters of each formulation Xi}
+(1) A matrix \code{allFilt$Xi} of possible formulations
+for each equation (corresponding to variable \code{Xi});
+And (2) a vector \code{allFilt$Npi} providing the number of
+polynomial terms contained in each formulation.}
 
-\item{nS}{A vector providing the number of dimensions that will be used for each
-input variables (see Examples 1 and 2). The dimension of the resulting model will
-be nVar = sum(nS).}
+\item{nS}{A vector providing the number of dimensions used for each
+input variables (see Examples 1 and 2). The dimension of the resulting
+model will be \code{nVar = sum(nS)}.}
 
 \item{nPmin}{Corresponds to the minimum number of parameters (and thus
-of regressor) of the model}
+of polynomial term) allowed.}
 
 \item{nPmax}{Corresponds to the maximum number of parameters (and thus
-of regressor) of the model}
+of polynomial) allowed.}
 }
 \description{
 For each equation to be retrieved, an ensemble
-of potential formulation is given. For instance, three formulations
-are provided for equation (1), one for equation (2) and two for
-equation (3). In this case, six possible sets can be obtained
-from it.
+of potential formulation is given. For instance, if three possible
+formulations are provided for equation (1), one for equation (2)
+and two for equation (3). In this case, six (i.e. 3*1*2) possible
+sets of equations can be obtained from these potential formulations.
 The aim of this program is to formulate all the potential
-systems from the provided formulation.
+systems from the individual formulations provided of the
+individual equations.
 }
 \examples{
 #############
 # Example 1 #
 #############
+# We build an example
 allFilt <- list()
+# For equation 1 (variable X1)
 allFilt$Np1 <- 1         # only one formulation with one single parameter
-allFilt$Np2 <- c(3, 4)   # two potential formulations, one with respectively
-# three and four parameters
-allFilt$Np3 <- c(2, 4)   # two potential formulations, one with respectively
-# two and four parameters
-# formulations for variables Xi:
+# For equation 2 (variable X2)
+allFilt$Np2 <- c(3, 4)   # two potential formulations, with respectively three and four parameters
+# For equation 3 (variable X3)
+allFilt$Np3 <- c(2, 4)   # two potential formulations, with respectively two and four parameters
+# Formulations for variables Xi:
+# For X1:
 allFilt$X1 <- t(as.matrix(c(0,0,0,1,0,0,0,0,0,0)))
+# For X2:
 allFilt$X2 <- t(matrix(c(0,-0.85,0,-0.27,0,0,0,0.46,0,0,
                          0,-0.64,0,0,0,0,0,0.43,0,0),
                        ncol=2, nrow=10))
+# For X3:
 allFilt$X3 <- t(matrix(c(0, 0.52,  0, -1.22e-05,  0, 0, 0.99, 5.38e-05, 0, 0,
                          0, 0.52, 0, 0, 0, 0, 0.99, 0, 0, 0),
                        ncol=2, nrow=10))
+# From these individual we can retrieve all possible formulations
 findAllSets(allFilt, nS=c(3), nPmin=1, nPmax=14)
+# if only formulations with seven maximum number of terms are expected:
+findAllSets(allFilt, nS=c(3), nPmin=1, nPmax=7)
 
+}
+\seealso{
+\code{\link{autoGPoMoSearch}}
 }
 \author{
 Sylvain Mangiarotti
 }
-

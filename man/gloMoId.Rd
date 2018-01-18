@@ -2,7 +2,7 @@
 % Please edit documentation in R/gloMoId.R
 \name{gloMoId}
 \alias{gloMoId}
-\title{gloMoId :  global Model Identification}
+\title{Global Model Identification}
 \usage{
 gloMoId(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1,
   weight = NULL, show = 1, filterReg = NULL, winL = 9)
@@ -14,64 +14,60 @@ the original variable in the first column and its successive
 derivatives in the next columns. In the latter case, for the
 construction of n-dimensional model, \code{series} should have
 \eqn{nVar+1} columns since one more derivative will be necessary
-to identify the model parameters. Variable nVar will be set
+to identify the model parameters. Variable \code{nVar} will be set
 equal to n.
 In the former case, that is when only a single vector is provided,
 the derivatives will be automatically recomputed. Therefore, the
 dimension nVar expected for the model has to be provided.}
 
-\item{tin}{Input date vector which length should correspond to the variables of
-the input data (same number of lines).}
+\item{tin}{Input date vector which length should correspond to
+the input time series.}
 
-\item{dt}{The time sampling of the input series.}
+\item{dt}{Sampling time of the input time series.}
 
-\item{nVar}{The model dimension expected. This parameter will be
-deduced from the input data (\code{series}) if \code{series} is
-a matrix. If \code{series} is a vector, the expected dimension nVar
-should be provided.}
+\item{nVar}{Number of variables considered in the polynomial formulation.}
 
-\item{dMax}{Maximum degree of the polynomial functions allowed
-in the model (see \code{poLabs}).}
+\item{dMax}{Maximum degree of the polynomial formulation.}
 
-\item{weight}{Weighting function of input data series. By default uniform
-weight is applied. This weighting function can also be used to apply
-the analysis piecewise using zeros and ones.}
+\item{weight}{A vector providing the binary weighting function
+of the input data series (0 or 1). By default, all the values
+are set to 1.}
 
-\item{show}{Indicates (2) or not (0-1) the algorithm progress}
+\item{show}{Provide (2) or not (0-1) visual output during
+the running process.}
 
-\item{filterReg}{A vector that specifies the a priori structure of
-the the function of the output model in canonical form.
-The organisation of the filter follows the convention defined in
-\code{poLabs} and can be obtained using \code{poLabs(nVar,dMax)}.
+\item{filterReg}{A vector that specifies the template for
+the equation structure (for one single equation).
+The convention defined by \code{poLabs} is used.
 Value is 1 if the regressor is available, 0 if it is not.}
 
-\item{winL}{Total number of points used for computing the derivatives of the input
-time series (data). This parameter will be used as an input in function \code{drvSucc}.}
+\item{winL}{Total number of points used for computing the derivatives
+of the input time series. This parameter will be used as an
+input in function \code{drvSucc} to compute the derivatives.}
 }
 \value{
 \code{A} list of five elements : \cr
 
-\code{init} Initial time series and the successive derivatives used
-in the modeling. \cr
+\code{$init} The original time series and the successive derivatives used
+for the modeling. \cr
 
-\code{filterReg}	Structure of the output model. Value is 1 if the
-regressor is available, 0 if it is not. The corresponding terms can
-be obtained with poLabs(dMax,dMax). \cr
+\code{$filterReg}	The structure of the output model. Value is 1 if the
+regressor is available, 0 if it is not. The terms order is
+given by function \code{poLabs}. \cr
 
-\code{codereconstr} Simulated trajectory: the initial variable and
-its derivatives obtained by integrating the equations of the
-identified model. \cr
+\code{$K}	Values of the identified coefficients corresponding to
+the regressors defined in \code{filterReg}. \cr
 
-\code{codeK}	Values of the identified coefficients corresponding to
-the regressors defined in filterReg. \cr
+\code{$resTot} The variance of the residual signal of the model. \cr
 
-\code{coderesTot} Residual signal of the model. \cr
+\code{$resSsMod} The variance of the residual signal of the closer submodels. \cr
 
-\code{coderesSsMod} Residual signal of the closer submodels. \cr
+\code{$finalWeight} Weighting series after boundary values
+were removed. \cr
 }
 \description{
 Algorithm for global modelling in
-a Polynomial and canonical formulation of Ordinary
+polynomial and canonical formulation of Ordinary
 Differential Equations.
 Univariate Global modeling aims to obtain multidimensional
 models from single time series (Gouesbet & Letellier 1994,
@@ -93,12 +89,11 @@ For a model dimension nVar=3, the global model will read: \cr
 # Example 1 #
 #############
 # load data
-#Example 2
 data("Ross76")
 tin <- Ross76[,1]
 data <- Ross76[,2:3]
 
-# Application with a simplified structure
+# Polynomial identification
 reg <- gloMoId(data[0:500,2], dt=1/100, nVar=2, dMax=2, show=0)
 
 #############
@@ -129,7 +124,7 @@ series[1:100] <- series[1:100] + 0.01 * runif(1:100, min = -1, max = 1)
 series[301:320] <- series[301:320] + 0.05 * runif(1:20, min = -1, max = 1)
 # weighting function
 W <- tin * 0 + 1
-W[1:100] <- 0  # the first fourty values will not be considered
+W[1:100] <- 0  # the first hundred values will not be considered
 W[301:320] <- 0  # twenty other values will not be considered either
 reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
 visuEq(3, 2, reg$K, approx = 4)
@@ -149,9 +144,6 @@ lines(v0[1], v0[2], type = 'p', col = 'red')
 
 }
 }
-\author{
-Sylvain Mangiarotti, Laurent Drapeau, Mireille Huc
-}
 \references{
 [1] Gouesbet G., Letellier C.,
 Global vector-field reconstruction by using a multivariate polynomial
@@ -164,7 +156,7 @@ Physical Review E, 86, 046205, 2012. \cr
 Two chaotic models for cereal crops observed from satellite in northern Morocco.
 Chaos, 24(2), 023130, 2014. \cr
 [4] Mangiarotti S.,
-Low dimensional chaotic models for the plague epidemic in Bombay (18961911),
+Low dimensional chaotic models for the plague epidemic in Bombay (1896-1911),
 Chaos, Solitons & Fractals, 81(A), 184-196, 2015. \cr
 [5] Mangiarotti S., Peyre M. & Huc M.,
 A chaotic model for the epidemic of Ebola Virus Disease in West Africa (2013-2016).
@@ -174,4 +166,6 @@ Chaos, 26, 113112, 2016. \cr
 \code{\link{gPoMo}}, \code{\link{autoGPoMoSearch}},
          \code{\link{autoGPoMoTest}}, \code{\link{poLabs}}
 }
-
+\author{
+Sylvain Mangiarotti, Laurent Drapeau, Mireille Huc
+}

@@ -1,7 +1,7 @@
-#' @title odeBruitMult2 : For the numerical integration of ordinary
-#' differential equations with multiplicative noise.
+#' @title For the numerical integration of ordinary
+#' differential equations with dynamical noise.
 #'
-#' @description A function for the numerical integration of Ordinary
+#' @description A subfunction for the numerical integration of Ordinary
 #' Differential Equations provided in a generic polynomial form.
 #' Model formulation follows the convention defined
 #' by function \code{poLabs}.
@@ -15,18 +15,18 @@
 #' @param method Numerical method used in the integration process.
 #' (see \code{ode} function in \code{deSolve} package for details).
 #'
+#' @seealso \code{\link{numinoisy}}
+#'
 #' @author Sylvain Mangiarotti, Malika Chassan
 #'
-#' #@export
-
 odeBruitMult2 <- function(x0, t, K, varData = NULL, txVarBruitM = NULL, varBruitM = NULL, method = NULL){
 
 	nVar = length(x0)
 
 	# ajout slvn 24/09/2015
 	# check if EITHER txBruitM OR sigBruitM is given
-	if ( is.null(varBruitM) & is.null(txVarBruitM)) stop("either txVarBruitM or sigBruitM should be provided")
-	if ( !is.null(varBruitM) & !is.null(txVarBruitM)) stop("either txVarBruitM or sigBruitM should be provided")
+	if ( is.null(varBruitM) & is.null(txVarBruitM)) stop("either txVarBruitM or varBruitM should be provided")
+	if ( !is.null(varBruitM) & !is.null(txVarBruitM)) stop("either txVarBruitM or varBruitM should be provided, not both")
 
 	rec = ode (x0, t, derivODE2, K, method)
 	vectBruitM <- matrix(0,nrow=length(t),ncol=nVar+1)

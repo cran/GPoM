@@ -2,7 +2,7 @@
 % Please edit documentation in R/wInProd.R
 \name{wInProd}
 \alias{wInProd}
-\title{wInProd : weighted inner product}
+\title{Weighted inner product}
 \usage{
 wInProd(A1, A2, weight = NULL)
 }
@@ -11,13 +11,13 @@ wInProd(A1, A2, weight = NULL)
 
 \item{A2}{The input matrix 2.}
 
-\item{weight}{: The weighting vector.}
+\item{weight}{The weighting vector.}
 }
 \value{
 \code{inP} The weighted inner product.
 }
 \description{
-Computes weighted inner product.
+Computes weighted inner products.
 }
 \examples{
 ############
@@ -36,4 +36,3 @@ w = c(0,0,0,1,1,1)
 wInProd(A1, A2, weight = w)
 
 }
-

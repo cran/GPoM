@@ -1,8 +1,8 @@
-#' @title numinoisy : Generates time series of deterministic-behaviour
-#' stochatically-perturbed
+#' @title Generates time series of deterministic-behavior
+#' with stochatic perturbations (measurement and/or dynamical noise)
 #'
 #' @description Generates time series from Ordinary Differential Equations
-#' perturbed by multiplicative and/or additive noises
+#' perturbed by dynamical and/or measurement noises
 #'
 #' @inheritParams poLabs
 #' @inheritParams gloMoId
@@ -10,51 +10,53 @@
 #'
 #' @importFrom stats sd rnorm
 #'
-#' @param x0 Initial conditions. Should be a vector which size must be equal
+#' @param x0 The initial conditions. Should be a vector which size must be equal
 #' to the model dimension \code{dim(K)[2]} (the number of variables of the
-#' model defined by matrix K).
+#' model defined by matrix \code{K}).
 #' @param t A vector providing all the dates for which the output are expected.
 #' @param K The Ordinary Differential Equations used to model the dynamics.
 #' The number of column should correspond to the number of variables, the
-#' number of lines should correspond to the number of parameters ordered
-#' following the convention defined by \code{poLabs(nVar,dMax)}, with nVar
-#' the number of variables and dMax the maximum polynomial degree allowed.
-#' @param varData A vector of size nVar providing the caracteristic variances
-#' of each variable of the dynamical systems in ODE defined by matrix K.
+#' number of lines to the number of parameters following the convention
+#' defined by \code{poLabs(nVar,dMax)}.
+#' @param varData A vector of size \code{nVar} providing the caracteristic
+#' variances of each variable of the dynamical systems in ODE defined
+#' by matrix \code{K}.
 #' If not provided, this variance is automatically estimated.
 #' @param txVarBruitA A vector defining the ratio of ADDITIVE noise
 #' for each variable of the dynamical system in ODE. The additive noise is
 #' added at the end of the numerical integration process. The ratio is
 #' defined relatively to the signal variance of each variable.
-#' @param txVarBruitM A vector defining the ratio of MULTIPLICATIVE
-#' noise for each variable of the dynamical system in ODE. The multiplicative
+#' @param txVarBruitM A vector defining the ratio of DYNAMICAL
+#' noise for each variable of the dynamical system in ODE. This
 #' noise is a perturbation added at each numerical integration step. The
 #' ratio is defined relatively to the signal variance of each variable.
 #' @param varBruitA A vector defining the variance of ADDITIVE noise
 #' for each variable of the dynamical system in ODE. The additive noise is
 #' added at the end of the numerical integration process.
-#' @param varBruitM A vector defining the ratio of MULTIPLICATIVE
-#' noise for each variable of the dynamical system in ODE. The multiplicative
+#' @param varBruitM A vector defining the variance of DYNAMICAL
+#' noise for each variable of the dynamical system in ODE. This
 #' noise is a perturbation added at each numerical integration step.
 #' @param taux Generates random gaps in time series. Parameter \code{taux}
 #' defines the ratio of data to be kept (e.g. for \eqn{taux=0.75}, 75 percents
 #' of the data are kept).
-#' @param freq Undesamples the time series. Parameter \code{freq} defines the
+#' @param freq Subsamples the time series. Parameter \code{freq} defines the
 #' periodicity of data kept (e.g. for \eqn{freq=3}, 1 data out of 3 is kept).
 #' @param variables Defines which variables must be generated.
-#' @param method Defines the numerical integration method to be used. See
-#' function \code{ode} from package \code{deSolve} for details.
+#' @param method Defines the numerical integration method to be used.
+#' The fourth-order Runge-Kutta method is used by default
+#' (\code{method = 'rk4'}). Other method may be used (such as \code{'ode45'}
+#' or \code{'lsoda'}), see function \code{ode} from package \code{deSolve}
+#' for details.
 #'
 #' @return A list of two variables: \cr
-#' @return \code{$donnees} the integrated trajectory (first column is the time,
+#' @return \code{$donnees} The integrated trajectory (first column is the time,
 #' next columns are the model variables) \cr
-#' @return \code{$idices} \cr
-#' @return \code{$signal_init} the integrated trajectory (first column is the time,
-#' next columns are the model variables) \cr
-#' @return \code{$bruitM} The level of multiplicative noise \cr
+#' @return \code{$bruitM} The level of dynamical noise \cr
 #' @return \code{$bruitA} The level of additive noise \cr
-#' @return \code{$vectBruitM} The multiplicative noise used to produce the time series \cr
-#' @return \code{$vectBruitA} The additive noise used to produce the time series \cr
+#' @return \code{$vectBruitM} The vector of the dynamical noise used to produce
+#' the time series \cr
+#' @return \code{$vectBruitA} The vector of the additive noise used to produce
+#' the time series \cr
 #' @return \code{$ecart_type} The level standard deviation \cr
 #'
 #' @author Sylvain Mangiarotti, Malika Chassan
@@ -201,6 +203,6 @@ numinoisy <- function(x0, t, K,
 
 
   # Output
-  list(donnees = DONNEES, indices = indices, signal_init = data$reconstr, bruitM = sigma, bruitA = rho, vectBruitM = vectBruitM,vectBruitA = vectBruitA, ecart_type=ecTy)
+  list(donnees = DONNEES, indices = indices, bruitM = sigma, bruitA = rho, vectBruitM = vectBruitM,vectBruitA = vectBruitA, ecart_type=ecTy)
 }
 

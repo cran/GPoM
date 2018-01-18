@@ -1,14 +1,15 @@
-#' @title p2dMax : provides dMax given pMax and nVar
+#' @title p2dMax : provides the maximum polynomial degree \code{dMax}
+#' given the number of variables \code{nVar} and the number of possible
+#' polynomial terms \code{pMax}.
 #'
-#' @description Search the maximum polynomial degree dMax
-#'              given the number of polynomial terms pMax
-#'              and the system dimension nVar
-#'
+#' @description Find the maximum polynomial degree \code{dMax}
+#'              given the number of polynomial terms \code{pMax}
+#'              and the system dimension \code{nVar}.
 #'
 #' @inheritParams gloMoId
-#' @param pMaxKnown  The number of polynoms terms to retrieve
+#' @param pMaxKnown  The number of polynomial terms
 #'
-#' @return The maximum polynomial degree \code{dMax} used to code the polynomial
+#' @return \code{dMax} The maximum polynomial degree
 #'
 #' @author Sylvain Mangiarotti, Laurent Drapeau
 #'

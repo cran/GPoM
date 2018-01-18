@@ -2,26 +2,28 @@
 % Please edit documentation in R/poLabs.R
 \name{poLabs}
 \alias{poLabs}
-\title{poLabs : polynomial Labels}
+\title{Polynomial labels order}
 \usage{
 poLabs(nVar, dMax, findIt = NULL, Xnote = "X")
 }
 \arguments{
 \item{nVar}{The number of variables}
 
-\item{dMax}{The maximum degree allowed for the polynomial}
+\item{dMax}{The maximum degree allowed in the formulation}
 
 \item{findIt}{A vector of selected terms.}
 
-\item{Xnote}{Notation used for the variable, by default Xnote = 'X'.}
+\item{Xnote}{Enables to defines the notation used for the variable,
+by default \code{Xnote = 'X'}.}
 }
 \value{
-\code{lbls} A vector of characters. Each element is the expression of a regressor
-such as \eqn{X_1^2 X_3 X_4}
+\code{lbls} A vector of characters. Each element is the
+expression of one polynomial term, such as \eqn{X_1^2 X_3 X_4}
 }
 \description{
-Edits the polynomial labels for chosen dimension
-nVar and maximum polynomial degree dMax.
+Defines the order of the polynomial labels given
+the number of variables \code{nVar} and the maximum polynomial
+degree \code{dMax}.
 }
 \examples{
 #Regressor order for three variables \\eqn{(X1,X2,X3)} (nVar = 3) for a maximum
@@ -42,10 +44,9 @@ poLabs(2, 2, findIt = Pvec!=0, Xnote = 'w')
 poLabs(2, 2, findIt = Pvec!=0, Xnote = c('x','y'))
 
 }
-\author{
-Sylvain Mangiarotti
-}
 \seealso{
 \code{\link{visuEq}}
 }
-
+\author{
+Sylvain Mangiarotti
+}

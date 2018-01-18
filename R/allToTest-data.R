@@ -1,14 +1,14 @@
-#' This is data to be included in my package
+#' A list providing the description of six models tested by
+#' the function \code{autoGPoMoTest}.
 #'
 #' @name allToTest
 #' @docType data
 #' @author Sylvain Mangiarotti, Mireille Huc
-#' @description List of 6 models to be tested by autoGPoMoTest
-#' Each model $mToTest1, $mToTest2, etc. is provided as a matrix
-#' of coefficients of dimension 10 * 3 that corresponds to a
-#' formulation of three equations (nVar = 3) of maximal polynomial
-#' degree dMax = 2. Each column column corresponds to one equation.
-#' The order of the terms is given by \code{poLabs(nVar = 3, dMax = 2)}.
+#' @description List of 6 models available for tests (by \code{autoGPoMoTest}).
+#' Each model (\code{$mToTest1}, \code{$mToTest2}, etc.) is provided as a matrix
+#' of dimension 10 * 3. Each column corresponds to one equation.
+#' The order of the coefficients follows the conventions defined
+#' by \code{poLabs(nVar = 3, dMax = 2)}.
 #' @examples
 #' ###########
 #' # example #

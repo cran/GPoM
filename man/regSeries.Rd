@@ -2,35 +2,31 @@
 % Please edit documentation in R/regSeries.R
 \name{regSeries}
 \alias{regSeries}
-\title{regSeries : Estimate regressors time series}
+\title{Estimates the monomial time series}
 \usage{
 regSeries(nVar, dMax, series, pReg = NULL)
 }
 \arguments{
-\item{nVar}{The model dimension expected. This parameter will be
-deduced from the input data (\code{series}) if \code{series} is
-a matrix. If \code{series} is a vector, the expected dimension nVar
-should be provided.}
+\item{nVar}{Number of variables considered in the polynomial formulation.}
 
-\item{dMax}{Maximum degree of the polynomial functions allowed
-in the model (see \code{poLabs}).}
+\item{dMax}{Maximum degree of the polynomial formulation.}
 
 \item{series}{A matrix containing the original time series from which
-the regressors ones are built. One time series by column}
+the monomials are built. Each column corresponds to one given variable.}
 
 \item{pReg}{A matrix filled, for each column, with powers of time series
-used to create}
+used to create.}
 }
 \value{
-rpFull A matrix of time series. Each column correspond to one
+\code{rpFull} A matrix of time series. Each column corresponds to one
 regressor such as \eqn{X_1^2 X_3 X_4}
 }
 \description{
-Creates series by multiplying given time series among them.
+Creates time series by multiplying given time series among them.
 }
 \examples{
-data(sprottK)
-sprottK <- as.matrix(sprottK)
+data(TSallMod_nVar3_dMax2)
+sprottK <- as.matrix(TSallMod_nVar3_dMax2$SprK$reconstr)[,2:4]
 dMax <- 2
 nVar <- dim(sprottK)[2]
 
@@ -45,4 +41,3 @@ polySeries2 <- regSeries(nVar, dMax, sprottK, pReg=p)
 \author{
 Sylvain Mangiarotti
 }
-

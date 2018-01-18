@@ -1,11 +1,11 @@
-#' This is data to be included in my package
+#' A time series of vegetation index measured from satellite
 #'
 #' @name NDVI
 #' @docType data
 #' 
 #' @description A time series of 28 years of Normalized
-#' Difference Vegetation Index measured from space based
-#' on the Advanced Very High Resolution Radiometer (AVHRR)
+#' Difference Vegetation Index measured from space by
+#' the Advanced Very High Resolution Radiometer (AVHRR)
 #' sensor from 1982 to 2008 (see reference [1] for details).
 #' 
 #' @author Sylvain Mangiarotti, Flavie Le Jean

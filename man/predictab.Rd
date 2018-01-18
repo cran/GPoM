@@ -2,15 +2,17 @@
 % Please edit documentation in R/predictab.R
 \name{predictab}
 \alias{predictab}
-\title{predictab : estimate the models predictability of gPoMo output}
+\title{Estimate the models performance obtained with \code{GPoMo}
+in term of predictability}
 \usage{
 predictab(ogp, fullt = NULL, fulldata = NULL, hp = NULL, Nech = 50,
-  show = 1, selecmod = NULL, id = 1)
+  show = 1, selecmod = NULL, id = 1, selV = 1, na.rm = FALSE)
 }
 \arguments{
-\item{ogp}{The output list obtained from gPoMo.}
+\item{ogp}{The output list obtained from function \code{gPoMo}.}
 
-\item{fullt}{Time vector of the data set for which predictability will be tested}
+\item{fullt}{Time vector of the data set for which predictability
+will be tested}
 
 \item{fulldata}{Data set for which predictability will be tested}
 
@@ -18,26 +20,34 @@ predictab(ogp, fullt = NULL, fulldata = NULL, hp = NULL, Nech = 50,
 
 \item{Nech}{Number of simulations}
 
-\item{show}{Indicates (2) or not (0-1) the algorithm progress}
+\item{show}{Provide (2) or not (0-1) visual output during
+the running process.}
 
-\item{selecmod}{a vector of the model selected.}
+\item{selecmod}{A vector of the model selected.}
 
-\item{id}{the type of model to identify. id = 1 correspond to the unidentified
-models, that is, potentialy chaotic models).}
+\item{id}{The type of model to identify. \code{id = 1} corresponds
+to unidentified models, that is, potentialy chaotic.}
+
+\item{selV}{Selected variable for the analysis}
+
+\item{na.rm}{Indicates if the \code{NA} should be removed
+(\code{na.rm = TRUE}) or not (\code{na.rm = FALSE}).}
 }
 \value{
-ErrmodAll A list of matrix $Errmod1, $Errmod2, etc.
-providing the forecasting error of each model 1, 2, etc.
+\code{ErrmodAll} A list of matrix \code{$Predmod1},
+\code{$Predmod2}, etc. and \code{$Errmod1}, \code{$Errmod2}, etc.
+providing respectively the forecasting and the forecasting error
+of models 1, 2, etc.
 Each column corresponds to one simulation starting from
-specific initial condition. Each line corresponds to
-the the horizon of prediction.
-Vectors corresponding to the initial condition time tE
-and the horizon of prediction hpE are also provided
-in $tE and $hpE, respectively.
+a specific initial condition. Each line corresponds to
+one horizon of prediction.
+Vectors corresponding to the initial condition time \code{tE}
+and the horizon of prediction \code{hpE} are also provided
+in \code{$tE} and \code{$hpE}, respectively.
 }
 \description{
-The algorithm aims to estimate automatically the predictability
-of the models obtained with `gPoMo`.
+The algorithm aims to estimate automatically the forecasting
+performances of the models obtained with \code{gPoMo}.
 }
 \examples{
 # load data
@@ -70,6 +80,5 @@ xlab = 't', ylab = 'hp', main = 'Errmod1')
 
 }
 \author{
-Sylvain Mangiarotti
+Sylvain Mangiarotti, Mireille Huc
 }
-

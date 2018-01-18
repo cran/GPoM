@@ -1,14 +1,12 @@
 ---
-title: "GPoM : Generate"
+title: "GPoM : I Generate"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_vignette:
-    fig.caption: yes
   pdf_document:
     number_sections: no
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{GPoM : I Generate}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -16,38 +14,42 @@ load package: "`r library(GPoM)`"
 
 The Generalized Global Polynomial Modelling (GPoM)
 package allows a generic
-formulation of any Ordinary Differential Equations (ODE)
+formulation of any Ordinary Differential Equations (ODEs)
 in polynomial form. The aim of the present vignette
 `I_Generate` is to introduce briefly the way to describe
-a set of polynomial ODEs in GPoM and how to perform
-its numerical integration.
+a set of polynomial ODEs with GPoM and to show how
+to perform its numerical integration^[Mangiarotti S,
+Le Jean F, Chassan M, Drapeau L, Huc M. 2018.
+GPoM: Generalized Polynomial Modelling. Version 1.1.
+*Comprehensive R Archive Network*.
+<https://cran.r-project.org/web/packages/GPoM>.].
 
 
-## Convention used to describe a polynomial
+## Conventions used to describe a polynomial
 
 The polynomial description is based on a convention defined
-in the function `regOrd` that provides the order of the polynomial
+by the function `regOrd` that provides the order of the polynomial
 terms.
 This convention depends on the model dimension (that is the number
 `nVar` of state variables), and on the maximum polynomial degree
-chosen for the formulation (defined by the parameter `dMax`).
-This order can be visualized with the `regLabs` function.
-For instance, for `nVar = 3` and `dMax = 2`, the convention used
-to formulate a polynomial will be as follows:
+used for the formulation (defined by the parameter `dMax`).
+This order can be visualized using the `poLabs` function.
+For instance, for `nVar = 3` and `dMax = 2`, the convention
+used to formulate a polynomial will be:
 
 
 ```{r}
-    poLabs(nVar = 3, dMax = 2)
+poLabs(nVar = 3, dMax = 2)
 ```
 
 This formulation has `pMax = 10` terms:
 
 ```{r, echo=FALSE}
-    nVar = 3
-    dMax = 2
+nVar = 3
+dMax = 2
 ```
 ```{r}
-    pMax =  d2pMax(nVar, dMax)
+pMax =  d2pMax(nVar, dMax)
 ```
 Based on this convention, one single ordinary differential equation (ODE) in polynomial
 form with `nVar` variables and of maximum polynomial degree `dMax` can be formulated
@@ -56,169 +58,177 @@ As an example, the equation :
 
 $dX_1/dt = 1 + 2 X_1 - 3 X_1X_3 + 4 X_2^2$
 
-has three variables (it requires at least `nVar = 3`) and is of maximum polynomial
-degree two (it requires at least `dMax = 2`).
-Following the convention defined by `regLabs(nVar = 3, dMax = 2)`,
-it will require the definition of the following vector of parameter:
+has the three variables $X_1$, $X_2$ and $X_3$
+(it thus requires at least `nVar = 3`) and is of maximum polynomial
+degree two due to terms $X_1X_3$ and $X_2^2$
+(it thus requires at least `dMax = 2`).
+Following the convention defined by `poLabs(nVar = 3, dMax = 2)`,
+it will require the definition of the following vector of parameters:
 
 ```{r}
-    param <- c(1, 0, 0, 0, 0, 4, 2, -3, 0, 0)
+param <- c(1, 0, 0, 0, 0, 4, 2, -3, 0, 0)
 ```
 
 Indeed:
 ```{r}
-    nVar = 3
-    dMax = 2
-    cbind(param, poLabs(nVar, dMax))
+nVar = 3
+dMax = 2
+cbind(param, poLabs(nVar, dMax))
 ```
-The same convention will be used for any other equations.
-Note that, by default, notation is `X`.
+The same convention will be used for any other equation.
+Note that, by default, the notation used for the variables
+is `X1`, `X2`, etc.
 However, to facilitate the analysis, alternative notations may
 also be used using the optional parameter `Xnote`:
 
 ```{r}
-  poLabs(3, 2, Xnote = 'y')
+poLabs(3, 2, Xnote = 'y')
 ```
 
-or also:
+or for a full choice of the notation:
 
 ```{r}
-  poLabs(3, 2, Xnote = c('x','W','y'))
+poLabs(3, 2, Xnote = c('x','W','y'))
 ```
 
 
 ## Definition of a set of polynomial ODE
 
-A set of $N$ equations will thus require the definition 
+A set of $N$ equations will require the definition 
 of $N$ parameter vectors and will thus be represented
-as a matrix of `pMax` lines by `nVar` columns.
+by a matrix of `pMax` lines by `nVar` columns.
 For example, the Rössler system^[O. Rössler, An Equation for Continuous Chaos,
-Physics Letters, vol. 57A, no 5, 1976, p. 397-398]
+Physics Letters, **57A**(5), 1976, 397-398]
 is defined by a set of three equations
 
 
-  $dx/dt = - y - z$
+$dx/dt = - y - z$
 
-  $dy/dt = x + a y$
+$dy/dt = x + a y$
 
-  $dz/dt = b + z (x - c)$.
+$dz/dt = b + z (x - c)$.
 
 
 For $(a = 0.52, b = 2, c = 4)$, this system can be decribed
-by a matrix `M` built as follows:
+by three vectors (one for each equation)
 ```{r}
-    # parameters
-    a = 0.52
-    b = 2
-    c = 4
-    # equations
-    Eq1 <- c(0,-1, 0,-1, 0, 0, 0, 0, 0, 0)
-    Eq2 <- c(0, 0, 0, a, 0, 0, 1, 0, 0, 0)
-    Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
+# parameters
+a = 0.52
+b = 2
+c = 4
+# equations
+Eq1 <- c(0,-1, 0,-1, 0, 0, 0, 0, 0, 0)
+Eq2 <- c(0, 0, 0, a, 0, 0, 1, 0, 0, 0)
+Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
 ```
 The model formulation is obtained by concatenating the vectors of
-the three equations into the matrix `K` that contains all the
+the three equations into one single matrix `K` containing all the
 coefficients of the model:
 
 ```{r}
-    K = cbind(Eq1, Eq2, Eq3)
+K = cbind(Eq1, Eq2, Eq3)
 ```
 
 The corresponding model equations can be edited in a mathematical
 form using the function `visuEq()`
 
 ```{r}
-    visuEq(nVar, dMax, K)
+visuEq(nVar, dMax, K)
 ```
 
-By default, the notation used in `GPoM` is `X` with an index,
-such as `X1`, `X2`, etc.
+By default, the notation used in `visuEq` for the variables
+is `X` with an indicative number, such as `X1`, `X2`, etc.
 Alternative notation can be used to edit the equations with 
-the `visuEq` function by using the option parameter `substit`.
+the `visuEq` function using the optional parameter `substit`.
 For `substit = 1`, single letters are automatically chosen
 such as
 
 ```{r}
-    visuEq(nVar, dMax, K, substit = 1)
+visuEq(nVar, dMax, K, substit = 1)
 ```
 
 The notation can be defined also manually, such as:
 
 ```{r, eval=TRUE}
-    visuEq(nVar, dMax, K, substit = c("U", "V", "W"))
+visuEq(nVar, dMax, K, substit = c("U", "V", "W"))
 ```
 
 ## Numerical integration
 
-The numerical integration of model `M` can be done using
-the `numicano` function that requires the use of the external
-package `deSolve`.
-The following parameters are required:
+The numerical integration of the model defined by matrix `K`
+can be done using the `numicano` function. It requires
+the use of the external package `deSolve`.
+The following parameters are required as input:
 
 ```{r}
-    # The initial conditions of the system variables
-    v0 <- c(-0.6, 0.6, 0.4)
-    # the model formulation K (see former section)
-    # the number of integration steps `Istep`
-    # the time step length `onestep`
-    # the model dimension `nVar`
-    # the maximum polynomial degree `dMax`
+# The initial conditions of the system variables
+v0 <- c(-0.6, 0.6, 0.4)
+# the model formulation K (see former section)
+# the number of integration steps `Istep`
+nIstep <- 5000
+# the time step length `onestep`
+onestep = 1/50
+# the model dimension `nVar`
+nVar = 3
+# the maximum polynomial degree `dMax`
+dMax = 2
 ```
-    
+
 The numerical integration is launched as follows:
 
 ```{r}
-    outNumi <- numicano(nVar, dMax, Istep = 5000, onestep = 1/50, KL = K, v0 = v0)
+outNumi <- numicano(nVar, dMax, Istep = nIstep, onestep = onestep, KL = K, v0 = v0)
 ```
 
 The output of the function `numicano` is a list that contains
-(1) `$K` a memory of the model parameters
+(1) a memory `$KL` of the model parameters
 
 ```{r, eval=FALSE}
-    outNumi$K
+outNumi$KL
 ```
-    
+
 from which `nVar` and `dMax` (required to reformulate the equations)
 can be retrieved
 
 ```{r, eval = FALSE}
-    # nVar
-    dim(outNumi$K)[2]
-    # dMax
-    pMax <- dim(outNumi$K)[1]
-    p2dMax(nVar, pMaxKnown = pMax)
+# nVar
+dim(outNumi$K)[2]
+# dMax
+pMax <- dim(outNumi$K)[1]
+p2dMax(nVar, pMaxKnown = pMax)
 ```
 
 and (2) the simulations `$reconstr`.
-This matrix contains `nVar + 1` columns.
+This matrix has `nVar + 1` columns.
 The first one is the time, the other ones correspond
-to the variables of the system $(X_1, X_2, X_3, ...)$
-that is $(x,y,z)$ in our case.
+to the variables of the system $(X1, X2, X3, ...)$
+(or $(x,y,z)$ to keep the formulation used previously
+in the text).
 
-Note that all other input parameters used in `numicano`
-can be retrieved from these output conditions:
+Note that all the other input parameters used in `numicano`
+can be retrieved from the outputs:
 
 ```{r, eval=FALSE}    
-    # initial conditions
-    head(outNumi$reconstr, 1)[2:(nVar+1)]
-    # time step
-    diff(outNumi$reconstr[1:2,1])
-    # number of integration time step
-    dim(outNumi$reconstr)[1]
+# initial conditions
+head(outNumi$reconstr, 1)[2:(nVar+1)]
+# time step
+diff(outNumi$reconstr[1:2,1])
+# number of integration time step
+dim(outNumi$reconstr)[1]
 ```
 
 The simulated time series can be plotted as follows:
 
 ```{r, fig.show='hold', fig.align='center'}    
-    plot(outNumi$reconstr[,1], outNumi$reconstr[,2], type='l',
-          main='time series', xlab='t', ylab = 'x(t)')
+plot(outNumi$reconstr[,1], outNumi$reconstr[,2], type='l',
+     main='time series', xlab='t', ylab = 'x(t)')
 ```
 
-and the plot of the phase portrait aswell:
+and the plot of the phase portrait as well:
 
-```{r, fig.show='hold', fig.align='center'}  
 
-  plot(outNumi$reconstr[,2], outNumi$reconstr[,3], type='l',
+```{r, fig.show='hold', fig.align='center', fig.width=4, fig.height=4}  
+plot(outNumi$reconstr[,2], outNumi$reconstr[,3], type='l',
      main='phase portrait', xlab='x(t)', ylab = 'y(t)')
 ```
 
@@ -226,8 +236,8 @@ and the plot of the phase portrait aswell:
 
 The aim of the GPoM package is to retreive ODEs from
 time series using global modelling. Such type of modelling
-can require a careful data preprocessing.
-Simple examples of preprocessing are given in the next
+may require a careful data preprocessing.
+Simple examples of preprocessing will be given in the next
 vignette `II_Preprocessing`.
-Examples for applying global modelling from time series
-will be presented in vignette `III_Modelling`.
+Examples for applying global modelling to time series
+will then be presented in vignette `III_Modelling`.

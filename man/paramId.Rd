@@ -2,24 +2,23 @@
 % Please edit documentation in R/paramId.R
 \name{paramId}
 \alias{paramId}
-\title{paramId : parameter Identification}
+\title{For parameter Identification}
 \usage{
 paramId(allForK, drv, weight)
 }
 \arguments{
 \item{allForK}{The list of input parameters}
 
-\item{drv}{the derivative (on the equation left hand)}
+\item{drv}{The derivative (on the equation left hand)}
 
 \item{weight}{The weighting series}
 }
 \value{
-allForK The initial list completed with the model parameters.
+\code{allForK} The initial list completed with the model parameters.
 }
 \description{
-Estimate polynomial coefficients.
+Estimate the polynomial coefficients.
 }
 \author{
 Sylvain Mangiarotti
 }
-

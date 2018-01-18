@@ -2,25 +2,24 @@
 % Please edit documentation in R/p2dMax.R
 \name{p2dMax}
 \alias{p2dMax}
-\title{p2dMax : provides dMax given pMax and nVar}
+\title{p2dMax : provides the maximum polynomial degree \code{dMax}
+given the number of variables \code{nVar} and the number of possible
+polynomial terms \code{pMax}.}
 \usage{
 p2dMax(nVar, pMaxKnown)
 }
 \arguments{
-\item{nVar}{The model dimension expected. This parameter will be
-deduced from the input data (\code{series}) if \code{series} is
-a matrix. If \code{series} is a vector, the expected dimension nVar
-should be provided.}
+\item{nVar}{Number of variables considered in the polynomial formulation.}
 
-\item{pMaxKnown}{The number of polynoms terms to retrieve}
+\item{pMaxKnown}{The number of polynomial terms}
 }
 \value{
-The maximum polynomial degree \code{dMax} used to code the polynomial
+\code{dMax} The maximum polynomial degree
 }
 \description{
-Search the maximum polynomial degree dMax
-             given the number of polynomial terms pMax
-             and the system dimension nVar
+Find the maximum polynomial degree \code{dMax}
+             given the number of polynomial terms \code{pMax}
+             and the system dimension \code{nVar}.
 }
 \examples{
 #############
@@ -43,10 +42,9 @@ p2dMax(6,462)
 length(poLabs(nVar=6, dMax=5))
 
 }
-\author{
-Sylvain Mangiarotti, Laurent Drapeau
-}
 \seealso{
 \code{\link{gloMoId}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
 }
-
+\author{
+Sylvain Mangiarotti, Laurent Drapeau
+}

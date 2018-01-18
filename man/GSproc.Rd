@@ -2,20 +2,20 @@
 % Please edit documentation in R/GSproc.R
 \name{GSproc}
 \alias{GSproc}
-\title{GSproc : Gram-Schmidt procedure}
+\title{Gram-Schmidt procedure}
 \usage{
 GSproc(polyK, ivec, weight = NULL)
 }
 \arguments{
-\item{polyK}{One list including $Y and $phy with:
-$Y a matrix for which the ith column will be used
+\item{polyK}{One list including \code{$Y} and \code{$phy} with:
+\code{$Y} a matrix for which the ith column will be used
 to add one orthogonal vector to the (i-1)th vectors of the
 current orthogonal base;
-and $phy such as the current orthogonal base is
-given by the (i-1)th first columns of matrix polyK$phy.}
+and \code{$phy} such as the current orthogonal base is
+given by the (i-1)th first columns of matrix \code{polyK$phy}.}
 
-\item{ivec}{Defines i, the current vector of polyK$Y and
-the current orthogonal base of pParam$phy.}
+\item{ivec}{Defines i, the current vector of \code{polyK$Y} and
+the current orthogonal base of \code{pParam$phy}.}
 
 \item{weight}{The weighing vector.}
 }
@@ -23,8 +23,8 @@ the current orthogonal base of pParam$phy.}
 \code{uNew} The model parameterization, that is:
 The residual orthogonal vector that can be included into
 the current orthogonal base. If the current base is empty,
-uNew is equal to the input vector of $Y; if the base is
-complete, uNew equals 0.
+\code{uNew} is equal to the input vector of \code{$Y};
+if the base is complete, \code{uNew} equals 0.
 }
 \description{
 Computes regressors coefficients
@@ -32,7 +32,4 @@ using the Gram-Schmidt procedure.
 }
 \author{
 Sylvain Mangiarotti
-
-#@export
 }
-

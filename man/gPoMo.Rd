@@ -2,7 +2,7 @@
 % Please edit documentation in R/gPoMo.R
 \name{gPoMo}
 \alias{gPoMo}
-\title{gPoMo: Generalized Polynomial Modeling}
+\title{Generalized Polynomial Modeling}
 \usage{
 gPoMo(data, tin = NULL, dtFixe = NULL, dMax = 2, nS = c(3), winL = 9,
   weight = NULL, show = 1, verbose = 1, underSamp = NULL, EqS = NULL,
@@ -10,59 +10,62 @@ gPoMo(data, tin = NULL, dtFixe = NULL, dMax = 2, nS = c(3), winL = 9,
   method = "lsoda")
 }
 \arguments{
-\item{data}{Input Time series: Each column corresponds to one input variable.}
+\item{data}{Input Time series: Each column is one time series
+that corresponds to one variable.}
 
-\item{tin}{Input date vector which length should correspond to the variables of
-the input data (same number of lines).}
+\item{tin}{Input date vector which length should correspond to
+the input time series.}
 
-\item{dtFixe}{Time step used for the analysis. In principle, it should correspond
-to the time step of the input data. Modification of this time step may be used to
-stabilize the numerical computation. Such modification should be performed in full
-consciouness that it will lead to change the time scale accordingly.}
+\item{dtFixe}{Time step used for the analysis. It should correspond
+to the sampling time of the input data.
+Note that for very large and very small time steps, alternative units
+may be used in order to stabilize the numerical computation.}
 
-\item{dMax}{Maximum degree of the polynomial functions allowed
-in the model (see \code{poLabs}).}
+\item{dMax}{Maximum degree of the polynomial formulation.}
 
-\item{nS}{A vector providing the number of dimensions that will be used for each
-input variables (see Examples 1 and 2). The dimension of the resulting model will
-be nVar = sum(nS).}
+\item{nS}{A vector providing the number of dimensions used for each
+input variables (see Examples 1 and 2). The dimension of the resulting
+model will be \code{nVar = sum(nS)}.}
 
-\item{winL}{Total number of points used for computing the derivatives of the input
-time series (data). This parameter will be used as an input in function \code{drvSucc}.}
+\item{winL}{Total number of points used for computing the derivatives
+of the input time series. This parameter will be used as an
+input in function \code{drvSucc} to compute the derivatives.}
 
-\item{weight}{Weighting function of input data series. By default uniform
-weight is applied. This weighting function can also be used to apply
-the analysis piecewise using zeros and ones.}
+\item{weight}{A vector providing the binary weighting function
+of the input data series (0 or 1). By default, all the values
+are set to 1.}
 
-\item{show}{Indicates (2) or not (0-1) the algorithm progress}
+\item{show}{Provide (2) or not (0-1) visual output during
+the running process.}
 
-\item{verbose}{Gives information (if set to 1) about the algorithm progress
-and keeps silent if set to 0}
+\item{verbose}{Gives information (if set to 1) about the algorithm
+progress and keeps silent if set to 0.}
 
-\item{underSamp}{Points used for undersampling the data. For undersamp = 1
-the complete time series is used. For undersamp = 2, only one data out of
-two is kept, etc.}
+\item{underSamp}{Number of points used for undersampling the data.
+For \code{undersamp = 1} the complete time series is used.
+For \code{undersamp = 2}, only one data out of two is kept, etc.}
 
 \item{EqS}{Model template including all allowed regressors.
 Each column corresponds to one equation. Each line corresponds to one
-regressor following the convention given by \code{poLabs(nVar,dMax)}.}
+polynomial term as defined by function \code{poLabs}.}
 
-\item{IstepMin}{Minimum step of integration at the beginning
-of the analysis (by default IstepMin=10).}
+\item{IstepMin}{The minimum number of integration step to start
+of the analysis (by default \code{IstepMin = 10}).}
 
-\item{IstepMax}{Maximum step of integration before stopping the
-analysis, with the interface this value can be changed during
-the analysis}
+\item{IstepMax}{The maximum number of integration steps for
+stopping the analysis (by default \code{IstepMax = 10000}).}
 
 \item{nPmin}{Corresponds to the minimum number of parameters (and thus
-of regressor) of the model}
+of polynomial term) allowed.}
 
 \item{nPmax}{Corresponds to the maximum number of parameters (and thus
-of regressor) of the model}
+of polynomial) allowed.}
 
 \item{method}{The integration technique used for the numerical
-integration. Default is 'lsoda'. Others such as 'rk4' or 'ode45'
-may also be used. See package deSolve for details.}
+integration. By default, the fourth-order Runge-Kutta method
+(\code{method = 'rk4'}) is used. Other methods such as 'ode45'
+or 'lsoda' may also be chosen. See package \code{deSolve}
+for details.}
 }
 \value{
 A list containing:
@@ -87,7 +90,8 @@ models of period-1 (-1), unclassified models (1).
 corresponding to the longest numerical integration duration)
 
 \code{$stockoutreg} A list of matrices with the integrated trajectories
-(variable \code{X1} in column 1, \code{X2} in 2, etc.) of all the models \code{$model1}, \code{$model2}, etc.
+(variable \code{X1} in column 1, \code{X2} in 2, etc.) of all the models \code{$model1},
+\code{$model2}, etc.
 }
 \description{
 Algorithm for a Generalized Polynomial formulation
@@ -98,13 +102,13 @@ In the generalized (polynomial) formulation provided in this
 function, it can also be applied to multivariate time series [3-4].
 
 Example:\cr
-Note that nS provides the number of dimensions used from each variable
+Note that \code{nS} provides the number of dimensions used from each variable
 
 case I \cr
-For nS=c(2,3) means that 2 dimensions are reconstructed from variable 1:
-the original variable X1 and its first derivative X2), and
+For \code{nS=c(2,3)} means that 2 dimensions are reconstructed from variable 1:
+the original variable \code{X1} and its first derivative \code{X2}), and
 3 dimensions are reconstructed from variable 2: the original
-variable X3 and its first and second derivatives X4 and X5.
+variable \code{X3} and its first and second derivatives \code{X4} and \code{X5}.
 The generalized model will thus be such as: \cr
 \eqn{dX1/dt = X2}\cr
 \eqn{dX2/dt = P1(X1,X2,X3,X4,X5)}\cr
@@ -113,8 +117,8 @@ The generalized model will thus be such as: \cr
 \eqn{dX5/dt = P2(X1,X2,X3,X4,X5).}\cr
 
 case II\cr
-For nS=c(1,1,1,1) means that only the original variables
-X1, X2, X3 and X4 will be used.
+For \code{nS=c(1,1,1,1)} means that only the original variables
+\code{X1}, \code{X2}, \code{X3} and \code{X4} will be used.
 The generalized model will thus be such as:\cr
 \eqn{dX1/dt = P1(X1,X2,X3,X4)}\cr
 \eqn{dX2/dt = P2(X1,X2,X3,X4)}\cr
@@ -162,24 +166,28 @@ out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), show = 1,
 
 \dontrun{
 #Example 4
-data(sprottK)
-data(rossler)
-data <- cbind(rossler,sprottK)[1:400,]
+# load data
+data("TSallMod_nVar3_dMax2")
+#multiple (six) time series
+tin <- TSallMod_nVar3_dMax2$SprK$reconstr[1:400,1]
+TSRo76 <- TSallMod_nVar3_dMax2$R76$reconstr[,2:4]
+TSSprK <- TSallMod_nVar3_dMax2$SprK$reconstr[,2:4]
+data <- cbind(TSRo76,TSSprK)[1:400,]
 dev.new()
-out4 <- gPoMo(data, dt=1/20, dMax = 2, nS=c(1,1,1,1,1,1),
-             show = 1, method = 'rk4',
-             IstepMin = 2, IstepMax = 3, nPmin = 13, nPmax = 13)
-# the original Rossler (variables x, y and z) and Sprott (variables X, Y and Z)
+# generalized Polynomial modelling
+out4 <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1,1,1,1),
+              show = 0, method = 'rk4',
+              IstepMin = 2, IstepMax = 3,
+              nPmin = 13, nPmax = 13)
+
+# the original Rossler (variables x, y and z) and Sprott (variables u, v and w)
 # systems are retrieved:
 visuEq(6, 2, out4$models$model347, approx = 4,
-           substit = c('x', 'y', 'z', 'X', 'Y', 'Z'))
-   # to check the robustness of the model, the integration duration
-   # should be chosen longer (at least IstepMax = 4000)
+       substit = c('x', 'y', 'z', 'u', 'v', 'w'))
+# to check the robustness of the model, the integration duration
+# should be chosen longer (at least IstepMax = 4000)
 }
 
-}
-\author{
-Sylvain Mangiarotti, Flavie Le Jean, Mireille Huc
 }
 \references{
 [1] Gouesbet G. & Letellier C., 1994. Global vector-field reconstruction by using a
@@ -197,5 +205,10 @@ in West Africa (2013-2016). Chaos, 26, 113112. \cr
 \seealso{
 \code{\link{gloMoId}}, \code{\link{autoGPoMoSearch}},
          \code{\link{autoGPoMoTest}}
-}
 
+\code{\link{autoGPoMoSearch}}, \code{\link{autoGPoMoTest}}, \code{\link{visuOutGP}},
+         \code{\link{poLabs}}, \code{\link{predictab}}, \code{\link{drvSucc}}
+}
+\author{
+Sylvain Mangiarotti, Flavie Le Jean, Mireille Huc
+}

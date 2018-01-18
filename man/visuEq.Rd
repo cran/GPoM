@@ -2,38 +2,45 @@
 % Please edit documentation in R/visuEq.R
 \name{visuEq}
 \alias{visuEq}
-\title{visuEq : Displays the model Equations}
+\title{Displays the models Equations}
 \usage{
 visuEq(nVar, dMax, K, substit = 0, approx = FALSE)
 }
 \arguments{
 \item{nVar}{The number of variables}
 
-\item{dMax}{The maximum degree allowed for the polynomial}
+\item{dMax}{The maximum degree allowed in the formulation}
 
-\item{K}{is the model: each column corresponds to one equation
-which organisation is following the convention given by function
-\code{poLabs} which requires the definition of the model dimension
-\code{nVar} (i.e. the number of variables) and the maximum polynomial
-degree \code{dMax} allowed.}
+\item{K}{A matrix providing the model description:
+each column corresponds to one equation which polynomial organisation
+is following the convention defined by function \code{poLabs}.}
 
-\item{substit}{applies subtitutions:
-for substit = 0 (default value), variables are chosen as X1, X2, ...
-for substit = 1, variables X1, X2, ... are replaces by x,y,z, ...
-for substit = 2, the codes provides a LaTex-like formulation of the model}
+\item{substit}{Applies subtitutions to the default values:
+for \code{substit = 0} (default value), variables are chosen
+as \code{X1}, \code{X2}, ...
+for \code{substit = 1}, variable \code{X1}, \code{X2}, ...
+will be replaced by \code{x}, \code{y}, \code{z}, ...
+for \code{substit = 2}, the codes provides a LaTex-like
+formulation of the model.
+The variables name can also be defined explicitely as follows:
+for \code{substit = c('x', 'H', 'T1')}, variables \code{X1},
+\code{X2}, \code{X3} ... will be replaced by \code{x}, \code{H}
+and \code{T1}.}
 
-\item{approx}{number of digits to be used:
-for approx = FALSE (default value) digits are edited with double precision 
-for approx = TRUE, only the minimum number of digits is edited (in order to
-have all the terms different from 0)
-for approx = 1, 2, etc. then respectively 1, 2, etc. digits are added to
-the minimum number of digits corresponding to approx = TRUE.}
+\item{approx}{The number of extra digits to be used:
+for \code{approx = FALSE} (default value) digits are
+edited with double precision;
+for \code{approx = TRUE}, only the minimum number of digits is
+edited (in order to have all the terms different from 0)
+for \code{approx} = 1, 2, etc. then respectively 1, 2, etc.
+digits are added to the minimum number of digits corresponding
+to \code{approx = TRUE}.}
 }
 \description{
 Displays the model equations for a polynomial model
-which description is provided as a matrix K, each column corresponding
-to an equation, each equation being corresponding to a list of terms
-following a convention given in `poLabs`.
+which description is provided as a matrix \code{K}, each column
+corresponding to one equation. The coefficients of the polynomial terms are given
+following the order defined by function \code{poLabs}.
 }
 \examples{
 #EQUATIONS VISUALISATION
@@ -64,4 +71,3 @@ visuEq(3,2,KL)
 \author{
 Sylvain Mangiarotti
 }
-

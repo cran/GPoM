@@ -2,32 +2,34 @@
 % Please edit documentation in R/regOrd.R
 \name{regOrd}
 \alias{regOrd}
-\title{regOrd : Defines the conventional order for regressors
-in the polynomial formulation}
+\title{Generate the conventional order for polynomial terms
+in a the polynomial formulation}
 \usage{
 regOrd(nVar, dMax)
 }
 \arguments{
 \item{nVar}{The number of variables}
 
-\item{dMax}{The maximum degree allowed for the polynomial}
+\item{dMax}{The maximum degree allowed in the formulation}
 }
 \value{
-A matrix of exponent. Each column correspond to one
-polynomial term. Each line correspond to one variable.
-For example, a column of three exponents (0,2,1) correspond
-to regressor X1^0 * X2^2 * X3^1, that is X2^2 * X3.
+A matrix of exponents. Each column corresponds to one
+polynomial term. Each line correspond to the exponent of one
+variable.
+For example, a column of three exponents \code{(0,2,1)} corresponds
+to the monomial \code{X1^0 * X2^2 * X3^1}, that is \eqn{X2^2 X3}.
 }
 \description{
-Defines the order convention for regressors in
-polynomial. It is formulated as a matrix of explonents. Each
-column of the matrix (a,b,c, ...) corresponds to one regressor 
-defined as the product of X1^a * X2^b * X3^c, etc.
-}
-\author{
-Sylvain Mangiarotti
+Generate the conventional order of the polynomial
+terms for the polynomial description.
+It is formulated as a matrix of exponents: Each
+column of the matrix (a,b,c, ...) corresponds to a product
+of the \code{nVar} available variables X1, X2, X3, etc.,
+that is, \eqn{X1^a X2^b X3^c}, etc.
 }
 \seealso{
 \code{\link{poLabs}}
 }
-
+\author{
+Sylvain Mangiarotti
+}

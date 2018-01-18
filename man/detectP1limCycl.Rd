@@ -2,26 +2,29 @@
 % Please edit documentation in R/detectP1limCycl.R
 \name{detectP1limCycl}
 \alias{detectP1limCycl}
-\title{detectP1limCycl : Detect limit cycles of period-1}
+\title{Detection of limit cycles of period-1}
 \usage{
 detectP1limCycl(data, LimCyclThreshold = 0.01, show = 2)
 }
 \arguments{
-\item{data}{A matrix of the trajectory in a 2D space (only
-the two first column are considered)}
+\item{data}{A matrix of the trajectory in a 2D space (if more than
+two columns are provided, only the two first columns are considered)}
 
 \item{LimCyclThreshold}{The detection threshold}
 
 \item{show}{Indicates the deepness of the feedback (from 0 to 2)}
 }
 \value{
-indicates if a limit cycle is detected (1) or not (0)
+Indicates if a limit cycle is detected (1) or not (0)
 }
 \description{
-Detects the limit cycle from trajectories
-in a bidimensional projection
+This algorithm aim to detect period-1 limit cycles
+from trajectories in the phase sapce considered in a
+bidimensional projection.
+}
+\seealso{
+\code{\link{autoGPoMoTest}}
 }
 \author{
 Sylvain Mangiarotti
 }
-

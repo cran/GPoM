@@ -1,9 +1,9 @@
-#'  Data of the R-package GPoM
+#'  Another set of time series of the Rossler-1976 chaotic system
 #'
 #' @name RosYco
 #' @docType data
 #' 
-#' @title Twelve Rossler-y time series
+#' @title Twelve Rossler-1976 time series (exclusively variable \eqn{y})
 #' 
 #' @description Twelve independant Rossler-1976 time series
 #' (variable y). The parameters used to generate the time

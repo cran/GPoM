@@ -8,12 +8,14 @@
 #' @inheritParams  poLabs
 #'
 #' @param ogp The output list obtained from gPoMo.
-#' @param selecmod a vector of the model selected.
-#' @param id the type of model to identify. id = 1 correspond to the unidentified
-#' models, that is, potentialy chaotic models).
-#' @param prioMinMax gives the priority for the plots among: "data", "model",
-#' "dataonly" and "modelonly".
-#' @param opt3D provides a 3D plot (x,y,z) when 'TRUE' (rgl library required).
+#' @param selecmod A vector of the selected model. Maximum 24 models can be
+#' presented at the same time.
+#' @param id The type of model to identify. \code{id = 1} corresponds to
+#' the unidentified models, that is, potentialy chaotic models).
+#' @param prioMinMax Gives the priority for the plots among: \code{"data"},
+#' \code{"model"}, \code{"dataonly"} and \code{"modelonly"}.
+#' @param opt3D Provides a 3D plot (x,y,z) when \code{opt = 'TRUE'}
+#' (the \code{rgl} library is required).
 #'
 #' @return A Matrix describing the terms composing each model by row. The first
 #' row corresponds to the model detection (1 unclarified, 2 diverging, 0 is fixed
@@ -84,12 +86,14 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
     if (nmod <= 15) op <- par(mfrow = c(3, 5), pty = "m")
     if (nmod <= 12) op <- par(mfrow = c(3, 4), pty = "m")
     if (nmod <= 9)  op <- par(mfrow = c(3, 3), pty = "m")
+    if (nmod <= 6)  op <- par(mfrow = c(3, 2), pty = "m")
     if (nmod <= 4)  op <- par(mfrow = c(2, 2), pty = "m")
-    if (nmod <= 1)  op <- par(mfrow = c(1, 1), pty = "m")
+    if (nmod == 2)  op <- par(mfrow = c(2, 1), pty = "m")
+    if (nmod == 1)  op <- par(mfrow = c(1, 1), pty = "m")
     for (imod in seemod)  {
       block0 <- paste("Model ", imod, " (Np = ", modInfo[imod, 2], ")", sep="")
       #
-      if (is.matrix(ogp$inputdata)) inputseries <- ogp$inputdata[,1]
+      inputseries <- as.matrix(ogp$inputdata)[,1]
       if (prioMinMax == 'data') {
         plot(ogp$tin, inputseries, cex = 0.7, col='black',
              main = block0, xlab='t', ylab='y(t)')
@@ -126,6 +130,11 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
       }
     }
   }
+  else {
+    stop('Too many models nmod = ', nmod, ', the fonction
+         can apply to maximum nmod = 24 models.')
+  }
+  
 
   if (nmod <= 24) {
     # plot data and models phase portraits
@@ -136,8 +145,10 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
     if (nmod <= 15) op <- par(mfrow = c(3, 5), pty = "s")
     if (nmod <= 12) op <- par(mfrow = c(3, 4), pty = "s")
     if (nmod <= 9)  op <- par(mfrow = c(3, 3), pty = "s")
-    if (nmod <= 4)  op <- par(mfrow = c(2, 2), pty = "s")
-    if (nmod <= 1)  op <- par(mfrow = c(1, 1), pty = "s")
+    if (nmod <= 6)  op <- par(mfrow = c(3, 2), pty = "m")
+    if (nmod <= 4)  op <- par(mfrow = c(2, 2), pty = "m")
+    if (nmod == 2)  op <- par(mfrow = c(2, 1), pty = "m")
+    if (nmod == 1)  op <- par(mfrow = c(1, 1), pty = "m")
     for (imod in seemod)  {
       block0 <- paste("Model ", imod, " (Np = ", modInfo[imod, 2], ")", sep="")
       if (prioMinMax == 'data') {
@@ -201,6 +212,10 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
         }
       }
     }
+  }
+  else {
+    stop('Too many models nmod = ', nmod, ', the fonction
+          can apply to maximum nmod = 24 models.')
   }
 
   # See equations

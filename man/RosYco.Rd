@@ -3,7 +3,7 @@
 \docType{data}
 \name{RosYco}
 \alias{RosYco}
-\title{Twelve Rossler-y time series}
+\title{Twelve Rossler-1976 time series (exclusively variable \eqn{y})}
 \format{An object of class \code{matrix} with 3000 rows and 12 columns.}
 \usage{
 RosYco
@@ -15,15 +15,14 @@ series correspond to a phase coherent behavior.
 Details can be found in [1]
 }
 \details{
-Data of the R-package GPoM
-}
-\author{
-Sylvain Mangiarotti, Flavie Le Jean.
+Another set of time series of the Rossler-1976 chaotic system
 }
 \references{
 [1] Mangiarotti S., Le Jean F., Huc M. & Letellier C.,
 Global Modeling of aggregated and associated chaotic
 dynamics. Chaos, Solitons and Fractals, 83, 82-96.
 }
+\author{
+Sylvain Mangiarotti, Flavie Le Jean.
+}
 \keyword{data}
-

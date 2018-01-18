@@ -1,27 +1,36 @@
-#' @title visuEq : Displays the model Equations
+#' @title Displays the models Equations
 #'
 #' @description Displays the model equations for a polynomial model
-#' which description is provided as a matrix K, each column corresponding
-#' to an equation, each equation being corresponding to a list of terms
-#' following a convention given in `poLabs`.
+#' which description is provided as a matrix \code{K}, each column
+#' corresponding to one equation. The coefficients of the polynomial terms are given
+#' following the order defined by function \code{poLabs}.
 #'
 #' @inheritParams poLabs
 #' @inheritParams derivODE2
 #' @inheritParams gloMoId
 #'
-#' @param substit applies subtitutions:
-#' for substit = 0 (default value), variables are chosen as X1, X2, ...
-#' for substit = 1, variables X1, X2, ... are replaces by x,y,z, ...
-#' for substit = 2, the codes provides a LaTex-like formulation of the model
-#' @param approx number of digits to be used:
-#' for approx = FALSE (default value) digits are edited with double precision 
-#' for approx = TRUE, only the minimum number of digits is edited (in order to
-#' have all the terms different from 0)
-#' for approx = 1, 2, etc. then respectively 1, 2, etc. digits are added to
-#' the minimum number of digits corresponding to approx = TRUE.
+#' @param substit Applies subtitutions to the default values:
+#' for \code{substit = 0} (default value), variables are chosen
+#' as \code{X1}, \code{X2}, ...
+#' for \code{substit = 1}, variable \code{X1}, \code{X2}, ...
+#' will be replaced by \code{x}, \code{y}, \code{z}, ...
+#' for \code{substit = 2}, the codes provides a LaTex-like
+#' formulation of the model.
+#' The variables name can also be defined explicitely as follows:
+#' for \code{substit = c('x', 'H', 'T1')}, variables \code{X1},
+#' \code{X2}, \code{X3} ... will be replaced by \code{x}, \code{H}
+#' and \code{T1}.
+#' @param approx The number of extra digits to be used:
+#' for \code{approx = FALSE} (default value) digits are
+#' edited with double precision;
+#' for \code{approx = TRUE}, only the minimum number of digits is
+#' edited (in order to have all the terms different from 0)
+#' for \code{approx} = 1, 2, etc. then respectively 1, 2, etc.
+#' digits are added to the minimum number of digits corresponding
+#' to \code{approx = TRUE}.
 #'
 #' @author Sylvain Mangiarotti
-#' 
+#'
 #' @examples
 #' #EQUATIONS VISUALISATION
 #' # number of variables:
@@ -51,6 +60,17 @@
 visuEq <- function (nVar, dMax, K, substit = 0, approx = FALSE) {
   if (is.vector(K)) {
     K <- cano2M(nVar, dMax, K)
+  }
+  # Check compatibility
+  if (dim(K)[2] != nVar) {
+    stop('nVar = ', nVar,
+         ' is not compatible with the model dimension dim(K)[2] = ',
+         dim(K)[2])
+  }
+  if (d2pMax(nVar,dMax) != dim(K)[1]) {
+    stop('dMax = ', dMax,
+         ' is not compatible with the model size dim(K)[1] = ',
+         dim(K)[1])
   }
   # for approximation with all terms
     if (approx == TRUE) {

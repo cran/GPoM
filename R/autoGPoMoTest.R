@@ -1,9 +1,11 @@
-#' @title autoGPoMoTest: Test models numerical integrability & classify the attractor
-#' reached at the convergence (from chosen initial conditions)
+#' @title Tests the numerical integrability of models and
+#' classify their dynamical regime
 #'
-#' @description Test the numerical integrability of models (of polynomial structure)
-#' possibly obtained with function autoGPoMoSearch, and classify these models as
-#' divergent, Fixed Points, Periodic or not classificable (potentially chaotic).
+#' @description Tests the numerical integrability of
+#' provided models (these may have been obtained with
+#' function \code{autoGPoMoSearch}),
+#' and classify these models as Divergent, Fixed Points,
+#' Periodic or not Unclassified (potentially chaotic).
 #'
 #' @inheritParams  gPoMo
 #' @inheritParams  gloMoId
@@ -14,45 +16,49 @@
 #' @importFrom graphics par plot text lines
 #' @importFrom stats lsfit
 #'
-#' @param allKL A list of the all the models \code{$mToTest1},
+#' @param allKL A list of all the models \code{$mToTest1},
 #' \code{$mToTest2}, etc. to be tested. Each model is provided
 #' as a matrix.
-#' @param IstepMin Minimum step of integration at the beginning
-#' of the analysis (by default IstepMin=10).
-#' @param IstepMax Maximum step of integration before stopping the
-#' analysis, with the interface this value can be changed during
-#' the analysis
-#' @param tooFarThreshold Divergence threshold, maximum times number
-#' that the model can be greater than the data standard deviation,
-#' without being removed from the analysis
-#' @param LimCyclThreshold Limit cycle threshold. Minimum neighbors
-#' distance between two integration steps, without being removed
-#' from the analysis
-#' @param fixedPtThreshold Limit cycle threshold. Minimum neighbors
-#' distance between two integration steps, without being removed
-#' from the analysis
+#' @param IstepMin The minimum number of integration step to start
+#' of the analysis (by default \code{IstepMin = 10}).
+#' @param IstepMax The maximum number of integration steps for
+#' stopping the analysis (by default \code{IstepMax = 10000}).
+#' @param tooFarThreshold Divergence threshold, maximum value
+#' of the model trajectory compared to the data standard
+#' deviation. By default a trjactory is too far if
+#' the distance to the center is larger than four times the variance
+#' of the input data.
+#' @param LimCyclThreshold Threshold used to detect the limit cycle.
+#' @param fixedPtThreshold Threshold used to detect fixed points.
 #' @param method The integration technique used for the numerical
-#' integration. Default is 'lsoda'. Others such as 'rk4' or 'ode45'
-#' may also be used. See package deSolve for details.
+#' integration. By default, the fourth-order Runge-Kutta method
+#' (\code{method = 'rk4'}) is used. Other methods such as 'ode45'
+#' or 'lsoda' may also be chosen. See package \code{deSolve}
+#' for details.
 #'
 #' @author Sylvain Mangiarotti, Flavie Le Jean
 #'
 #' @return A list containing:
-#' @return \code{$okMod}      A vector classifying the models: diverging models (0), periodic
-#' models of period-1 (-1), unclassified models (1).
+#' @return \code{$okMod}      A vector classifying the models: diverging models (0),
+#' periodic models of period-1 (-1), unclassified models (1).
 #' @return \code{$coeff}      A matrix with the coefficients of one selected model
 #' @return \code{$models}     A list of all the models to be tested \code{$mToTest1},
-#' \code{$mToTest2}, etc. and all selected models \code{$model1}, \code{$model2}, etc.
+#' \code{$mToTest2}, etc. and of all selected models \code{$model1}, \code{$model2}, etc.
 #' @return \code{$tout}       The time vector of the output time series (vector length
 #' corresponding to the longest numerical integration duration)
 #' @return \code{$stockoutreg} A list of matrices with the integrated trajectories
-#' (variable \code{X1} in column 1, \code{X2} in 2, etc.) of all the models \code{$model1}, \code{$model2}, etc.
+#' (variable \code{X1} in column 1, \code{X2} in 2, etc.) for all the models
+#' \code{$model1}, \code{$model2}, etc.
+#'
+#' @seealso \code{\link{autoGPoMoSearch}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
 #'
 #' @examples
-#' #Examples
+#' #Example
+#' # Load data:
 #' data('RosYco')
 #' # Structure choice
 #' data('allToTest')
+#' # Test the models
 #' outGPT <- autoGPoMoTest(RosYco, nVar= 3, dMax = 2, dt = 1/125, show=1,
 #'                         allKL = allToTest, IstepMax = 60)
 #'
@@ -62,7 +68,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
                            show = 1, verbose = 1,
                            allKL = allKL, IstepMin = 10,
                            IstepMax = 10000, tooFarThreshold = 4, LimCyclThreshold = 0.0,
-                           fixedPtThreshold = 1E-8, method = 'lsoda')
+                           fixedPtThreshold = 1E-8, method = 'rk4')
 {
 
   data <- as.matrix(data)
@@ -111,24 +117,24 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
   ptm <- NULL
   #kmod <- matrix(NA, nrow = pMax*0, ncol = nVar)
   KL <- NULL
-  while (sum(okMod) != 0 & Istep < IstepMax) {
+  while (sum(okMod == 1) != 0 & Istep < IstepMax) {
     if (verbose == 1) {
       if (is.null(ptm)) {
         # Number of model under test
         block <- paste("### For Istep = ", Istep,
                        " (max: ", IstepMax,
-                       "), models to test: ", sum(okMod),
+                       "), models to test: ", sum(okMod == 1),
                        " / ", length(listMod), sep="")
       }
       else {
         # Number of model under test
-        Tnext <- (proc.time()[3] - ptm) / sum(oldOkMod) * sum(okMod) * 2
+        Tnext <- (proc.time()[3] - ptm) / sum(oldOkMod == 1) * sum(okMod == 1) * 2
         hr <- Tnext %/% 3600
         min <- floor((Tnext - hr * 3600) %/% 60)
         sec <- round(Tnext  - hr * 3600 - min * 60, digits = 2)
         block <- paste("### For Istep = ", Istep,
                        " (max: ", IstepMax,
-                       "), models to test: ", sum(okMod),
+                       "), models to test: ", sum(okMod == 1),
                        " / ", length(listMod),
                        ". Runtime: ~ ",
                        hr, "h ",
@@ -141,7 +147,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
       oldOkMod <- okMod
     }
     #
-    whatModel <- (okMod == 1) * rep(1:length(okMod))
+    whatModel <- (okMod == 1) * rep(1:length(okMod == 1))
     whatModel <- whatModel[whatModel != 0]
     kmod <- matrix(NA, nrow = pMax*0, ncol = nVar)
     for (i in 1:length(whatModel)) {
@@ -164,8 +170,8 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
       else {
         nlast <- dim(outreg)[1]
 
-        ratio <- (outreg[nlast, 2:(nVar + 1)]-datamoy)/datasd
-        iznogood <- ratio[abs(ratio)>4]
+        ratio <- (outreg[nlast, 2:(nVar + 1)] - datamoy) / datasd
+        iznogood <- ratio[abs(ratio) > tooFarThreshold]
         if (is.na(sum(outreg)) | sum(iznogood) != 0 |
             abs(outreg[nlast, 2] - outreg[1, 2]) <= fixedPtThreshold) {
           okMod[iMod] <- 0
@@ -179,7 +185,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
             else if (sum(iznogood) != 0) {
               text(0., 0.9, paste("TOO FAR: |sig/ref| > 4"), col = 'orange')
               for (i in 1:nVar) {
-                if (abs(ratio[i]) <= 4) {
+                if (abs(ratio[i]) <= tooFarThreshold) {
                   block <- paste("text(0,", 0.9 - 0.2 * i,
                                  ", paste('variable ", i,
                                  " :',signif(",ratio[i],
@@ -245,8 +251,8 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
     }
     Istep <- 2 * Istep
     if (show == 1) {
-      if (nVar <= 3) nsubplot <- sum(okMod)
-      else nsubplot <- 2* sum(okMod)
+      if (nVar <= 3) nsubplot <- sum(okMod == 1)
+      else nsubplot <- 2* sum(okMod == 1)
       if (nsubplot > 16) {
         op <- par(mfrow = c(4, 6), pty = "s")
       }
@@ -260,7 +266,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
   }
   if (verbose == 1) {
     # Number of unclassified models
-    block <- paste("### Number of unclassified models: ", sum(okMod),
+    block <- paste("### Number of unclassified models: ", sum(okMod == 1),
                    " / ", length(listMod), sep="")
     cat(block, "\n")
   }
