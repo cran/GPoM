@@ -42,24 +42,44 @@
 #' tin <- Ross76[,1]
 #' data <- Ross76[,3]
 #' dev.new()
-#' out1 <- gPoMo(data, tin=tin, dMax = 2, nS=c(3), show = 1,
+#' out1 <- gPoMo(data, tin = tin, dMax = 2, nS=c(3), show = 1,
 #'               IstepMax = 1000, nPmin = 9, nPmax = 11)
 #' visuEq(3, 2, out1$models$model1, approx = 4)
-#'
+#' 
+#' 
 #'\dontrun{
 #' #Example 2
 #' data("Ross76")
 #' tin <- Ross76[,1]
-#' data <- Ross76[,2:4]
+#' data <- Ross76[,3]
+#' # if some data are not valid (vector 'weight' with zeros)
+#' W <- tin * 0 + 1
+#' W[1:100] <- 0
+#' W[700:1500] <- 0
+#' W[2000:2800] <- 0
+#' W[3000:3500] <- 0
 #' dev.new()
-#' out2 <- gPoMo(data, tin=tin, dMax = 2, nS=c(1,1,1), show = 1,
-#'               IstepMin = 10, IstepMax = 3000, nPmin = 7, nPmax = 8)
-#' # the simplest model able to reproduce the observed dynamics is model #5
-#' visuEq(3, 2, out2$models$model5, approx = 4) # the original Rossler system is thus retrieved
+#' out2 <- gPoMo(data, tin = tin, weight = W,
+#'                  dMax = 2, nS=c(3), show = 1,
+#'                  IstepMax = 6000, nPmin = 9, nPmax = 11)
+#' visuEq(3, 2, out2$models$model3, approx = 4)
 #'}
+#'
 #'
 #'\dontrun{
 #' #Example 3
+#' data("Ross76")
+#' tin <- Ross76[,1]
+#' data <- Ross76[,2:4]
+#' dev.new()
+#' out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(1,1,1), show = 1,
+#'               IstepMin = 10, IstepMax = 3000, nPmin = 7, nPmax = 8)
+#' # the simplest model able to reproduce the observed dynamics is model #5
+#' visuEq(3, 2, out3$models$model5, approx = 4) # the original Rossler system is thus retrieved
+#'}
+#'
+#'\dontrun{
+#' #Example 4
 #' data("Ross76")
 #' tin <- Ross76[,1]
 #' data <- Ross76[,2:3]
@@ -70,13 +90,13 @@
 #' EqS[,3] <- c(0,1,0,0,0,0,1,1,0,0)
 #' visuEq(3, 2, EqS, substit = c('X','Y','Z'))
 #' dev.new()
-#' out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), show = 1,
+#' out4 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), show = 1,
 #'       EqS = EqS, IstepMin = 10, IstepMax = 2000,
 #'       nPmin = 9, nPmax = 11)
 #'}
 #'
 #'\dontrun{
-#' #Example 4
+#' #Example 5
 #' # load data
 #' data("TSallMod_nVar3_dMax2")
 #' #multiple (six) time series
@@ -86,14 +106,14 @@
 #' data <- cbind(TSRo76,TSSprK)[1:400,]
 #' dev.new()
 #' # generalized Polynomial modelling
-#' out4 <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1,1,1,1),
+#' out5 <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1,1,1,1),
 #'               show = 0, method = 'rk4',
 #'               IstepMin = 2, IstepMax = 3,
 #'               nPmin = 13, nPmax = 13)
 #'
 #' # the original Rossler (variables x, y and z) and Sprott (variables u, v and w)
 #' # systems are retrieved:
-#' visuEq(6, 2, out4$models$model347, approx = 4,
+#' visuEq(6, 2, out5$models$model347, approx = 4,
 #'        substit = c('x', 'y', 'z', 'u', 'v', 'w'))
 #' # to check the robustness of the model, the integration duration
 #' # should be chosen longer (at least IstepMax = 4000)
@@ -189,6 +209,10 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
     stop
   }
 
+  if (is.null(weight)) {
+    weight <- tin * 0 + 1
+  }
+  
   if (is.vector(data)) data <- as.matrix(data)
 
   # Compute the first nS[i] derivatives dXi/dt for each time series Xi
@@ -291,11 +315,15 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
   }
 
 
+  # Select valid initial conditions, i.e. such as W != 0
+  numValidIC <- min(which(Wout == 1))
   # test integration
   out <- autoGPoMoTest(as.matrix(coherentdata),
                        tin = NULL, dt=dtFixe, nVar = nVar, dMax = dMax,
                        show = show, verbose = verbose,
                        allKL = allToTest,
+                       numValidIC = numValidIC,
+                       weight = Wout,
                        IstepMin = IstepMin,
                        IstepMax = IstepMax, tooFarThreshold = 4,
                        LimCyclThreshold = 0.,
@@ -305,6 +333,7 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
   # ouput
   out$inputdata <- data
   out$tin <- tin
+  out$weight <- weight
   out$filtdata <- as.matrix(coherentdata)
   out$tfiltdata <- tout
   out$Wfiltdata <- Wout

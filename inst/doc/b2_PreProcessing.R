@@ -36,7 +36,9 @@ xout <- seq(min(tus), max(tus), by = 0.01)
 rspl <- spline(tus, y = datus[,1], method = "fmm", xout = xout)
 # plot resampled
 lines(rspl$x, rspl$y, type='l', col='green')
-legend(0,6.5,c("original", "subsampled", "resampled"), col=c('lightgray', 'red', 'green'), lty=c(1,1,1), pch=c(NA,1, NA), cex=0.6)
+legend(0,6.5,c("original", "subsampled", "resampled"),
+       col=c('lightgray', 'red', 'green'), lty=c(1,1,1),
+       pch=c(NA,1, NA), cex=0.6)
 
 ## ---- eval = TRUE, fig.align='center'------------------------------------
 # from original signal

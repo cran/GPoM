@@ -226,7 +226,7 @@ gloMoId <- function(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1,
     resSsMod <- vector("numeric", nRegModif)
     for (i in 1:nRegModif) {
       KTemp <- allForK$K * ((1:nRegModif) != i)
-      resSsMod[i] <- sum((drvS - allForK$Y %*% as.matrix(KTemp))^2)
+      resSsMod[i] <- sum((finalWeight * drvS - finalWeight * allForK$Y %*% as.matrix(KTemp))^2)
     }
     KFinal <- vector("numeric",length=nReg)
     KFinal[filterReg == 1] <- allForK$K

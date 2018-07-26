@@ -31,7 +31,7 @@ GSproc <- function(polyK, ivec, weight = NULL) {
       # compute the norm
       normV <- wInProd(v, v, weight)
       # compute the projection
-      proj <- wInProd(u, v, weight) / normV * v
+      proj <- as.vector(wInProd(u, v, weight) / normV) * v
       # compute the new vector
       uNew <- uNew - proj
     }

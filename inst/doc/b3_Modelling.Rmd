@@ -1,5 +1,5 @@
 ---
-title: "GPoM : III Modelling"
+title: "GPoM : 3 Modelling"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     number_sections: no
     latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{GPoM : III Modelling}
+  %\VignetteIndexEntry{GPoM : 3 Modelling}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -16,7 +16,7 @@ load package: "`r library(GPoM)`"
 ## Global Modelling
 
 This document gives an illustration on how to apply
-the global modelling technique.
+the global modelling technique in various contexts.
 The aim of the `GPoM` package is to obtain
 models of Ordinary Differential Equations (ODEs)
 of polynomial form from time series (either single
@@ -24,7 +24,7 @@ or multiple).
 Such type of modelling requires a careful
 time series preprocessing.
 Such data preprocessing was sketched in
-the vignette `II_PreProcessing`.
+the vignette `2 PreProcessing`.
 In the present vignette, it is assumed that
 the studied time series has already been carefully
 preprocessed, so that the modelling tools can now
@@ -46,7 +46,7 @@ data("Ross76")
 ```
 
 (note that the GPoM package can easily be used to produce such
-chaotic data set, see vignette `I_Generate`).
+chaotic data set, see vignette `1 Conventions`).
 
 The loaded variable `Ross76` is a matrix. The time
 vector is in the first column and the time series
@@ -161,7 +161,7 @@ objective of the model (characterization, forecasting, etc.).
 One way to validate the model can be done by considering
 the forecasting performances of the model.
 A code dedicated to such a type of validation
-is presented in vignette `V_Predictability`.
+is presented in vignette `5 Predictability`.
 
 
 ## Detection of causal couplings and retro-modelling
@@ -254,6 +254,9 @@ visuEq(3, 2, data_vignetteIII$out2_m5, approx = 4)
 ```
 
 The original Rössler system is thus retrieved.
+The ability of the approach to retrieve original
+equations was also tested to numerous other
+dynamical systems (see vignette `7 Retro-modelling`).
 
 A practical application of the global modelling technique
 under real world conditions was done for modelling
@@ -305,7 +308,7 @@ Obviously, the correlation between the two time series
 is not very high since close to 0.5 in magnitude
 (Note that alternative examples with very low levels
 of correlations will also be considered in vignette
-`VII_Retro-modelling`):
+`7 Retro-modelling`):
 
 ```{r, eval = TRUE, fig.align='center'}
 # correlation between Rössler-x and Rössler-y
@@ -620,21 +623,17 @@ of the equations can be retrieved.
 The approach may thus be used as a retro-modelling
 technique in order to interpret the model terms.
 This problem will be investigated in more details
-in vignette  `VII_Retromodelling`.
+in vignette  `7 Retromodelling`.
 
-## Time series with gaps and associate modelling
+## Time series with gaps
 
 When measurements are gathered under real environmental
 conditions, the time series may have gaps,
 or may be contaminated by temporary perturbations
 which should be removed.
-In other cases, equivalent records of the same dynamical behavior
-may have been performed at different locations (concurently
-or not) and it may be useful to considered these time
-series simultaneously in the modelling process.
 The `GPoM` package can be applied to such types of data
 sets^[S. Mangiarotti, F. Le Jean, M. Huc, C. Letellier,
-2016. Global modeling of aggregated and associated chaotic
+2016. Global modelling of aggregated and associated chaotic
 dynamics. *Chaos, Solitons & Fractals*, **83**, 82-96].
 
 An example of this kind of situation is given in the present
@@ -644,11 +643,11 @@ section. The Rössler system is used again in this example:
 # load data
 data("Ross76")
 # time vector
-tin <- Ross76[1:500,1]
+tin <- Ross76[1:1500,1]
 # single time series
-series <- Ross76[1:500,3]
+series0 <- series <- Ross76[1:1500,3]
 # plot
-plot(tin, series, type = 'l', col = 'gray', xlab = 'time', ylab = 'Observational data')
+plot(tin, series0, type = 'l', col = 'gray', xlab = 'time', ylab = 'Observational data')
 ```
 
 To illustrate our purpose, some noise is added to the original
@@ -671,21 +670,31 @@ W[301:320] <- 0  # twenty other values will be discarded too
 lines(tin, W, type = 'l', col = 'brown')
 legend(0, -2,c("observed data", "weighting function"),
        col=c('black', 'brown'), lty=1, cex=0.8)
-
 ```
 
-The global modeling is then applied:
+The global modelling is then applied:
 
-```{r, eval = TRUE}
-reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
-```
+```{r, echo = TRUE, eval = FALSE}
+# Weighted time series
+GPout1 <- gPoMo(data = series, tin = tin, weight = W,
+                dMax = 2, nS = 3, winL = 9, show = 1,
+                IstepMin = 10, IstepMax = 6000,
+                nPmin = 5, nPmax = 11, method = 'rk4')
+```               
+```{r, echo = FALSE, eval = TRUE}
+# Weighted time series
+GPout1 <- gPoMo(data = series, tin = tin, weight = W,
+                dMax = 2, nS = 3, winL = 9, show = 0,
+                IstepMin = 10, IstepMax = 6000,
+                nPmin = 5, nPmax = 11, method = 'rk4')
+```               
 
 The following equations are retrieved (the option `weight`
 indicates when the observations provides in `series` should
 be considered in the analysis, or not):
 
 ```{r, eval = TRUE}
-visuEq(3, 2, reg$K, approx = 2)
+visuEq(3, 2, GPout1$models$model7, approx = 2)
 ```
 
 This set of equations can then be integrated numerically.
@@ -694,32 +703,139 @@ state for which weight is equal to 1.
 
 ```{r, eval = TRUE}
 # first weight which value not equal to zero:
-i1 = which(reg$finalWeight == 1)[1]
-v0 <-  reg$init[i1,1:3]
-reconstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250, PolyTerms=reg$K,
-                     v0=v0, method="rk4")
+i1 = which(GPout1$Wfiltdata== 1)[1]
+v0 <-  GPout1$filtdata[i1,1:3]
+rcstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250,
+                  KL = GPout1$models$model7,
+                  v0=v0, method="rk4")
 ```
 
-The Rössler model is correctly retrieved:
+The best obtained model is #7 that efectively reproduces
+the dynamic of the original system:
 
 ```{r, eval = TRUE, fig.align='center', fig.width=4, fig.height=4}
-plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l', lwd = 3,
+plot(rcstr$reconstr[,2], rcstr$reconstr[,3], type='l', lwd = 3,
      main='phase portrait', xlab='y', ylab = 'dy/dt', col='orange')
 # original data:
-lines(reg$init[,1], reg$init[,2], type='l',
+lines(GPout1$filtdata[,1], GPout1$filtdata[,2], type='l',
       main='phase portrait', col='black')
 # initial condition
 lines(v0[1], v0[2], type = 'p', col = 'red')
 legend(-2,1,c("original", "model"), col=c('black', 'orange'), lty=1, cex=0.5)
 legend(-2.1,-0.7,"initial conditions : ", cex = 0.5,  bty="n")
+```
+
+Note that model #3 also produces a good approximation
+of the original system.
+
+```{r, eval = TRUE}
+visuEq(3, 2, GPout1$models$model3, approx = 2)
+```
+
+This model converges to a periodic attractor but
+with a slight modification of its parameterization,
+a chaotic solutions can be obtained.
+
+```{r, eval = TRUE}
+# first weight which value not equal to zero:
+i1 = which(GPout1$Wfiltdata== 1)[1]
+v0 <-  GPout1$filtdata[i1,1:3]
+KL3bis <- KL3 <- GPout1$models$model7
+KL3bis[2,3] <- KL3[2,3] * 1.1
+rcstr <- numicano(nVar = 3, dMax = 2,
+                     Istep = 40000, onestep = 1/250, KL = KL3bis,
+                     v0 = v0, method = "rk4")
+plot(rcstr$reconstr[35000:40000,2], rcstr$reconstr[35000:40000,3],
+     main='phase portrait', xlab='y', ylab = 'dy/dt',
+     type='l', lwd = 3, col='orange')
+```
+
+## Time series in associassion
+
+Equivalent records of the same dynamical behavior
+may have been performed by several sensors,
+concurently or not and at same or different locations.
+It may then be useful, and simetimes necessary, to consider
+these time series simultaneously in the modelling process.
+The `GPoM` package can also be applied to such type
+of data sets^[Ibid].
+
+A set of four time series of different time legnth,
+all derived from the Rössler system, are made available
+to show how to apply the global modelling technique
+to such a set of time series.
+
+```{r, eval = TRUE, fig.align='center'}
+# load data
+data("severalTS")
+# plot
+plot(svrlTS$data1$TS[,1] - svrlTS$data1$TS[1,1], svrlTS$data1$TS[,2],
+     type = 'l', col = 'gray',
+     xlab = 'time', ylab = 'y(t)', main = 'Observational data',
+     xlim = c(0, 20), ylim = c(-6, 2.2))
+lines(svrlTS$data2$TS[,1] - svrlTS$data2$TS[1,1], svrlTS$data2$TS[,2],
+      type = 'l', col = 'blue')
+lines(svrlTS$data3$TS[,1] - svrlTS$data3$TS[1,1], svrlTS$data3$TS[,2],
+      type = 'l', col = 'orange')
+lines(svrlTS$data4$TS[,1] - svrlTS$data4$TS[1,1], svrlTS$data4$TS[,2],
+      type = 'l', col = 'brown')
+```
+
+The function `concat` concatenates the set of separated time series
+into a single time series, and provides a corresponding weight vector `W`
+that takes the bundary conditions between successive time series
+into account, in order to avoid any discontinuous effect.
+
+```{r, eval = TRUE, fig.align='center'}
+# Concatenate the data set into a single time series
+winL = 55
+concaTS <- concat(svrlTS, winL = winL)
+```
+
+A large value is chosen for parameter `winL` just to highlight
+its effect on the next plots.
+The gray line enables to clearly distinguish the discontinuities
+at the connexion of originally separated time series.
+Data points rejected at the boudary are plotted as red dots
+and kept ones as green dots.
+The corresponding weighted vector is plotted as a black line.
+
+```{r, eval = TRUE, fig.align='center'}
+# Plot the concatenated time series
+plot(concaTS$sglTS$TS[,1], concaTS$sglTS$TS[,2],
+     main = 'Concatenated time series',
+     xlab = 'Time (concatenated)', ylab = 'y(t)',
+     type = 'l', col = 'gray')
+lines(concaTS$sglTS$TS[concaTS$sglTS$W == 1,1],
+      concaTS$sglTS$TS[concaTS$sglTS$W == 1,2], type = 'p', col = 'green', cex = 0.5)
+lines(concaTS$sglTS$TS[concaTS$sglTS$W == 0,1],
+      concaTS$sglTS$TS[concaTS$sglTS$W == 0,2], type = 'p', col = 'red', cex = 0.5)
+lines(concaTS$sglTS$TS[,1], concaTS$sglTS$W, type = 'l')
+```
+
+The output of function `concat` can directly be used for global modelling:
+
+```{r, echo = TRUE, eval = FALSE}
+GPout2 <- gPoMo(data = concaTS$sglTS$TS[,2], tin = concaTS$sglTS$TS[,1],
+                dMax = 2, nS = 3, winL = winL, weight = concaTS$sglTS$W, show = 1,
+                IstepMin = 10, IstepMax = 12000, nPmin = 6, nPmax = 12, method = 'rk4')
 
 ```
+```{r, echo = TRUE, eval = FALSE}
+GPout2 <- gPoMo(data = concaTS$sglTS$TS[,2], tin = concaTS$sglTS$TS[,1],
+                dMax = 2, nS = 3, winL = winL, weight = concaTS$sglTS$W, show = 0,
+                IstepMin = 10, IstepMax = 12000, nPmin = 6, nPmax = 12, method = 'rk4')
+
+```
+
+The dynamic of the original system is effectively reproduced
+by sereral models.
 
 ## Output visualization and global models validation
 
 The outputs of the `gPoMo` function are gathered in one
 single list.
-The next vignette `IV_VisualizeOutputs` aims to show
+The next vignette `4 VisualizeOutputs` aims to show
 how the results are organized in this list.
 Examples of model validation are then presented in the
-vignette `V_Predictability`.
+vignette `5 Predictability`.

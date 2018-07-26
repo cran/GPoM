@@ -19,6 +19,8 @@
 #' @param allKL A list of all the models \code{$mToTest1},
 #' \code{$mToTest2}, etc. to be tested. Each model is provided
 #' as a matrix.
+#' @param numValidIC Line number of the first valid initial
+#' conditions, that is, such as weight is not equal to zero.
 #' @param IstepMin The minimum number of integration step to start
 #' of the analysis (by default \code{IstepMin = 10}).
 #' @param IstepMax The maximum number of integration steps for
@@ -66,7 +68,7 @@
 autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
                            nVar = nVar, dMax = dMax,
                            show = 1, verbose = 1,
-                           allKL = allKL, IstepMin = 10,
+                           allKL = allKL, numValidIC = 1, weight = NULL, IstepMin = 10,
                            IstepMax = 10000, tooFarThreshold = 4, LimCyclThreshold = 0.0,
                            fixedPtThreshold = 1E-8, method = 'rk4')
 {
@@ -88,6 +90,9 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
   else if (!is.null(tin) & !is.null(dt)) {
     cat("input time vector 'tin' and  time step 'dt' are inconsistent")
     stop
+  }
+  if (is.null(weight)) {
+    weight <- tin * 0 + 1
   }
   tout <- NULL
 
@@ -112,7 +117,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
   Istep <- IstepMin
   StockInitState <- list()
   InitStates <- matrix(data=1, nrow = length(listMod), ncol = 1) %*%
-    as.vector(data[1, 1:nVar])
+    as.vector(data[numValidIC, 1:nVar])
   # reference time
   ptm <- NULL
   #kmod <- matrix(NA, nrow = pMax*0, ncol = nVar)
@@ -233,12 +238,20 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
               plot(outreg[, 2], outreg[, 3], type = "l",
                    main = paste("#", iMod, "(", sum(KL!=0
                    ), "p)"), col = "red", xlab=paste("I=",Istep), ylab="")
-              lines(data[, 1], data[, 2], type = "l")
+              lines(outreg[1, 2], outreg[1, 3], type = "p",
+                    col = "red")
+              data0 <- data
+              data0[weight == 0,2] <- NaN
+              lines(data0[, 1], data0[, 2], type = "l", col = 'gray')
               if (nVar > 3) {
                 plot(outreg[, nVar-1], outreg[, nVar], type = "l",
                      main = paste("#", iMod, "(", sum(KL!=0
                      ), "p)"), col = "green", xlab=paste("I=",Istep), ylab="")
-                lines(data[, nVar-2], data[, nVar-1], type = "l")
+                lines(outreg[1, 2], outreg[1, 3], type = "p",
+                      col = "green")
+                data0 <- data
+                data0[weight==0,2] <- NaN
+                lines(data0[, nVar-2], data0[, nVar-1], type = "l", col = 'gray')
               }
             }
           }

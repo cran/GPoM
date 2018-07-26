@@ -1,12 +1,12 @@
 ---
-title: "GPoM : I Generate"
+title: "GPoM : 1 Conventions"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
   pdf_document:
     number_sections: no
 vignette: >
-  %\VignetteIndexEntry{GPoM : I Generate}
+  %\VignetteIndexEntry{GPoM : 1 Conventions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -16,7 +16,7 @@ The Generalized Global Polynomial Modelling (GPoM)
 package allows a generic
 formulation of any Ordinary Differential Equations (ODEs)
 in polynomial form. The aim of the present vignette
-`I_Generate` is to introduce briefly the way to describe
+`1 Conventions` is to introduce briefly the way to describe
 a set of polynomial ODEs with GPoM and to show how
 to perform its numerical integration^[Mangiarotti S,
 Le Jean F, Chassan M, Drapeau L, Huc M. 2018.
@@ -39,7 +39,9 @@ used to formulate a polynomial will be:
 
 
 ```{r}
-poLabs(nVar = 3, dMax = 2)
+nVar = 3
+dMax = 2
+poLabs(nVar = nVar, dMax = dMax)
 ```
 
 This formulation has `pMax = 10` terms:
@@ -238,6 +240,6 @@ The aim of the GPoM package is to retreive ODEs from
 time series using global modelling. Such type of modelling
 may require a careful data preprocessing.
 Simple examples of preprocessing will be given in the next
-vignette `II_Preprocessing`.
+vignette `2 Preprocessing`.
 Examples for applying global modelling to time series
-will then be presented in vignette `III_Modelling`.
+will then be presented in vignette `3 Modelling`.

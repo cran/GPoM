@@ -24,9 +24,8 @@ pour le Développement, 18 avenue Edouard Belin,
 31401 Toulouse, FRANCE]$^,$ ^[The developments of the GPoM package
 have been funded by the french programs *LEFE / Insu* (2012-2016),
 and by the *Défi InFiNiTi / CNRS* (2016-2017)].
-The global modelling technique is a model-building approach:
-its aim is to obtain difference, delayed of differential
-equations from time series.
+The global modelling technique is a model-building approach.
+Its aim is to obtain differential equations from time series.
 Model-building from data takes its background from
 the fields of Electrical Engineering and Statistics
 and was originally mostly dedicated to linear problems
@@ -34,10 +33,10 @@ and was originally mostly dedicated to linear problems
 dynamics and chaos: A review,
 *Mathematical Problems in Engineering*, 2009, 238960.].
 The more advanced developments of the model-building
-approaches also incorporate the Theory of Nonlinear
+approaches have incorporated the Theory of Nonlinear
 Dynamical Systems in its background.
-Thanks to it, global modelling technique is well adapted
-to model deterministic behaviours of various degree
+Thanks to it, global modelling technique has become well
+adapted to model deterministic behaviours of various degree
 of nonlinarity (linear, weakly or strongly nonlinear, chaotic),
 and it is also well designed to model dynamical
 behaviors characterized by a high sentivity
@@ -54,20 +53,24 @@ of phenomenological models from numerical scalar time
 series, *Physica D*, **58**, 202-215.]$^,$ ^[G. Gouesbet & C. Letellier, 1994. Global vector-field reconstruction
 by using a multivariate polynomial L2 approximation
 on nets, *Physical Review E*, **49**, 4955-4972.].
-The ability to obtain equations for one chosen system
-may be very different depending on what variable
-is used to reconstruct the equations.
-This property plays a very important role when
-trying to retrieve governing equations for any
-dynamical system.
+The ability to obtain equations of a chosen system
+may highly vary depending on what variables
+are used to reconstruct the equations.
+The set of observed variables plays a very important
+role when trying to retrieve governing equations
+for any dynamical system.
 This question was investigated during
-the last decades^[C. Letellier, L. A. Aguirre, &
+the last decades^[C. Letellier, L. A. Aguirre &
 J. Maquet, 2005. Relation between observability
 and differential embeddings for nonlinear dynamics,
 *Physical Review E*, **71**, 066213.]$^,$ ^[L.A. Aguirre &
 C. Letellier, 2011. Investigating observability properties
 from data in non-linear dynamics. *Physical Review E*,
-**83**, 066209.].
+**83**, 066209.]$^,$ ^[L.A. Aguirre, L. L. Portes &
+C. Letellier, 2018. Structural, Dynamical and Symbolic
+Observability: From Dynamical Systems to Networks.
+*IEEE Transactions on Control of Network Systems*,
+arXiv:1806.08909v1.].
 
 It is only in the 2000s that a set of
 ODEs could be directly obtained from real world data set^[J. Maquet,
@@ -79,7 +82,7 @@ New algorithms were developped at the begining
 of the 2010s^[S. Mangiarotti, R. Coudret, L. Drapeau
 & L. Jarlan, 2012. Polynomial search and global modeling:
 Two algorithms for modeling chaos,” *Physical Review E*, **86**(4),
-046205.] that have proven to have very high levels of performance
+046205.] that have proven to have a very high level of performance
 to model dynamical behaviors observed under real environmental
 conditions: cereal crops cycles, snow area cycles,
 eco-epidemiology, etc.^[S. Mangiarotti, L. Drapeau &
@@ -111,35 +114,35 @@ Seven illustrative `vignettes` are provided to introduce
 the package which can be used as a tutorial and as a
 demonstrator. These are as follows:
 
-(1) `I_Generate` introduces the conventions
+(1) `1 Conventions` introduces the conventions
 used to formulate sets of ODEs of polynomial form
 with `GPoM` and shows how to integrate them numerically,
 
-(2) `II_PreProcessing` provides some simple
+(2) `2 PreProcessing` provides some simple
 examples of time series preprocessing before
 applying the global modelling technique,
 
-(3) `III_Modelling` is dedicated to the global
+(3) `3 Modelling` is dedicated to the global
 modelling itself. Several case studies are presented
 considering single and multiple time series, both for
 modelling or detecting causal couplings,
 
-(4) `IV_VisuOutput` shows how to get an overview
+(4) `4 VisuOutput` shows how to get an overview
 of the output obtained with global modelling
 functions and explains how these are organised,
 
-(5) `V_Predictability` aims to provide basic examples
+(5) `5 Predictability` provides basic examples
 of validation considering the models performances in
 term of predictability,
 
-(6) `VI_Robustness` aims to illustrate the robustness of
-the global modelling technique under degraded conditions
-of noisy time series, subsampling/resampling,
-time series length, sensitivity to initial conditions,
+(6) `6 Robustness` illustrates the robustness of
+the global modelling technique under various types
+of degraded conditions: noisy time series, subsampling/resampling,
+short time series length, sensitivity to initial conditions,
 
-(7) `VII_Retromodelling` aims to test the ability of
-the global modelling technique to retrieve the original
-equations considering various dynamical systems.
+(7) `7 Retromodelling` shows the ability of
+the global modelling technique to unveil the original
+equations when all the system variables are available.
 
 The present GPoM package is made available to whom
 would like to use it.
@@ -154,12 +157,14 @@ For univariate time series modelling:
 & L. Jarlan, 2012. Polynomial search and global modeling:
 Two algorithms for modeling chaos,” *Physical Review E*,
 **86**(4), 046205.
+<https://journals.aps.org/pre/abstract/10.1103/PhysRevE.86.046205>
 
 For infering causal couplings and for detecting or analysing
 multivariate couplings:
 [2] S. Mangiarotti, 2015. Low
 dimensional chaotic models for the plague epidemic in
 Bombay, *Chaos, Solitons & Fractals*, **81**(A), 184-196.
+<https://www.sciencedirect.com/science/article/pii/S0960077915002933>
 
 For using the generalized formulation of global
 modelling (that combines multiariate time series
@@ -167,23 +172,37 @@ and some of their derivatives):
 [3] S. Mangiarotti, M. Peyre & M. Huc, 2016.
 A chaotic model for the epidemic of Ebola virus disease
 in West Africa (2013–2016). *Chaos*, **26**, 113112.
+<https://aip.scitation.org/doi/abs/10.1063/1.4967730>
 
 For the time series resampling (before applying
 the global modelling technique):
 [4] S. Mangiarotti, 2018. The global modelling
-classification technique applied to the detection of chaotic attractors. *Supplementary Material A* to
+classification technique applied to the detection of chaotic attractors.
+<https://ars.els-cdn.com/content/image/1-s2.0-S0960077917305040-mmc1.pdf>
+*Supplementary Material A* to
 "Can the global modelling technique be used for crop classification?"
 by S. Mangiarotti, A.K. Sharma, S. Corgne, L. Hubert-Moy, L. Ruiz, M.
 Sekhar, Y. Kerr, 2018. *Chaos, Solitons & Fractals*, **106**, 363-378.
+<https://www.sciencedirect.com/science/article/pii/S0960077917305040>
+
 
 For modelling the dynamics of aggregated (or associated) time series:
 [5] S. Mangiarotti, F. Le Jean, M. Huc, C. Letellier, 2016.
 Global modeling of aggregated and associated chaotic
 dynamics. *Chaos Solitons Fractals*, **83**, 82–96.
 
+When topological properties can not be derived
+from the observational data and from the model
+(either due to noisy conditions, or high dimensional dynamic),
+alternative approaches have to be used for validation.
 Note that various validation methods have been
-introduced in [3]. A validation of high precision
-is also presented in the supplementary matials of [1].
+introduced in [3].
+<https://aip.scitation.org/doi/abs/10.1063/1.4967730>
+Note that when a validation based on topological properties
+is possible, a validation of high precision can be performed
+as examplified in the supplementary matials <https://journals.aps.org/pre/supplemental/10.1103/PhysRevE.86.046205/SuppMatos_PhysRevE_Pub_sept2012.pdf> of reference [1]
+<https://journals.aps.org/pre/supplemental/10.1103/PhysRevE.86.046205>.
+
 
 The authors of the package decline any responsability
 about the results and interpretations obtained and made

@@ -1,5 +1,5 @@
 ---
-title: "GPoM : II PreProcessing"
+title: "GPoM : 2 PreProcessing"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     number_sections: no
     latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{GPoM : II PreProcessing}
+  %\VignetteIndexEntry{GPoM : 2 PreProcessing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -62,7 +62,7 @@ The GPoM package is based on polynomial formulations.
 For the canonical formulation, its aim is to obtain a
 polynomial approximation of the function $F$.
 An approximation of $F$ can be obtained using the `gPoMo`
-function (see vignette `III_Modelling`).
+function (see vignette `3 Modelling`).
 In practice, the canonical form will require the
 computations of $n$ derivatives in order to have
 the following $n + 1$ time series:
@@ -103,7 +103,7 @@ of observability^[C. Letellier, L. A. Aguirre,
 differential embeddings for nonlinear dynamics,
 *Physical Review E*, **71**(6), 066213.].
 Time series of such equations can be easily generated
-with the GPoM package (see vignette `I_Generate`).
+with the GPoM package (see vignette `1 Conventions`).
 A ready-to-use data set of the Rössler-1976 system that
 can be directly loaded is also provided in the package:
 
@@ -159,7 +159,9 @@ xout <- seq(min(tus), max(tus), by = 0.01)
 rspl <- spline(tus, y = datus[,1], method = "fmm", xout = xout)
 # plot resampled
 lines(rspl$x, rspl$y, type='l', col='green')
-legend(0,6.5,c("original", "subsampled", "resampled"), col=c('lightgray', 'red', 'green'), lty=c(1,1,1), pch=c(NA,1, NA), cex=0.6)
+legend(0,6.5,c("original", "subsampled", "resampled"),
+       col=c('lightgray', 'red', 'green'), lty=c(1,1,1),
+       pch=c(NA,1, NA), cex=0.6)
 ```
 
 In the present case, the spline resampling appears
@@ -286,7 +288,7 @@ $dX_n/dt = f_n(X_1, X_2, ..., X_n)$.
 
 where the $X_i$, are the observed variables.
 The GPoM package can be used to obtain a polynomial
-approximation of the functions $f_i$ (see vignette `III_Modelling`).
+approximation of the functions $f_i$ (see vignette `3 Modelling`).
 This formulation will thus require the computations of the
 first derivatives of each time series in order to have
 $(X_1, X_2, ..., X_n, dX_1/dt, dX_2/dt, ... dX_n/dt)$.
@@ -440,4 +442,4 @@ of Ebola virus disease in West Africa (2013-2016).
 
 Once the time series have been carefully prepared, the global
 modelling technique can be applied. This next step will be
-presented in the following vignette `III_Modelling`.
+presented in the following vignette `3 Modelling`.

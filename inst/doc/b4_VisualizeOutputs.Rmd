@@ -1,5 +1,5 @@
 ---
-title: "GPoM : IV Visualization of the outputs"
+title: "GPoM : 4 Visualization of the outputs"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     number_sections: no
     latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{GPoM : IV Visualization of the outputs}
+  %\VignetteIndexEntry{GPoM : 4 Visualization of the outputs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -173,7 +173,7 @@ the `gPoMo` algorithm) and `$models$model#`
 (the list of uncategorized models).
 In both cases, models coefficients are in a matrix
 of dimension `pMax * nVar` with `pMax` the maximal
-number of parameter (see vignette `I_Generate`) and
+number of parameter (see vignette `1 Conventions`) and
 `nVar` the number of variables (also called model
 dimension).
 The corresponding equations can be edited directly
@@ -186,7 +186,7 @@ dMax <- p2dMax(nVar,pMaxKnown = pMax)
 # See equations
 visuEq(nVar, dMax, outputGPoM$models$model7, approx = 2)
 #
-visuEq(nVar, dMax, outputGPoM$models$model9, approx = 2)
+visuEq(nVar, dMax, outputGPoM$models$model9, approx = TRUE)
 ```
 
 By default, a large number of digits is provided for each
@@ -236,5 +236,5 @@ An overview of all the main elements of the global
 modelling technique and GPoM tools were presented
 in the previous vignettes.
 An illustration of model validation will now be
-presented in the last vignette `V_Predictability`
+presented in the last vignette `5 Predictability`
 based on the model forecasting performances.

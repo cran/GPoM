@@ -258,11 +258,11 @@ visuEq(6, 2, data_vignetteIII$out4_m347, approx = 2,
 # load data
 data("Ross76")
 # time vector
-tin <- Ross76[1:500,1]
+tin <- Ross76[1:1500,1]
 # single time series
-series <- Ross76[1:500,3]
+series0 <- series <- Ross76[1:1500,3]
 # plot
-plot(tin, series, type = 'l', col = 'gray', xlab = 'time', ylab = 'Observational data')
+plot(tin, series0, type = 'l', col = 'gray', xlab = 'time', ylab = 'Observational data')
 
 ## ---- eval = TRUE, fig.align='center'------------------------------------
 # some noise is added
@@ -278,29 +278,99 @@ lines(tin, W, type = 'l', col = 'brown')
 legend(0, -2,c("observed data", "weighting function"),
        col=c('black', 'brown'), lty=1, cex=0.8)
 
+## ---- echo = TRUE, eval = FALSE------------------------------------------
+#  # Weighted time series
+#  GPout1 <- gPoMo(data = series, tin = tin, weight = W,
+#                  dMax = 2, nS = 3, winL = 9, show = 1,
+#                  IstepMin = 10, IstepMax = 6000,
+#                  nPmin = 5, nPmax = 11, method = 'rk4')
+
+## ---- echo = FALSE, eval = TRUE------------------------------------------
+# Weighted time series
+GPout1 <- gPoMo(data = series, tin = tin, weight = W,
+                dMax = 2, nS = 3, winL = 9, show = 0,
+                IstepMin = 10, IstepMax = 6000,
+                nPmin = 5, nPmax = 11, method = 'rk4')
 
 ## ---- eval = TRUE--------------------------------------------------------
-reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
-
-## ---- eval = TRUE--------------------------------------------------------
-visuEq(3, 2, reg$K, approx = 2)
+visuEq(3, 2, GPout1$models$model7, approx = 2)
 
 ## ---- eval = TRUE--------------------------------------------------------
 # first weight which value not equal to zero:
-i1 = which(reg$finalWeight == 1)[1]
-v0 <-  reg$init[i1,1:3]
-reconstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250, PolyTerms=reg$K,
-                     v0=v0, method="rk4")
+i1 = which(GPout1$Wfiltdata== 1)[1]
+v0 <-  GPout1$filtdata[i1,1:3]
+rcstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250,
+                  KL = GPout1$models$model7,
+                  v0=v0, method="rk4")
 
 ## ---- eval = TRUE, fig.align='center', fig.width=4, fig.height=4---------
-plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l', lwd = 3,
+plot(rcstr$reconstr[,2], rcstr$reconstr[,3], type='l', lwd = 3,
      main='phase portrait', xlab='y', ylab = 'dy/dt', col='orange')
 # original data:
-lines(reg$init[,1], reg$init[,2], type='l',
+lines(GPout1$filtdata[,1], GPout1$filtdata[,2], type='l',
       main='phase portrait', col='black')
 # initial condition
 lines(v0[1], v0[2], type = 'p', col = 'red')
 legend(-2,1,c("original", "model"), col=c('black', 'orange'), lty=1, cex=0.5)
 legend(-2.1,-0.7,"initial conditions : ", cex = 0.5,  bty="n")
 
+## ---- eval = TRUE--------------------------------------------------------
+visuEq(3, 2, GPout1$models$model3, approx = 2)
+
+## ---- eval = TRUE--------------------------------------------------------
+# first weight which value not equal to zero:
+i1 = which(GPout1$Wfiltdata== 1)[1]
+v0 <-  GPout1$filtdata[i1,1:3]
+KL3bis <- KL3 <- GPout1$models$model7
+KL3bis[2,3] <- KL3[2,3] * 1.1
+rcstr <- numicano(nVar = 3, dMax = 2,
+                     Istep = 40000, onestep = 1/250, KL = KL3bis,
+                     v0 = v0, method = "rk4")
+plot(rcstr$reconstr[35000:40000,2], rcstr$reconstr[35000:40000,3],
+     main='phase portrait', xlab='y', ylab = 'dy/dt',
+     type='l', lwd = 3, col='orange')
+
+## ---- eval = TRUE, fig.align='center'------------------------------------
+# load data
+data("severalTS")
+# plot
+plot(svrlTS$data1$TS[,1] - svrlTS$data1$TS[1,1], svrlTS$data1$TS[,2],
+     type = 'l', col = 'gray',
+     xlab = 'time', ylab = 'y(t)', main = 'Observational data',
+     xlim = c(0, 20), ylim = c(-6, 2.2))
+lines(svrlTS$data2$TS[,1] - svrlTS$data2$TS[1,1], svrlTS$data2$TS[,2],
+      type = 'l', col = 'blue')
+lines(svrlTS$data3$TS[,1] - svrlTS$data3$TS[1,1], svrlTS$data3$TS[,2],
+      type = 'l', col = 'orange')
+lines(svrlTS$data4$TS[,1] - svrlTS$data4$TS[1,1], svrlTS$data4$TS[,2],
+      type = 'l', col = 'brown')
+
+## ---- eval = TRUE, fig.align='center'------------------------------------
+# Concatenate the data set into a single time series
+winL = 55
+concaTS <- concat(svrlTS, winL = winL)
+
+## ---- eval = TRUE, fig.align='center'------------------------------------
+# Plot the concatenated time series
+plot(concaTS$sglTS$TS[,1], concaTS$sglTS$TS[,2],
+     main = 'Concatenated time series',
+     xlab = 'Time (concatenated)', ylab = 'y(t)',
+     type = 'l', col = 'gray')
+lines(concaTS$sglTS$TS[concaTS$sglTS$W == 1,1],
+      concaTS$sglTS$TS[concaTS$sglTS$W == 1,2], type = 'p', col = 'green', cex = 0.5)
+lines(concaTS$sglTS$TS[concaTS$sglTS$W == 0,1],
+      concaTS$sglTS$TS[concaTS$sglTS$W == 0,2], type = 'p', col = 'red', cex = 0.5)
+lines(concaTS$sglTS$TS[,1], concaTS$sglTS$W, type = 'l')
+
+## ---- echo = TRUE, eval = FALSE------------------------------------------
+#  GPout2 <- gPoMo(data = concaTS$sglTS$TS[,2], tin = concaTS$sglTS$TS[,1],
+#                  dMax = 2, nS = 3, winL = winL, weight = concaTS$sglTS$W, show = 1,
+#                  IstepMin = 10, IstepMax = 12000, nPmin = 6, nPmax = 12, method = 'rk4')
+#  
+
+## ---- echo = TRUE, eval = FALSE------------------------------------------
+#  GPout2 <- gPoMo(data = concaTS$sglTS$TS[,2], tin = concaTS$sglTS$TS[,1],
+#                  dMax = 2, nS = 3, winL = winL, weight = concaTS$sglTS$W, show = 0,
+#                  IstepMin = 10, IstepMax = 12000, nPmin = 6, nPmax = 12, method = 'rk4')
+#  
 

@@ -119,7 +119,8 @@ visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprK, substit = 1)
 
 ## ----plotSprK, eval=TRUE, fig.align='center'-----------------------------
   TS <- TSallMod_nVar3_dMax2$SprK$reconstr
-  plot(TS[,1], TS[,2], type = 'l', ylim = c(-3,3.6), xlab = 't', ylab= '', main = 'Sprott-K', col = 'blue')
+  plot(TS[,1], TS[,2], type = 'l', ylim = c(-3,3.6), xlab = 't', ylab= '', 
+       main = 'Sprott-K', col = 'blue')
   lines(TS[,1], TS[,3], type = 'l', col = 'red')
   lines(TS[,1], TS[,4], type = 'l',  col = 'green')
   legend(0,3.5, c("x(t)", "y(t)", "z(t)"), col=c('blue', 'red', 'green'), lty=1, cex = 0.8)

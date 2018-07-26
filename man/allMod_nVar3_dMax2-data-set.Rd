@@ -6,7 +6,7 @@
 \alias{allMod_nVar3_dMax2 data set}
 \alias{allMod_nVar3_dMax2}
 \title{Numerical description of a list of eighteen three-dimensional chaotic
-sytems (see vignette \code{VII_Retro-Modelling})}
+sytems (see vignette \code{7_Retro-Modelling})}
 \format{An object of class \code{list} of length 18.}
 \usage{
 allMod_nVar3_dMax2
@@ -29,7 +29,7 @@ by function \code{poLabs(nVar = 3, dMax = 2)}.
 }
 \references{
 All the references are provided in
-vignette \code{VII_retro-modelling}.
+vignette \code{7_retro-modelling}.
 }
 \author{
 Sylvain Mangiarotti, Mireille Huc.

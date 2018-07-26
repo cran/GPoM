@@ -1,5 +1,5 @@
 ---
-title: "GPoM : V Models predictability"
+title: "GPoM : 5 Models predictability"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     number_sections: no
     latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{GPoM : V Models predictability}
+  %\VignetteIndexEntry{GPoM : 5 Models predictability}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -271,9 +271,9 @@ it to your favorite data sets.
 Two other vignettes are available which aim
 is to show the robustness of the global modelling
 under noisy conditions, subsampling, short lenth
-time series (in `VI_Sensitivity`);
+time series (in `6 Sensitivity`);
 and to illustrate its performances on other
-dynamical systems (in `VII_Retromodelling`)
+dynamical systems (in `7 Retromodelling`)
 since the previous tests were performed before
 almost exclusively on the same system.
 

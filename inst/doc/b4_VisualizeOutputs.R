@@ -76,7 +76,7 @@ dMax <- p2dMax(nVar,pMaxKnown = pMax)
 # See equations
 visuEq(nVar, dMax, outputGPoM$models$model7, approx = 2)
 #
-visuEq(nVar, dMax, outputGPoM$models$model9, approx = 2)
+visuEq(nVar, dMax, outputGPoM$models$model9, approx = TRUE)
 
 ## ---- eval = TRUE--------------------------------------------------------
 # for model #7

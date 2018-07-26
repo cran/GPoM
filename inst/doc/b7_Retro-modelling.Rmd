@@ -1,5 +1,5 @@
 ---
-title: "GPoM : VII Retro-modelling"
+title: "GPoM : 7 Retro-modelling"
 author: "Sylvain Mangiarotti & Mireille Huc"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     number_sections: no
     latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{GPoM : VII Retro-modelling}
+  %\VignetteIndexEntry{GPoM : 7 Retro-modelling}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 load package: "`r library(GPoM)`"
@@ -24,7 +24,7 @@ To answer this question, the Rössler system^[O. Rössler,
 An Equation for Continuous Chaos, *Physics Letters*,
 **57A**(5), 1976, 397-398.] was extensively used
 in the previous vignettes, in particular in vignettes
-`III_Modelling` and `VI_Sensitivity`, to show
+`3 Modelling` and `6 Sensitivity`, to show
 that the global modelling is very efficient to retrieve
 this system under various conditions
 of noise, subsampling, short length time series, etc.
@@ -142,7 +142,7 @@ The results obtained for this system are especially
 interesting since providing an obvious evidence
 that correlation is not a good tool for the detection
 of linkages between dynamical variables.
-Contrarily, the retromodelling technique enables
+Contrarily, the retro-modelling technique enables
 not only to detect the couplings.
 Furthermore, it goes far beyound, by making it
 possible to retrieve the original and
@@ -337,7 +337,8 @@ visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprK, substit = 1)
 The following data set was used:
 ```{r plotSprK, eval=TRUE, fig.align='center'}
   TS <- TSallMod_nVar3_dMax2$SprK$reconstr
-  plot(TS[,1], TS[,2], type = 'l', ylim = c(-3,3.6), xlab = 't', ylab= '', main = 'Sprott-K', col = 'blue')
+  plot(TS[,1], TS[,2], type = 'l', ylim = c(-3,3.6), xlab = 't', ylab= '', 
+       main = 'Sprott-K', col = 'blue')
   lines(TS[,1], TS[,3], type = 'l', col = 'red')
   lines(TS[,1], TS[,4], type = 'l',  col = 'green')
   legend(0,3.5, c("x(t)", "y(t)", "z(t)"), col=c('blue', 'red', 'green'), lty=1, cex = 0.8)

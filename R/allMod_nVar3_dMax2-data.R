@@ -1,5 +1,5 @@
 #' Numerical description of a list of eighteen three-dimensional chaotic
-#' sytems (see vignette \code{VII_Retro-Modelling})
+#' sytems (see vignette \code{7_Retro-Modelling})
 #'
 #' @name allMod_nVar3_dMax2 data set
 #' @docType data
@@ -24,7 +24,7 @@
 #' @author Sylvain Mangiarotti, Mireille Huc.
 #'
 #' @references All the references are provided in
-#' vignette \code{VII_retro-modelling}.
+#' vignette \code{7_retro-modelling}.
 #'
 #' @keywords data
 "allMod_nVar3_dMax2"

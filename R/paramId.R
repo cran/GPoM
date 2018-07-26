@@ -34,7 +34,7 @@ paramId <- function(allForK, drv, weight) {
   for (i in 1:nRegModif) {
     K[i] <- t(cc[i:nRegModif]) %*% as.matrix(allForK$A[i:nRegModif,i])
   }
-  resTot <- sum((drv - allForK$Y %*% as.matrix(K))^2)
+  resTot <- sum((weight * drv - weight * allForK$Y %*% as.matrix(K))^2)
   # prepare output
   allForK$K <- K
   allForK$resTot <- resTot

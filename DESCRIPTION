@@ -1,16 +1,19 @@
 Package: GPoM
 Type: Package
 Title: Generalized Polynomial Modelling
-Version: 1.1
-Date: 2018-01-18
+Version: 1.2
+Date: 2018-07-26
 Authors@R: c(
     person("Sylvain", "Mangiarotti", email = "sylvain.mangiarotti@cesbio.cnes.fr",role = c("aut")),
     person("Flavie", "Le Jean",role = c("ctb")),
     person("Malika", "Chassan",role = c("ctb")),
     person("Laurent", "Drapeau",role = c("ctb")),
     person("Mireille", "Huc", email = "mireille.huc@cesbio.cnes.fr", role = "cre"))
-Author: Sylvain Mangiarotti [aut], Flavie Le Jean [ctb], Malika Chassan [ctb],
-    Laurent Drapeau [ctb], Mireille Huc [cre]
+Author: Sylvain Mangiarotti [aut],
+  Flavie Le Jean [ctb],
+  Malika Chassan [ctb],
+  Laurent Drapeau [ctb],
+  Mireille Huc [cre]
 Maintainer: Mireille Huc <mireille.huc@cesbio.cnes.fr>
 Description: Platform dedicated to the Global Modelling technique. Its aim is to
     obtain ordinary differential equations of polynomial form directly from
@@ -30,6 +33,6 @@ Suggests: testthat, knitr, rmarkdown, signal, float
 VignetteBuilder: knitr
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2018-01-18 10:33:50 UTC; glori
+Packaged: 2018-07-26 12:42:47 UTC; hucm
 Repository: CRAN
-Date/Publication: 2018-01-18 16:43:44 UTC
+Date/Publication: 2018-07-26 16:20:23 UTC

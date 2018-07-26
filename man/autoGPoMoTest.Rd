@@ -6,9 +6,9 @@
 classify their dynamical regime}
 \usage{
 autoGPoMoTest(data, tin = NULL, dt = NULL, nVar = nVar, dMax = dMax,
-  show = 1, verbose = 1, allKL = allKL, IstepMin = 10,
-  IstepMax = 10000, tooFarThreshold = 4, LimCyclThreshold = 0,
-  fixedPtThreshold = 1e-08, method = "rk4")
+  show = 1, verbose = 1, allKL = allKL, numValidIC = 1, weight = NULL,
+  IstepMin = 10, IstepMax = 10000, tooFarThreshold = 4,
+  LimCyclThreshold = 0, fixedPtThreshold = 1e-08, method = "rk4")
 }
 \arguments{
 \item{data}{Input Time series: Each column is one time series
@@ -32,6 +32,13 @@ progress and keeps silent if set to 0.}
 \item{allKL}{A list of all the models \code{$mToTest1},
 \code{$mToTest2}, etc. to be tested. Each model is provided
 as a matrix.}
+
+\item{numValidIC}{Line number of the first valid initial
+conditions, that is, such as weight is not equal to zero.}
+
+\item{weight}{A vector providing the binary weighting function
+of the input data series (0 or 1). By default, all the values
+are set to 1.}
 
 \item{IstepMin}{The minimum number of integration step to start
 of the analysis (by default \code{IstepMin = 10}).}
