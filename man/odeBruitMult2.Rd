@@ -5,8 +5,15 @@
 \title{For the numerical integration of ordinary
 differential equations with dynamical noise.}
 \usage{
-odeBruitMult2(x0, t, K, varData = NULL, txVarBruitM = NULL,
-  varBruitM = NULL, method = NULL)
+odeBruitMult2(
+  x0,
+  t,
+  K,
+  varData = NULL,
+  txVarBruitM = NULL,
+  varBruitM = NULL,
+  method = NULL
+)
 }
 \arguments{
 \item{x0}{Initial conditions}

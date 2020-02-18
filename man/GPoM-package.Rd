@@ -122,16 +122,9 @@ Malika Chassan, Laurent Drapeau, Mireille Huc.
 
 Maintainer: M. Huc <mireille.huc@cesbio.cnes.fr>
 }
-\keyword{analysis,}
-\keyword{causal}
-\keyword{chaos,}
-\keyword{data}
-\keyword{dynamical}
-\keyword{global}
-\keyword{inference,}
-\keyword{learning}
-\keyword{modeling,}
-\keyword{nonlinear}
-\keyword{series}
-\keyword{systems,}
-\keyword{time}
+\concept{causal inference}
+\concept{chaos}
+\concept{data learning}
+\concept{global modeling}
+\concept{nonlinear dynamical systems}
+\concept{time series analysis}

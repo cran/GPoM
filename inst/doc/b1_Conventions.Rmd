@@ -22,7 +22,7 @@ to perform its numerical integration^[Mangiarotti S,
 Le Jean F, Chassan M, Drapeau L, Huc M. 2018.
 GPoM: Generalized Polynomial Modelling. Version 1.1.
 *Comprehensive R Archive Network*.
-<https://cran.r-project.org/web/packages/GPoM>.].
+<https://cran.r-project.org/package=GPoM>.].
 
 
 ## Conventions used to describe a polynomial
@@ -135,7 +135,7 @@ The corresponding model equations can be edited in a mathematical
 form using the function `visuEq()`
 
 ```{r}
-visuEq(nVar, dMax, K)
+visuEq(K)
 ```
 
 By default, the notation used in `visuEq` for the variables
@@ -146,13 +146,13 @@ For `substit = 1`, single letters are automatically chosen
 such as
 
 ```{r}
-visuEq(nVar, dMax, K, substit = 1)
+visuEq(K, substit = 1)
 ```
 
 The notation can be defined also manually, such as:
 
 ```{r, eval=TRUE}
-visuEq(nVar, dMax, K, substit = c("U", "V", "W"))
+visuEq(K, substit = c("U", "V", "W"))
 ```
 
 ## Numerical integration

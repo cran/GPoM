@@ -63,7 +63,7 @@ in 1986 (it was rediscovered by Sprott in 1994, known as Sprott-A).
 This system reads
 
 ```{r visuNH86, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$NH86, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$NH86,  substit = 1)
 ```
 
 ### Data
@@ -123,10 +123,10 @@ or converging to a fixed point (#3, #8 and #9).
 Equations for model #6 effectively correspond to the original
 system:
 ```{r visuNH86b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outNH86$models$model6, substit = 1, approx = 2)
+visuEq(K = outNH86$models$model6,  substit = 1, approx = 2)
 ```
 ```{r visuNH86c, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out4model6, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out4model6,  substit = 1, approx = 2)
 ```
 
 Therefore, despite the absence of correlation observed
@@ -161,7 +161,7 @@ $d^3x/dt^3 + a . d^2x/dt^2 + b.dx/dt + x (1 + x) = 0$,
 which can be rewritten in the canonical form:
 
 ```{r visuGT92, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$GT92, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$GT92,  substit = 1)
 ```
 
 The following set of time series $x(t)$, $y(t)$ and $z(t)$
@@ -192,10 +192,10 @@ Performing the same analysis as for the system Nosé-Hoover
 system can be directly retrieved (model #1):
   
 ```{r visuGT92b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outGT92$models$model1, substit = 1, approx = 2)
+visuEq(K = outGT92$models$model1,  substit = 1, approx = 2)
 ```
 ```{r visuGT92c, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out5model1, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out5model1,  substit = 1, approx = 2)
 ```
 
 Note that obtained models of smaller size have
@@ -222,7 +222,7 @@ Sprott-F, H, K, O, P, G, M, Q and S.
 The Sprott-F system reads:
 
 ```{r visuSprF, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprF, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprF,  substit = 1)
 ```
 
 A specific attention was paid uuper to the Nosé-Hoover system
@@ -268,10 +268,10 @@ they are less parsimonious (models #15, #25, #28 and #29).
 The formulation of the original system is thus effectively retrieved:
 
 ```{r visuSprFb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprF$models$model5, substit = 1, approx = 2)
+visuEq(K = outSprF$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuSprFc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out6model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out6model5,  substit = 1, approx = 2)
 ```
 
 Similarly, results are found to be straightforward for all the Sprott systems.
@@ -280,7 +280,7 @@ Similarly, results are found to be straightforward for all the Sprott systems.
 
 The Sprott-H system reads
 ```{r visuSprH, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprH, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprH,  substit = 1)
 ```
 
 Although less marked, the behavior of this system
@@ -317,10 +317,10 @@ outSprH <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1),
 The formulation of the original system is directly retrieved:
   
 ```{r visuSprHa, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprH$models$model5, substit = 1, approx = 2)
+visuEq(K = outSprH$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuSprHb, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out7model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out7model5,  substit = 1, approx = 2)
 ```
 
 No simpler formulation could enable to reproduce the observed dynamic.
@@ -331,7 +331,7 @@ No simpler formulation could enable to reproduce the observed dynamic.
 The Sprott-K system reads
 
 ```{r visuSprK, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprK, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprK,  substit = 1)
 ```
 
 The following data set was used:
@@ -356,10 +356,10 @@ outSprK <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1),show = 1
 The formulation of the original system is directly retrieved:
   
 ```{r visuSprKb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprK$models$model5, substit = 1, approx = 2)
+visuEq(K = outSprK$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuSprKc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out8model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out8model5,  substit = 1, approx = 2)
 ```
 
 and no simpler formulation enabling to reproduce the observed dynamic
@@ -370,7 +370,7 @@ was obtained.
 The Sprott-O system reads
 
 ```{r visuSprO, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprO, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprO,  substit = 1)
 ```
 
 The following data set was used:
@@ -397,10 +397,10 @@ outSprO <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1),
 The formulation of the original was directly retrieved:
   
 ```{r visuSprOb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprO$models$model2, substit = 1, approx = 2)
+visuEq(K = outSprO$models$model2,  substit = 1, approx = 2)
 ```
 ```{r visuSprOc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out9model2, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out9model2,  substit = 1, approx = 2)
 ```
 
 and no simpler formulation enabling to reproduce the observed dynamic
@@ -411,7 +411,7 @@ was obtained.
 The Sprott-P system reads
 
 ```{r visuSprP, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprP, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprP,  substit = 1)
 ```
 
 The following data set was used:
@@ -436,10 +436,10 @@ outSprP<- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1), show = 1
 The formulation of the original system is directly retrieved:
   
 ```{r visuSprPb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprP$models$model5, substit = 1, approx = 2)
+visuEq(K = outSprP$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuSprPc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out10model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out10model5,  substit = 1, approx = 2)
 ```
 
 No simpler formulation enabling to reproduce the observed dynamic
@@ -450,7 +450,7 @@ was obtained.
 The Sprott-G system reads
 
 ```{r visuSprG, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprG, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprG,  substit = 1)
 ```
 
 The following data set was used:
@@ -475,10 +475,10 @@ outSprG <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1),
 The formulation of the original system was directly retrieved:
   
 ```{r visuSprGb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprG$models$model5, substit = 1, approx = 2)
+visuEq(K = outSprG$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuSprGc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out11model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out11model5,  substit = 1, approx = 2)
 ```
 
 No simpler formulation enabling to reproduce the observed dynamic
@@ -489,7 +489,7 @@ was obtained.
 The Sprott-M system reads
 
 ```{r visuSprM, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprM, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprM,  substit = 1)
 ```
 
 The following data set was used:
@@ -515,10 +515,10 @@ outSprM <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1),
 The formulation of the original system was directly retrieved:
   
 ```{r visuSprMb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprM$models$model2, substit = 1, approx = 2)
+visuEq(K = outSprM$models$model2,  substit = 1, approx = 2)
 ```
 ```{r visuSprMc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out12model2, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out12model2,  substit = 1, approx = 2)
 ```
 
 No simpler formulation enabling to reproduce the observed dynamic
@@ -529,7 +529,7 @@ was obtained.
 The Sprott-Q system reads
 
 ```{r visuSprQ, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprQ, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprQ,  substit = 1)
 ```
 
 The following data set was used:
@@ -554,10 +554,10 @@ outSprQ <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1), show = 
 The formulation of the original is directly retrieved:
   
 ```{r visuSprQb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprQ$models$model2, substit = 1, approx = 2)
+visuEq(K = outSprQ$models$model2,  substit = 1, approx = 2)
 ```
 ```{r visuSprQc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out13model2, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out13model2,  substit = 1, approx = 2)
 ```
 
 No simpler formulation enabling to reproduce the observed dynamic
@@ -568,7 +568,7 @@ was obtained.
 The Sprott-S system reads
 
 ```{r visuSprS, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$SprS, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$SprS,  substit = 1)
 ```
 
 The following data set was used:
@@ -593,10 +593,10 @@ outSprS<- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1), show = 1
 The formulation of the original system is directly retrieved:
   
 ```{r visuSprSb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outSprS$models$model5, substit = 1, approx = 2)
+visuEq(K = outSprS$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuSprSc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out14model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out14model5,  substit = 1, approx = 2)
 ```
 
 No simpler formulation enabling to reproduce the observed dynamic
@@ -610,7 +610,7 @@ discovered by Edouard N. Lorenz in 1963 is now considered.
 This system reads
 
 ```{r visuL63, eval=TRUE}
-  visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$L63, substit = 1, approx = 4)
+  visuEq(K = allMod_nVar3_dMax2$L63,  substit = 1, approx = 4)
 ```
 
 The following data set was considered for the modelling:
@@ -638,11 +638,11 @@ the term  $-y$ is missing in the second equation.
 This obtained morel reads
 
 ```{r visuL63b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outL63$models$model5, substit = 1, approx = 2)
+visuEq(K = outL63$models$model5,  substit = 1, approx = 2)
 ```
 ```{r visuL63c, eval=TRUE, echo=FALSE}
 #data("data_vignetteVII$out1model5")
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out1model5, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out1model5,  substit = 1, approx = 2)
 ```
 This term is not detected because it is of small influence
 on the dynamics (actually the dynamic of variable $y$ is more or
@@ -653,10 +653,10 @@ very similar to the original one. The original model (#18) is
 included among them :
 
 ```{r visuL63d, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outL63$models$model18, substit = 1, approx = 2)
+visuEq(K = outL63$models$model18,  substit = 1, approx = 2)
 ```
 ```{r visuL63e, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out1model18, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out1model18,  substit = 1, approx = 2)
 ```
 
 Since model #5 is more parsomonious, it can be considered that
@@ -734,7 +734,7 @@ and information flow, *Zeitschrift für Naturforsch A*,
 in 1981 is a Lorenz-like system. This system reads
 
 ```{r visuBQ81, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$BS81, substit = 1, approx = 4)
+visuEq(K = allMod_nVar3_dMax2$BS81,  substit = 1, approx = 4)
 ```
 
 The following set of variable was used to test
@@ -761,20 +761,20 @@ Here also, the simplest model has one less term than
 the original model:
   
 ```{r visuBQ81b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outBS81$models$model3, substit = 1, approx = 2)
+visuEq(K = outBS81$models$model3,  substit = 1, approx = 2)
 ```
 ```{r visuBQ81c, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out2model3, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out2model3,  substit = 1, approx = 2)
 ```
 
 Three 6-parameter models were also obtained which all have a phase space
 very similar to the original one. The original model
 
 ```{r visuBQ81d, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outBS81$models$model11, substit = 1, approx = 2)
+visuEq(K = outBS81$models$model11,  substit = 1, approx = 2)
 ```
 ```{r visuBQ81e, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out2model11, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out2model11,  substit = 1, approx = 2)
 ```
 is included among them.
 
@@ -832,7 +832,7 @@ This system is much more complex than the systems previously
 considered.
 
 ```{r visuL84, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$L84, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$L84,  substit = 1)
 ```
 
 It is also a quadratic system, but it includes eleven terms.
@@ -858,10 +858,10 @@ outL84 <- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1), show = 1
 
 The simplest obtained model has only five terms
 ```{r visuL84b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outL84$models$model3, substit = 1, approx = 2)
+visuEq(K = outL84$models$model3,  substit = 1, approx = 2)
 ```
 ```{r visuL84c, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out3model3, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out3model3,  substit = 1, approx = 2)
 ```
 However, its attractor is periodic and symmetric.
 Therefore, it is obviously not a precise approximation
@@ -870,10 +870,10 @@ The first model showing a high level of complexity
 is the model #9. This model has 6 terms
   
 ```{r visuL84d, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outL84$models$model9, substit = 1, approx = 2)
+visuEq(K = outL84$models$model9,  substit = 1, approx = 2)
 ```
 ```{r visuL84e, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out3model9, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out3model9,  substit = 1, approx = 2)
 ```
 
 Although several terms are missing (two in the first equation,
@@ -893,10 +893,10 @@ A visual inspection of the phase portraits obviously shows
 that the best agreement is obtained with the model #141.
   
 ```{r visuL84f, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outL84$models$model141, substit = 1, approx = 2)
+visuEq(K = outL84$models$model141,  substit = 1, approx = 2)
 ```
 ```{r visuL84g, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out3model141, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out3model141,  substit = 1, approx = 2)
 ```
 
 which formulation effectively corresponds to the original
@@ -911,7 +911,7 @@ in 2004.^[K. E. Chlouverakis & J. C. Sprott, A comparison of correlation
 and Lyapunov dimensions, *Physica D*, **200**, 156-164, 2004.]
 
 ```{r visuCS2004, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$CS2004, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$CS2004,  substit = 1)
 ```
 
 The following data set was used for the analysis:
@@ -949,10 +949,10 @@ The smallest model (#26) obtained with the third type
 has the following formulation
 
 ```{r visuCS2004b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outCS2004$models$model26, substit = 1, approx = 2)
+visuEq(K = outCS2004$models$model26,  substit = 1, approx = 2)
 ```
 ```{r visuCS2004c, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out15model26, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out15model26,  substit = 1, approx = 2)
 ```
 It is almost identical to the original system since
 only one term is missing in the second equation.
@@ -971,7 +971,7 @@ by Dequan Li in 2007^[Dequan Li, A three-scroll chaotic
 attractor, *Physics Letters A*, **372**, 387-393, 2007.]:
 
 ```{r visuLi2007, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$Li2007, substit = 1, approx = 2)
+visuEq(K = allMod_nVar3_dMax2$Li2007,  substit = 1, approx = 2)
 ```
 
 The following data set was obtained from this system:
@@ -997,10 +997,10 @@ outLi2007<- gPoMo(data = TS[,2:4], tin = TS[,1], dMax = 2, nS = c(1,1,1), show =
 Only the model #13 is able to reproduce the original phase portrait.
 
 ```{r visuLi2007b, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outLi2007$models$model13, substit = 1, approx = 2)
+visuEq(K = outLi2007$models$model13,  substit = 1, approx = 2)
 ```
 ```{r visuLi2007c, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out16model13, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out16model13,  substit = 1, approx = 2)
 ```
 
 The same result is obtained when allowing models
@@ -1015,7 +1015,7 @@ for recognizing new types of chaos : Application to the “cord” attractor,
 Christophe Letellier in 2012 by a modification of the Lorenz-1984 system.
 The system reads:
 ```{r visuCord, eval=TRUE}
-visuEq(nVar = 3, dMax = 2, K = allMod_nVar3_dMax2$Cord2012, substit = 1)
+visuEq(K = allMod_nVar3_dMax2$Cord2012,  substit = 1)
 ```
 
 The following data set was used for the analysis:
@@ -1046,10 +1046,10 @@ All the terms detected in model #9 are effectively included
 in the original system (four terms are not detected).
 
 ```{r visuCordb, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outCord2012$models$model9, substit = 1, approx = 2)
+visuEq(K = outCord2012$models$model9,  substit = 1, approx = 2)
 ```
 ```{r visuCordc, eval=TRUE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out17model9, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out17model9,  substit = 1, approx = 2)
 ```
 
 Only one spurious term (lower in magnitude compared to
@@ -1057,10 +1057,10 @@ the others) is detected in model #10 (term $z^2$
 in the first equations) and five terms are not detected:
 
 ```{r visuCordd, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outCord2012$models$model10, substit = 1, approx = 2)
+visuEq(K = outCord2012$models$model10,  substit = 1, approx = 2)
 ```
 ```{r visuCorde, eval=FALSE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out17model10, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out17model10,  substit = 1, approx = 2)
 ```
 
 Among all the obtained models, the phase portrait of model #62
@@ -1075,10 +1075,10 @@ The same spurious term is wrongly detected (term `z^2`
 in the first equations).
 
 ```{r visuCordf, eval=FALSE}
-visuEq(nVar = 3, dMax = 2, K = outCord2012$models$model62, substit = 1, approx = 2)
+visuEq(K = outCord2012$models$model62,  substit = 1, approx = 2)
 ```
 ```{r visuCordg, eval=FALSE, echo=FALSE}
-visuEq(nVar = 3, dMax = 2, K = data_vignetteVII$out17model62, substit = 1, approx = 2)
+visuEq(K = data_vignetteVII$out17model62,  substit = 1, approx = 2)
 ```
 
 The cord system cannot be retrieved completely in the present case,

@@ -43,7 +43,7 @@
 #' Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
 #' K <- cbind(Eq1, Eq2, Eq3)
 #' # Edition of the equations
-#' visuEq(nVar, dMax, K)
+#' visuEq(K, nVar, dMax)
 #' # initial conditions
 #' v0 <- c(-0.6, 0.6, 0.4)
 #' # model integration
@@ -79,7 +79,7 @@
 #' plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l',
 #'      main='phase portrait', xlab='x', ylab = 'dx/dt')
 #' # Edition of the equations
-#' visuEq(nVar, dMax, reconstr$KL)
+#' visuEq(reconstr$KL, nVar, dMax)
 #'}
 #'
 #' @seealso \code{\link{derivODE2}}, \code{\link{numinoisy}}
@@ -89,6 +89,13 @@ numicano = function(nVar, dMax, Istep=1000, onestep=1/125, KL=NULL, PolyTerms=NU
                     v0=NULL, method="rk4") {
 
   pMax <- d2pMax(nVar, dMax)
+  # check dimensions
+  if (dim(KL)[2] != nVar) {
+    stop("nVar (=",nVar,") does not match with the model dimension (=",dim(KL)[2],")")
+  }
+  if (length(v0) != nVar) {
+    stop("v0 length (=",length(v0),") does not match with the model dimension (=",dim(KL)[2],")")
+  }
   # check integer
   if (is.null(KL) & is.null(PolyTerms)) {
     stop("more information is required (either KL or PolyTerms)")

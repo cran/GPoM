@@ -78,7 +78,7 @@ Eq1 <- c(0,-1, 0,-1, 0, 0, 0, 0, 0, 0)
 Eq2 <- c(0, 0, 0, a, 0, 0, 1, 0, 0, 0)
 Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
 K = cbind(Eq1, Eq2, Eq3)
-visuEq(3, 2, K, substit = c("x", "y", "z"))
+visuEq(K, substit = c("x", "y", "z"))
 ```
 
 Two sets of initial conditions will be used from
@@ -188,21 +188,21 @@ in both cases. Obtained equations respectively read
 
 ```{r visu1, eval=FALSE}
 # Edit the equations of model obtained from time series generated from v1
-visuEq(nVar = 3, dMax = 2, out1$models$model5, substit = c("x", "y", "z"), approx = 2)
+visuEq(out1$models$model5, substit = c("x", "y", "z"), approx = 2)
 ```
 ```{r visu1b, echo = FALSE, eval=TRUE}
 # Edit the equations of model obtained from time series generated from v1
-visuEq(nVar = 3, dMax = 2, data_vignetteVI$out1model5, substit = c("x", "y", "z"), approx = 2)
+visuEq(data_vignetteVI$out1model5, substit = c("x", "y", "z"), approx = 2)
 ```
 for the first data set, and for the other one
 
 ```{r visu2, eval=FALSE}
 # Edit the equations of model obtained from time series generated from v2
-visuEq(nVar = 3, dMax = 2, out2$models$model5, substit = c("x", "y", "z"), approx = 2)
+visuEq(out2$models$model5, substit = c("x", "y", "z"), approx = 2)
 ```
 ```{r visu2b, eval=TRUE, echo=FALSE}
 # Edit the equations of model obtained from time series generated from v2
-visuEq(nVar = 3, dMax = 2, data_vignetteVI$out1model5, substit = c("x", "y", "z"), approx = 2)
+visuEq(data_vignetteVI$out1model5, substit = c("x", "y", "z"), approx = 2)
 ```
 The original equations of the Rössler system can thus be
 retrieved in both cases with data sets of different initial
@@ -407,11 +407,11 @@ visuOutGP(out9, selecmod = 44, prioMinMax = "model")
 
 ```{r visu9, eval=FALSE}
 # Equations
-visuEq(nVar = 3, dMax = 2, out9$models$model44, substit = 1, approx = 4)
+visuEq(out9$models$model44, substit = 1, approx = 4)
 ```
 ```{r visu9b, eval=TRUE, echo=FALSE}
 # Equations
-visuEq(nVar = 3, dMax = 2, data_vignetteVI$out9model44 , substit = 1, approx = 4)
+visuEq(data_vignetteVI$out9model44 , substit = 1, approx = 4)
 ```
 This model has one more algebraic term than the original system.
 This means that interpretation should be considered with
@@ -443,11 +443,11 @@ visuOutGP(out10, selecmod = 25, prioMinMax = "model")
 
 ```{r, eval=FALSE}
 # Equations
-visuEq(nVar = 3, dMax = 2, out10$models$model25, substit = 1, approx = 4)
+visuEq(out10$models$model25, substit = 1, approx = 4)
 ```
 ```{r, eval=TRUE, echo=FALSE}
 # Equations
-visuEq(nVar = 3, dMax = 2, data_vignetteVI$out10model25, substit = 1, approx = 4)
+visuEq(data_vignetteVI$out10model25, substit = 1, approx = 4)
 ```
 The error on the model parameters is very heterogeneous
 and much higher than what was found in previous tests
@@ -547,11 +547,11 @@ system:
 
 ```{r, eval=FALSE}
 # Equations
-visuEq(nVar = 3, dMax = 2, out11$models$model25, substit = 1, approx = 4)
+visuEq(out11$models$model25, substit = 1, approx = 4)
 ```
 ```{r, echo=FALSE, eval=TRUE}
 # Equations
-visuEq(nVar = 3, dMax = 2, data_vignetteVI$out11model25, substit = 1, approx = 4)
+visuEq(data_vignetteVI$out11model25, substit = 1, approx = 4)
 ```
 The error on the parameters can vary from 0.7 % to 17 %.
 

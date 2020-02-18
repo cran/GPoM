@@ -3,10 +3,6 @@
 #' @description The algorithm aims to get a quick information about
 #' the outputs obtained with gPoMo.
 #'
-#' @inheritParams  gloMoId
-#' @inheritParams  drvSucc
-#' @inheritParams  poLabs
-#'
 #' @param ogp The output list obtained from gPoMo.
 #' @param selecmod A vector of the selected model. Maximum 24 models can be
 #' presented at the same time.
@@ -16,6 +12,10 @@
 #' \code{"model"}, \code{"dataonly"} and \code{"modelonly"}.
 #' @param opt3D Provides a 3D plot (x,y,z) when \code{opt = 'TRUE'}
 #' (the \code{rgl} library is required).
+#' @param maxPages The maximum of pages to be displayed (4 by default,
+#' but this may be insufficient when too many models remain)
+#' @param seeEq Indicates if equations should be displayed (seeEq = 1,
+#' by default) or not (seeEq = 0).
 #'
 #' @return A Matrix describing the terms composing each model by row. The first
 #' row corresponds to the model detection (1 unclarified, 2 diverging, 0 is fixed
@@ -35,7 +35,7 @@
 #' # single time series
 #' data <- Ross76[seq(1, 3000, by = 8), 3]
 #' dev.new()
-#' plot(tin, data, type = 'l')
+#' plot(tin, data, type = 'l', main = 'Observed time series')
 #' # global modelling
 #' # results are put in list outputGPoM
 #' outputGPoM <- gPoMo(data, tin=tin, dMax = 2, nS=c(3), show = 0,
@@ -44,12 +44,14 @@
 #' visuOutGP(outputGPoM)
 #'
 visuOutGP <- function (ogp, selecmod = NULL, id = 1,
-                       prioMinMax = 'data', opt3D = 'TRUE')
+                       prioMinMax = 'data', opt3D = 'TRUE',
+                       maxPages = NULL, seeEq = 1)
 {
   if (is.null(selecmod)) {
     # How many models could not be identified as non-chaotic
     nmod <- sum(ogp$okMod == id)
-    cat(nmod, 'models identified as id = ', id, "\n")
+    cat(nmod, 'models identified as id = ', id, ":", "\n")
+    cat(which(ogp$okMod == 1), "\n")
     #
     # what is the reference number of these models?
     which(ogp$okMod == id)
@@ -60,80 +62,104 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
     seemod <- selecmod
   }
   #
-  nVar <- dim(ogp$models$mToTest1)[2]
-  pMax <- dim(ogp$models$mToTest1)[1]
+  if (is.null(selecmod)) {
+    maxPages = 4
+  }
+  #
+  nVar <- dim(ogp$models[[1]])[2]
+  pMax <- dim(ogp$models[[1]])[1]
   dMax <- p2dMax(nVar, pMax)
   # maximum integration time steps of each tested models
-  modInfo <- matrix(0, ncol = 3, nrow = length(ogp$ok))
+  modInfo <- matrix(0, ncol = 3, nrow = 0)
   IstepMax <- NULL
   Np <- NULL
-  for (imod in 1:length(ogp$ok) ) {
+  for (imod in 1:length(ogp$okMod) ) {
     block <- paste("IstepMax <- dim(ogp$stockoutreg$model", imod, ")[1]", sep="")
     eval((parse(text = block)))
     block <- paste("Np <- sum(ogp$models$mToTest", imod, "!=0)", sep="")
     eval((parse(text = block)))
-    modInfo[imod, 1] = ogp$ok[imod]
-    modInfo[imod, 2] = Np
-    if (!is.null(IstepMax)) modInfo[imod, 3] = IstepMax
-  }
-
-   if (nmod <= 24) {
-    # plot data and models time series
-    dev.new()
-    op <- par(mfrow = c(4, 6), pty = "m")
-    if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
-    if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
-    if (nmod <= 15) op <- par(mfrow = c(3, 5), pty = "m")
-    if (nmod <= 12) op <- par(mfrow = c(3, 4), pty = "m")
-    if (nmod <= 9)  op <- par(mfrow = c(3, 3), pty = "m")
-    if (nmod <= 6)  op <- par(mfrow = c(3, 2), pty = "m")
-    if (nmod <= 4)  op <- par(mfrow = c(2, 2), pty = "m")
-    if (nmod == 2)  op <- par(mfrow = c(2, 1), pty = "m")
-    if (nmod == 1)  op <- par(mfrow = c(1, 1), pty = "m")
-    for (imod in seemod)  {
-      block0 <- paste("Model ", imod, " (Np = ", modInfo[imod, 2], ")", sep="")
-      #
-      inputseries <- as.matrix(ogp$inputdata)[,1]
-      if (prioMinMax == 'data') {
-        plot(ogp$tin, inputseries, cex = 0.7, col='black',
-             main = block0, xlab='t', ylab='y(t)')
-        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
-        #
-        block <- paste(
-          "lines(ogp$tout[1:modInfo[", imod,
-          ",3]], ogp$stockoutreg$model", imod,
-          "[,1], type='l', col='red')", sep="")
-        eval((parse(text = block)))
-      }
-      else if (prioMinMax == 'dataonly') {
-        plot(ogp$tin, inputseries, cex = 0.7, col='black',
-             main = block0, xlab='t', ylab='y(t)')
-        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
-      }
-      else if (prioMinMax == 'model') {
-        #
-        block <- paste(
-          "plot(ogp$tout[1:modInfo[", imod,
-          ",3]], ogp$stockoutreg$model", imod,
-          "[,1], type='l', col='red', main = block0, xlab='t', ylab='y(t)')", sep="")
-        eval((parse(text = block)))
-        lines(ogp$tin, inputseries, cex = 0.7, col='black', type='o')
-        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
-      }
-      else if (prioMinMax == 'modelonly') {
-        #
-        block <- paste(
-          "plot(ogp$tout[1:modInfo[", imod,
-          ",3]], ogp$stockoutreg$model", imod,
-          "[,1], type='l', col='red', main = block0, xlab='t', ylab='y(t)')", sep="")
-        eval((parse(text = block)))
-      }
+#    modInfo[imod, 1] = ogp$okMod[imod]
+#    modInfo[imod, 2] = Np
+    if (!is.null(IstepMax)) {
+      modInfo = rbind(modInfo, c(ogp$okMod[imod], Np, IstepMax))
+    }
+    else {
+      modInfo = rbind(modInfo, c(ogp$okMod[imod], Np, 0))
     }
   }
-  else {
-    stop('Too many models nmod = ', nmod, ', the fonction
-         can apply to maximum nmod = 24 models.')
+  
+  # rewrite the filtered data with NaN where non valid values
+  fdat <- ogp$filtdata
+  for (i in 1:dim(ogp$filtdata)[2]) {
+    fdat[ogp$Wfiltdata==0,i] <- NaN
   }
+  # find first valid value
+  firstOk <- which(is.nan(ogp$Wfiltdata)==0)[1]
+
+  
+
+#   if (nmod <= 24) {
+#    # plot data and models time series
+#    dev.new()
+#    op <- par(mfrow = c(4, 6), pty = "m")
+#    if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
+#    if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
+#    if (nmod <= 15) op <- par(mfrow = c(3, 5), pty = "m")
+#    if (nmod <= 12) op <- par(mfrow = c(3, 4), pty = "m")
+#    if (nmod <= 9)  op <- par(mfrow = c(3, 3), pty = "m")
+#    if (nmod <= 6)  op <- par(mfrow = c(3, 2), pty = "m")
+#    if (nmod <= 4)  op <- par(mfrow = c(2, 2), pty = "m")
+#    if (nmod == 2)  op <- par(mfrow = c(2, 1), pty = "m")
+#    if (nmod == 1)  op <- par(mfrow = c(1, 1), pty = "m")
+#    for (imod in seemod)  {
+#      block0 <- paste("Model ", imod, " (Np = ", modInfo[imod, 2], ")", sep="")
+#      #
+#      inputseries <- as.matrix(ogp$inputdata)[,1]
+#      if (prioMinMax == 'data') {
+#        plot(ogp$tin, inputseries, cex = 0.7, col='black',
+#             main = block0, xlab='t', ylab='y(t)')
+#        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
+#        #
+#        block <- paste(
+#          "lines(ogp$tout[1:modInfo[", imod,
+#          ",3]], ogp$stockoutreg$model", imod,
+#          "[,1], type='l', col='red')", sep="")
+#        eval((parse(text = block)))
+#      }
+#      else if (prioMinMax == 'dataonly') {
+#        plot(ogp$tin, inputseries, cex = 0.7, col='black',
+#             main = block0, xlab='t', ylab='y(t)')
+#        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
+#      }
+#      else if (prioMinMax == 'model') {
+#        #
+#        block <- paste(
+#          "plot(ogp$tout[1:modInfo[", imod,
+#          ",3]], ogp$stockoutreg$model", imod,
+#          "[,1], type='l', col='red', main = block0, xlab='t', ylab='y(t)')", sep="")
+#        eval((parse(text = block)))
+#        lines(ogp$tin, inputseries, cex = 0.7, col='black', type='o')
+#        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
+#      }
+#      else if (prioMinMax == 'modelonly') {
+#        #
+#        block <- paste(
+#          "plot(ogp$tout[1:modInfo[", imod,
+#          ",3]], ogp$stockoutreg$model", imod,
+#          "[,1], type='l', col='red', main = block0, xlab='t', ylab='y(t)')", sep="")
+#        eval((parse(text = block)))
+#      }
+#    }
+#  }
+#  else {
+#    stop('Too many models nmod = ', nmod, ', the fonction 
+#         can apply to maximum nmod = 24 models.
+#         It may be applied by selecting the models by hand, in several steps such as e.g.
+#         visuOutGP(outputGPoM, selecmod = which(outputGPoM$okMod == 1)[1:24])
+#         and then
+#         visuOutGP(outputGPoM, selecmod = which(outputGPoM$okMod == 1)[24:',
+#         nmod,'])')
+#  }
   
 
   if (nmod <= 24) {
@@ -152,96 +178,174 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
     for (imod in seemod)  {
       block0 <- paste("Model ", imod, " (Np = ", modInfo[imod, 2], ")", sep="")
       if (prioMinMax == 'data') {
-        plot(ogp$filtdata[,1], ogp$filtdata[,2], type='l', col='green',
-           xlab='y(t)', ylab='dy(t)/dt', main = block0)
+        plot(fdat[,1], fdat[,2], type='l', col='green',
+           xlab='X1', ylab='X2', main = block0)
+        lines(fdat[firstOk,1], fdat[firstOk,2],
+              type='p', col='green',
+              xlab='X1', ylab='X2', main = block0, cex = 1.2)
         block <- paste(
             "lines(ogp$stockoutreg$model", imod,
-            "[,1], ogp$stockoutreg$model", imod,
-            "[,2], type='l', col='red')", sep="")
+            "[,2], ogp$stockoutreg$model", imod,
+            "[,3], type='l', col='red')", sep="")
+        eval((parse(text = block)))
+        block <- paste(
+          "lines(ogp$stockoutreg$model", imod,
+          "[1,2], ogp$stockoutreg$model", imod,
+          "[1,3], type='p', cex = 1.2, col='red')", sep="")
         eval((parse(text = block)))
         if (opt3D) {
-          plot3d(ogp$filtdata[,1], ogp$filtdata[,2], ogp$filtdata[,3], type='l', col='green',
-               xlab='y(t)', ylab='dy(t)/dt', zlab='d2y(t)/dt2', main = block0)
+          plot3d(fdat[,1], fdat[,2], fdat[,3], type='l', col='green',
+               xlab='X1', ylab='X2', zlab='X3', main = block0)
+          plot3d(fdat[firstOk,1], fdat[firstOk,2], fdat[firstOk,3],
+                 type='p', size = 5, col='green',
+                 xlab='X1', ylab='X2', zlab='X3', main = block0, add = TRUE)
           block <- paste(
             "plot3d(ogp$stockoutreg$model", imod,
-            "[,1], ogp$stockoutreg$model", imod,
             "[,2], ogp$stockoutreg$model", imod,
-            "[,3], type='l', col='red', add = TRUE)", sep="")
+            "[,3], ogp$stockoutreg$model", imod,
+            "[,4], type='l', col='red', add = TRUE)", sep="")
+          eval((parse(text = block)))
+          block <- paste(
+            "plot3d(ogp$stockoutreg$model", imod,
+            "[1,2], ogp$stockoutreg$model", imod,
+            "[1,3], ogp$stockoutreg$model", imod,
+            "[1,4], type='p', size = 5, col='red', add = TRUE)", sep="")
           eval((parse(text = block)))
         }
       }
       else if (prioMinMax == 'dataonly') {
-        plot(ogp$filtdata[,1], ogp$filtdata[,2], type='l', col='green',
-             xlab='y(t)', ylab='dy(t)/dt', main = block0)
+        plot(fdat[,1], fdat[,2], type='l', col='green',
+             xlab='X1', ylab='X2', main = block0)
+        lines(fdat[firstOk,1], fdat[firstOk,2],
+              type='p', col='green',
+              xlab='X1', ylab='X2', main = block0, cex = 1.2)
         if (opt3D) {
-            plot3d(ogp$filtdata[,1], ogp$filtdata[,2], ogp$filtdata[,3], type='l', col='green',
-                   xlab='y(t)', ylab='dy(t)/dt', zlab='d2y(t)/dt2', main = block0)
+            plot3d(fdat[,1], fdat[,2], fdat[,3],
+                   type='l', col='green',
+                   xlab='X1', ylab='X2', zlab='X3', main = block0)
+            plot3d(fdat[firstOk,1], fdat[firstOk,2], fdat[firstOk,3],
+                   type='p', size = 5, col='green',
+                   xlab='X1', ylab='X2', zlab='X3', main = block0)
         }
       }
       else if (prioMinMax == 'model') {
         block <- paste(
           "plot(ogp$stockoutreg$model", imod,
-          "[,1], ogp$stockoutreg$model", imod,
-          "[,2], type='l', col='red', xlab='y(t)', ylab='dy(t)/dt', main = block0)", sep="")
+          "[,2], ogp$stockoutreg$model", imod,
+          "[,3], type='l', col='red', xlab='X1', ylab='X2', main = block0)", sep="")
         eval((parse(text = block)))
-        lines(ogp$filtdata[,1], ogp$filtdata[,2], type='l', col='green')
+        block <- paste(
+          "lines(ogp$stockoutreg$model", imod,
+          "[1,2], ogp$stockoutreg$model", imod,
+          "[1,3], type='p', cex = 1.2, col='red', xlab='X1', ylab='X2', main = block0)", sep="")
+        eval((parse(text = block)))
+        lines(fdat[,1], fdat[,2], type='l', col='green')
+        lines(fdat[firstOk,1], fdat[firstOk,2],
+              type='p', col='green', cex = 1.2)
         if (opt3D) {
           block <- paste(
             "plot3d(ogp$stockoutreg$model", imod,
-            "[,1], ogp$stockoutreg$model", imod,
             "[,2], ogp$stockoutreg$model", imod,
-            "[,3], type='l', col='red', xlab='y(t)', ylab='dy(t)/dt', zlab='d2y(t)/dt2', main = block0)", sep="")
+            "[,3], ogp$stockoutreg$model", imod,
+            "[,4], type='l', col='red', xlab='X1', ylab='X2', zlab='X3', main = block0)", sep="")
           eval((parse(text = block)))
-          plot3d(ogp$filtdata[,1], ogp$filtdata[,2], ogp$filtdata[,3],
+          block <- paste(
+            "plot3d(ogp$stockoutreg$model", imod,
+            "[1,2], ogp$stockoutreg$model", imod,
+            "[1,3], ogp$stockoutreg$model", imod,
+            "[1,4], type='p', size = 5, col='red', xlab='X1', ylab='X2', zlab='X3', main = block0, add = TRUE)", sep="")
+          eval((parse(text = block)))
+          plot3d(fdat[,1], fdat[,2], fdat[,3],
                  type='l', col='green', add = TRUE)
+          plot3d(fdat[firstOk,1], fdat[firstOk,2], fdat[firstOk,3],
+                 type='p', size = 5, col='green', add = TRUE)
         }
       }
       else if (prioMinMax == 'modelonly') {
         block <- paste(
           "plot(ogp$stockoutreg$model", imod,
-          "[,1], ogp$stockoutreg$model", imod,
-          "[,2], type='l', col='red', xlab='y(t)', ylab='dy(t)/dt', main = block0)", sep="")
+          "[,2], ogp$stockoutreg$model", imod,
+          "[,3], type='l', col='red', xlab='X1', ylab='X2', main = block0)", sep="")
+        eval((parse(text = block)))
+        block <- paste(
+          "plot(ogp$stockoutreg$model", imod,
+          "[1,2], ogp$stockoutreg$model", imod,
+          "[1,3], type='p', cex = 1.2, col='red', xlab='X1', ylab='X2', main = block0)", sep="")
         eval((parse(text = block)))
         if (opt3D) {
             block <- paste(
               "plot3d(ogp$stockoutreg$model", imod,
-              "[,1], ogp$stockoutreg$model", imod,
               "[,2], ogp$stockoutreg$model", imod,
-              "[,3], type='l', col='red', xlab='y(t)', ylab='dy(t)/dt', zlab='d2y(t)/dt2', main = block0)", sep="")
+              "[,3], ogp$stockoutreg$model", imod,
+              "[,4], type='l', col='red', xlab='X1', ylab='X2', zlab='X3', main = block0)", sep="")
+            eval((parse(text = block)))
+            block <- paste(
+              "plot3d(ogp$stockoutreg$model", imod,
+              "[1,2], ogp$stockoutreg$model", imod,
+              "[1,3], ogp$stockoutreg$model", imod,
+              "[1,4], type='p', size = 5, col='red', xlab='X1', ylab='X2', zlab='X3', main = block0, add = TRUE)", sep="")
             eval((parse(text = block)))
         }
       }
     }
   }
   else {
-    stop('Too many models nmod = ', nmod, ', the fonction
-          can apply to maximum nmod = 24 models.')
+    if (ceiling(nmod / 24) > maxPages) {
+      # All the pages are can be displayed
+      for (iPage in 1:maxPages) {
+          visuOutGP(ogp,
+                    selecmod = which(ogp$okMod == 1)[((iPage-1)*24+1):((iPage)*24)],
+                    seeEq = seeEq)
+        }
+      # TOO MANY MODELS:
+      # Maximum 'maxPages' pages are displayed by default
+      warning('Too many models nmod = ', nmod,'. By default the fonction ',
+           'can display four pages 24 models each (that is nmod <= 96).',
+           'Too have more page, please use the option maxPages = ',
+           ceiling(nmod / 24))
+    }
+    else {
+      maxPages <- ceiling(nmod / 24)
+      # All the pages are can be displayed
+      for (iPage in 1:maxPages) {
+        if (iPage < maxPages) {
+          visuOutGP(ogp,
+                    selecmod = which(ogp$okMod == 1)[((iPage-1)*24+1):((iPage)*24)],
+                    seeEq = seeEq)
+        }
+        else if (iPage == maxPages) {
+          visuOutGP(ogp,
+                    selecmod = which(ogp$okMod == 1)[((iPage-1)*24+1):nmod],
+                    seeEq = seeEq)
+        }
+      }
+    }
   }
 
-  # See equations
-  cat('Equations of', "\n")
-  #
-  ic <- NULL
-  for (imod in seemod)  {
-    block <- paste("### Model ", imod,
-                   " (Np = ", modInfo[imod,2],
-                   "):", sep="")
-    cat(block, "\n")
-    block <- paste("ic <- ogp$stockoutreg$model", imod,
-                   "[1,]", sep="")
-    eval((parse(text = block)))
-    cat("### Initial conditions: ", "\n")
-    block <- paste(ic, sep="")
-    cat(block, "\n")
-    cat("### Equations: ", "\n")
-    block <- paste(
-      "visuEq(", nVar,
-      ",",dMax,
-      ", ogp$models$model", imod,
-      ")", sep="")
-    eval((parse(text = block)))
+  if (seeEq == 1) {
+    # See equations
+    cat('Equations of', "\n")
+    #
+    ic <- NULL
+    for (imod in seemod)  {
+      block <- paste("### Model ", imod,
+                     " (Np = ", modInfo[imod,2],
+                     "):", sep="")
+      cat(block, "\n")
+      block <- paste("ic <- ogp$stockoutreg$model", imod,
+                     "[1,]", sep="")
+      eval((parse(text = block)))
+      cat("### Initial conditions: ", "\n")
+      block <- paste(ic, sep="")
+      cat(block, "\n")
+      cat("### Equations: ", "\n")
+      block <- paste(
+        "visuEq(ogp$models$model", imod,
+        ")", sep="")
+      eval((parse(text = block)))
+    }
   }
 
-  cat('Models classification, size and number of integration steps:', "\n")
+#  cat('Models classification, size and number of integration steps:', "\n")
   invisible(t(modInfo))
 }

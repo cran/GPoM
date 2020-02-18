@@ -6,8 +6,6 @@
 #' polynomial Ordinary Differential Equations (ODE). This function
 #' requires the function \code{ode} (\code{deSolve} package).
 #'
-#' @inheritParams gloMoId
-#'
 #' @param t All the dates for which the result of the numerical
 #' integration of the model must be provided
 #' @param x Current state vector (input from which the next state will

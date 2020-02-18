@@ -4,8 +4,16 @@
 \alias{autoGPoMoSearch}
 \title{Automatic search of polynomial Equations}
 \usage{
-autoGPoMoSearch(data, dt, nVar = nVar, dMax = dMax, weight = NULL,
-  show = 0, underSamp = NULL, filterReg = NULL)
+autoGPoMoSearch(
+  data,
+  dt,
+  nVar = nVar,
+  dMax = dMax,
+  weight = NULL,
+  show = 0,
+  underSamp = NULL,
+  filterReg = NULL
+)
 }
 \arguments{
 \item{data}{Input Time series: Each column is one time series

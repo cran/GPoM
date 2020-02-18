@@ -5,9 +5,20 @@
 \title{Generates time series of deterministic-behavior
 with stochatic perturbations (measurement and/or dynamical noise)}
 \usage{
-numinoisy(x0, t, K, varData = NULL, txVarBruitA = NULL,
-  txVarBruitM = NULL, varBruitA = NULL, varBruitM = NULL, taux = NULL,
-  freq = NULL, variables = NULL, method = NULL)
+numinoisy(
+  x0,
+  t,
+  K,
+  varData = NULL,
+  txVarBruitA = NULL,
+  txVarBruitM = NULL,
+  varBruitA = NULL,
+  varBruitM = NULL,
+  taux = NULL,
+  freq = NULL,
+  variables = NULL,
+  method = NULL
+)
 }
 \arguments{
 \item{x0}{The initial conditions. Should be a vector which size must be equal
@@ -98,11 +109,11 @@ Eq2 <- c(0, 0, 0, a, 0, 0, 1, 0, 0, 0)
 Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
 K <- cbind(Eq1, Eq2, Eq3)
 # Edit the equations
-visuEq(nVar, dMax, K)
+visuEq(K, nVar, dMax)
 # initial conditions
 v0 <- c(-0.6, 0.6, 0.4)
 # output time required
-timeOut = (0:1000)/50
+timeOut = (0:800)/50
 # variance of additive noise
 varBruitA = c(0,0,0)^2
 # variance of multiplitive noise

@@ -26,7 +26,7 @@ polyTerms <- c(0.2,0,-1,0.5,0,0,0,0,0,0)
 # Convert this vector into a matrix formulation with all the equations: 
 K <- cano2M(3,2,polyTerms)
 # Visualize the equations:
-visuEq(3,2,K)
+visuEq(K,3,2)
 
 }
 \seealso{

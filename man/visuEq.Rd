@@ -4,16 +4,23 @@
 \alias{visuEq}
 \title{Displays the models Equations}
 \usage{
-visuEq(nVar, dMax, K, substit = 0, approx = FALSE)
+visuEq(
+  K,
+  nVar = NULL,
+  dMax = NULL,
+  substit = 0,
+  approx = FALSE,
+  selecmod = NULL
+)
 }
 \arguments{
-\item{nVar}{The number of variables}
-
-\item{dMax}{The maximum degree allowed in the formulation}
-
 \item{K}{A matrix providing the model description:
 each column corresponds to one equation which polynomial organisation
 is following the convention defined by function \code{poLabs}.}
+
+\item{nVar}{The number of variables}
+
+\item{dMax}{The maximum degree allowed in the formulation}
 
 \item{substit}{Applies subtitutions to the default values:
 for \code{substit = 0} (default value), variables are chosen
@@ -35,12 +42,19 @@ edited (in order to have all the terms different from 0)
 for \code{approx} = 1, 2, etc. then respectively 1, 2, etc.
 digits are added to the minimum number of digits corresponding
 to \code{approx = TRUE}.}
+
+\item{selecmod}{An integer providing the number in the sublist
+when the model matrix is provided in a list. Should not be
+provided (or NULL) if the model matrix is provided directly.}
 }
 \description{
 Displays the model equations for a polynomial model
 which description is provided as a matrix \code{K}, each column
-corresponding to one equation. The coefficients of the polynomial terms are given
-following the order defined by function \code{poLabs}.
+corresponding to one equation. The coefficients of the polynomial
+terms are given following the order defined by function \code{poLabs}.
+The matrix can also be provided in a list \code{K},
+in this case, the matrix should be located in \code{K$model[[selecmod]]}
+where selecmod should be provided as input parameter.
 }
 \examples{
 #EQUATIONS VISUALISATION
@@ -57,15 +71,15 @@ KL[4,1] <- -1
 KL[5,3] <- -0.123456789
 # Equations visualisation:
 # (a) by default, variables names X1, X2, X3 are used
-visuEq(nVar, dMax, KL)
+visuEq(KL, nVar, dMax)
 # (b) for susbstit=1, variables names x, y, y are used instead
-visuEq(nVar, dMax, KL, approx = TRUE, substit=1)
+visuEq(KL, nVar, dMax, approx = TRUE, substit=1)
 # (c) the name of the variables can also be chosen manualy
-visuEq(nVar, dMax, KL, approx = 3, substit=c('U', 'V', 'W'))
+visuEq(KL, nVar, dMax, approx = 3, substit=c('U', 'V', 'W'))
 
 # A canonical model can be provided as a single vector
 polyTerms <- c(0.2,0,-1,0.5,0,0,0,0,0,0)
-visuEq(3,2,KL)
+visuEq(KL, 3,2)
 
 }
 \author{

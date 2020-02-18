@@ -93,17 +93,17 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
   pMax <- dim(ogp$models$mToTest1)[1]
   dMax <- p2dMax(nVar, pMax)
   # maximum integration time steps of each tested models
-  modInfo <- matrix(0, ncol = 3, nrow = length(ogp$ok))
+  modInfo <- matrix(0, ncol = 3, nrow = length(ogp$okMod))
   # initiate output
   ErrmodAll <- list()
   IstepMax <- NULL
   Np <- NULL
-  for (imod in 1:length(ogp$ok) ) {
+  for (imod in 1:length(ogp$okMod) ) {
     block <- paste("IstepMax <- dim(ogp$stockoutreg$model", imod, ")[1]", sep="")
     eval((parse(text = block)))
     block <- paste("Np <- sum(ogp$models$mToTest", imod, "!=0)", sep="")
     eval((parse(text = block)))
-    modInfo[imod, 1] = ogp$ok[imod]
+    modInfo[imod, 1] = ogp$okMod[imod]
     modInfo[imod, 2] = Np
     if (!is.null(IstepMax)) modInfo[imod, 3] = IstepMax
   }

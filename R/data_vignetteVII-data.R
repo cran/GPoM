@@ -9,5 +9,7 @@
 #'
 #' @author Sylvain Mangiarotti, Mireille Huc.
 #'
+#' @import float
+#' 
 #' @keywords data
 "data_vignetteVII"

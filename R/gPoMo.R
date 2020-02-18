@@ -44,7 +44,7 @@
 #' dev.new()
 #' out1 <- gPoMo(data, tin = tin, dMax = 2, nS=c(3), show = 1,
 #'               IstepMax = 1000, nPmin = 9, nPmax = 11)
-#' visuEq(3, 2, out1$models$model1, approx = 4)
+#' visuEq(out1$models$model1, approx = 4)
 #' 
 #' 
 #'\dontrun{
@@ -62,7 +62,7 @@
 #' out2 <- gPoMo(data, tin = tin, weight = W,
 #'                  dMax = 2, nS=c(3), show = 1,
 #'                  IstepMax = 6000, nPmin = 9, nPmax = 11)
-#' visuEq(3, 2, out2$models$model3, approx = 4)
+#' visuEq(out2$models$model3, approx = 4)
 #'}
 #'
 #'
@@ -75,7 +75,7 @@
 #' out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(1,1,1), show = 1,
 #'               IstepMin = 10, IstepMax = 3000, nPmin = 7, nPmax = 8)
 #' # the simplest model able to reproduce the observed dynamics is model #5
-#' visuEq(3, 2, out3$models$model5, approx = 4) # the original Rossler system is thus retrieved
+#' visuEq(out3$models$model5, approx = 3, substit = 1) # the original Rossler system is thus retrieved
 #'}
 #'
 #'\dontrun{
@@ -88,11 +88,12 @@
 #' EqS[,1] <- c(0,0,0,1,0,0,0,0,0,0)
 #' EqS[,2] <- c(1,1,0,1,0,1,1,1,1,1)
 #' EqS[,3] <- c(0,1,0,0,0,0,1,1,0,0)
-#' visuEq(3, 2, EqS, substit = c('X','Y','Z'))
+#' visuEq(EqS, substit = c('X','Y','Z'))
 #' dev.new()
 #' out4 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), show = 1,
 #'       EqS = EqS, IstepMin = 10, IstepMax = 2000,
 #'       nPmin = 9, nPmax = 11)
+#' visuEq(out4$models$model2, approx = 2, substit = c("Y","Y2","Z"))
 #'}
 #'
 #'\dontrun{
@@ -113,7 +114,7 @@
 #'
 #' # the original Rossler (variables x, y and z) and Sprott (variables u, v and w)
 #' # systems are retrieved:
-#' visuEq(6, 2, out5$models$model347, approx = 4,
+#' visuEq(out5$models$model347, approx = 4,
 #'        substit = c('x', 'y', 'z', 'u', 'v', 'w'))
 #' # to check the robustness of the model, the integration duration
 #' # should be chosen longer (at least IstepMax = 4000)
@@ -150,10 +151,18 @@
 #' @param EqS Model template including all allowed regressors.
 #' Each column corresponds to one equation. Each line corresponds to one
 #' polynomial term as defined by function \code{poLabs}.
+#' @param AndManda AND-mandatory terms in the equations (all the provided
+#' terms should be in the equations).
+#' @param OrMandaPerEq OR-mandatory terms per equations (at least one of
+#' the provided terms should be in each equation).
 #' @param nPmin Corresponds to the minimum number of parameters (and thus
 #' of polynomial term) allowed.
 #' @param nPmax Corresponds to the maximum number of parameters (and thus
 #' of polynomial) allowed.
+#' @param nPminPerEq Corresponds to the minimum number of parameters (and thus
+#' of polynomial term) allowed per equation.
+#' @param nPmaxPerEq Corresponds to the maximum number of parameters (and thus
+#' of polynomial) allowed per equation.
 #' @param verbose Gives information (if set to 1) about the algorithm
 #' progress and keeps silent if set to 0.
 #'
@@ -181,9 +190,14 @@
 #'
 gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
                    weight = NULL, show = 1, verbose = 1,
-                   underSamp = NULL, EqS = NULL,
-                   IstepMin = 2, IstepMax = 2000, nPmin=1, nPmax=14,
-                   method = 'lsoda')
+                   underSamp = NULL,
+                   EqS = NULL,
+                   AndManda = NULL, OrMandaPerEq = NULL,
+                   IstepMin = 2, IstepMax = 2000,
+                   nPmin = 1, nPmax = 14,
+                   tooFarThr = 4, FxPtThr = 1E-8, LimCyclThr = 1E-6,
+                   nPminPerEq = 1, nPmaxPerEq = NULL,
+                   method = 'rk4')
 {
 
   nVar = sum(nS)
@@ -191,6 +205,10 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
 
   if (is.vector(data)) data <- as.matrix(data)
 
+  if (IstepMax < IstepMin) {
+    stop("Integration steps are inconsistent: IstepMax < IstepMin")
+  }
+  
   if (is.null(tin) & is.null(dtFixe)) {
     cat("when neither input time vector 'tin' nor time step 'dtFixe' are given")
     cat("'dtFixe' is taken such as dtFixe=0.01")
@@ -214,6 +232,18 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
   }
   
   if (is.vector(data)) data <- as.matrix(data)
+  
+  # if nPmaxPerEq is not provided it is chosen equal to nPmax
+  # in order to keep all the possible equations
+  if (is.null(nPmaxPerEq)) nPmaxPerEq <- nPmax
+  # convert nPminPerEq and nPmaxPerEq to vectors if required
+  # (the minimum number of term will be the same for all equations)
+  if (length(nPminPerEq) == 1) nPminPerEq <- rep(nPminPerEq,nVar)
+  if (length(nPmaxPerEq) == 1) nPmaxPerEq <- rep(nPmaxPerEq,nVar)
+  
+  if(sum((nPmaxPerEq - nPminPerEq) < 0) > 0) {
+    stop("stop: nPminPerEq and nPmaxPerEq are inconsistent")
+  }
 
   # Compute the first nS[i] derivatives dXi/dt for each time series Xi
     # output size
@@ -290,10 +320,62 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
     block <- paste("allFilt$Np", sum(nS[1:i]), " <- as.vector(colSums(t(filt)))", sep="")
     eval((parse(text = block)))
   }
-
+  
+  # Remove equations individually too small or too big
+  for (i in 1:nVar) {
+    # Take the information from the possible models provided in input
+    block <- paste("PotModParam <- allFilt$X", i, "",sep="")
+    eval((parse(text = block)))
+    whatlines <- (colSums(t(PotModParam)!=0) >= nPminPerEq[i]
+                  & colSums(t(PotModParam)!=0) <= nPmaxPerEq[i])
+    PotModParam <- PotModParam[whatlines,]
+    if (is.vector(PotModParam)) PotModParam <- t(as.matrix(PotModParam))
+    block <- paste("allFilt$X", i, " <- as.matrix(PotModParam)",sep="")
+    eval((parse(text = block)))
+    block <- paste("allFilt$Np", i, " <- as.matrix(colSums(t(PotModParam)!=0))",sep="")
+    eval((parse(text = block)))
+    }
+  
+  # Remove equations that do not include the And-mandatory terms
+  if (is.null(AndManda) == 'FALSE') {
+    for (i in 1:nVar) {
+      # Take the information from the possible models provided in input
+      block <- paste("PotModParam <- allFilt$X", i, "",sep="")
+      eval((parse(text = block)))
+      tmpM <- rep(AndManda[,i],dim(PotModParam)[1])
+      dim(tmpM) <- c(dim(PotModParam)[2],dim(PotModParam)[1])
+      whatlines <- which(colSums(t(PotModParam!=0) * tmpM) == colSums(tmpM))
+      PotModParam <- PotModParam[whatlines,]
+      if (is.vector(PotModParam)) PotModParam <- t(as.matrix(PotModParam))
+      block <- paste("allFilt$X", i, " <- as.matrix(PotModParam)",sep="")
+      eval((parse(text = block)))
+      block <- paste("allFilt$Np", i, " <- as.matrix(colSums(t(PotModParam)!=0))",sep="")
+      eval((parse(text = block)))
+    }
+  }
+  
+  # Remove equations that do not include the OR-mandatory terms
+  if (is.null(OrMandaPerEq) == 'FALSE') {
+    for (i in 1:nVar) {
+      # Take the information from the possible models provided in input
+      block <- paste("PotModParam <- allFilt$X", i, "",sep="")
+      eval((parse(text = block)))
+      tmpM <- rep(OrMandaPerEq[,i],dim(PotModParam)[1])
+      dim(tmpM) <- c(dim(PotModParam)[2],dim(PotModParam)[1])
+      whatlines <- which(colSums(t(PotModParam!=0) * tmpM) == 1)
+      PotModParam <- PotModParam[whatlines,]
+      if (is.vector(PotModParam)) PotModParam <- t(as.matrix(PotModParam))
+      block <- paste("allFilt$X", i, " <- as.matrix(PotModParam)",sep="")
+      eval((parse(text = block)))
+      block <- paste("allFilt$Np", i, " <- as.matrix(colSums(t(PotModParam)!=0))",sep="")
+      eval((parse(text = block)))
+    }
+  }
+  
   # Sets of combined equations
   #
-  SetsNp <- findAllSets(allFilt, nS=nS, nPmin=nPmin, nPmax=nPmax)
+  SetsNp <- findAllSets(allFilt, nS=nS,
+                        nPmin=nPmin, nPmax=nPmax)
 
   # reorder
   nParam <- colSums(t(SetsNp$Np))
@@ -325,9 +407,9 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
                        numValidIC = numValidIC,
                        weight = Wout,
                        IstepMin = IstepMin,
-                       IstepMax = IstepMax, tooFarThreshold = 4,
-                       LimCyclThreshold = 0.,
-                       fixedPtThreshold = 0.0, method = method)
+                       IstepMax = IstepMax, tooFarThr = tooFarThr,
+                       LimCyclThr = LimCyclThr,
+                       FxPtThr = FxPtThr, method = method)
 
 
   # ouput

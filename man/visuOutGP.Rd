@@ -4,8 +4,15 @@
 \alias{visuOutGP}
 \title{visuOutGP : get a quick information of gPoMo output}
 \usage{
-visuOutGP(ogp, selecmod = NULL, id = 1, prioMinMax = "data",
-  opt3D = "TRUE")
+visuOutGP(
+  ogp,
+  selecmod = NULL,
+  id = 1,
+  prioMinMax = "data",
+  opt3D = "TRUE",
+  maxPages = NULL,
+  seeEq = 1
+)
 }
 \arguments{
 \item{ogp}{The output list obtained from gPoMo.}
@@ -21,6 +28,12 @@ the unidentified models, that is, potentialy chaotic models).}
 
 \item{opt3D}{Provides a 3D plot (x,y,z) when \code{opt = 'TRUE'}
 (the \code{rgl} library is required).}
+
+\item{maxPages}{The maximum of pages to be displayed (4 by default,
+but this may be insufficient when too many models remain)}
+
+\item{seeEq}{Indicates if equations should be displayed (seeEq = 1,
+by default) or not (seeEq = 0).}
 }
 \value{
 A Matrix describing the terms composing each model by row. The first
@@ -39,7 +52,7 @@ tin <- Ross76[seq(1, 3000, by = 8), 1]
 # single time series
 data <- Ross76[seq(1, 3000, by = 8), 3]
 dev.new()
-plot(tin, data, type = 'l')
+plot(tin, data, type = 'l', main = 'Observed time series')
 # global modelling
 # results are put in list outputGPoM
 outputGPoM <- gPoMo(data, tin=tin, dMax = 2, nS=c(3), show = 0,

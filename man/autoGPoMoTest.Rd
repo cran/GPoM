@@ -5,10 +5,24 @@
 \title{Tests the numerical integrability of models and
 classify their dynamical regime}
 \usage{
-autoGPoMoTest(data, tin = NULL, dt = NULL, nVar = nVar, dMax = dMax,
-  show = 1, verbose = 1, allKL = allKL, numValidIC = 1, weight = NULL,
-  IstepMin = 10, IstepMax = 10000, tooFarThreshold = 4,
-  LimCyclThreshold = 0, fixedPtThreshold = 1e-08, method = "rk4")
+autoGPoMoTest(
+  data,
+  tin = NULL,
+  dt = NULL,
+  nVar = nVar,
+  dMax = dMax,
+  show = 1,
+  verbose = 1,
+  allKL = allKL,
+  numValidIC = 1,
+  weight = NULL,
+  IstepMin = 10,
+  IstepMax = 10000,
+  tooFarThr = 4,
+  FxPtThr = 1e-08,
+  LimCyclThr = 1e-06,
+  method = "rk4"
+)
 }
 \arguments{
 \item{data}{Input Time series: Each column is one time series
@@ -46,15 +60,15 @@ of the analysis (by default \code{IstepMin = 10}).}
 \item{IstepMax}{The maximum number of integration steps for
 stopping the analysis (by default \code{IstepMax = 10000}).}
 
-\item{tooFarThreshold}{Divergence threshold, maximum value
+\item{tooFarThr}{Divergence threshold, maximum value
 of the model trajectory compared to the data standard
 deviation. By default a trjactory is too far if
 the distance to the center is larger than four times the variance
 of the input data.}
 
-\item{LimCyclThreshold}{Threshold used to detect the limit cycle.}
+\item{FxPtThr}{Threshold used to detect fixed points.}
 
-\item{fixedPtThreshold}{Threshold used to detect fixed points.}
+\item{LimCyclThr}{Threshold used to detect the limit cycle.}
 
 \item{method}{The integration technique used for the numerical
 integration. By default, the fourth-order Runge-Kutta method
@@ -67,6 +81,9 @@ A list containing:
 
 \code{$okMod}      A vector classifying the models: diverging models (0),
 periodic models of period-1 (-1), unclassified models (1).
+
+\code{$okMod}      A matrix classifying the model variables: diverging variable (0),
+period-1 variable (-1), period-2 variable (-2), fixed point variable (2), unclassified models (1).
 
 \code{$coeff}      A matrix with the coefficients of one selected model
 

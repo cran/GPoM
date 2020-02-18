@@ -1,4 +1,4 @@
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 # load data
 data("Ross76")
 # plot
@@ -7,7 +7,7 @@ data <- Ross76[,2:4]
 plot(tin, data[,1], xlab = 't', ylab = 'x(t)', main = 'Original time series',
      type='l', col = 'gray')
 
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 plot(tin, data[,1], xlab = 't', ylab = 'x(t)', 
      main = 'Subsampled time series', type='l', col = 'gray')
 # subsampling:
@@ -21,7 +21,7 @@ legend(0,6.5,c("original", "subsampled"), col=c('gray', 'red'),
        lty=c(1,1), pch=c(NA,1), cex=0.6)
 
 
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 plot(tin, data[,1], xlab = 't', ylab = 'x(t)', 
      main = 'Resampled time series', type='l', col = 'lightgray')
 # subsampling:
@@ -40,7 +40,7 @@ legend(0,6.5,c("original", "subsampled", "resampled"),
        col=c('lightgray', 'red', 'green'), lty=c(1,1,1),
        pch=c(NA,1, NA), cex=0.6)
 
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 # from original signal
 drv1 <- drvSucc(tin, data[,1], nDeriv=2)
 # from subsampled signal
@@ -48,7 +48,7 @@ drv2 <- drvSucc(tus, datus[,1], nDeriv=2)
 # from resampled signal
 drv3 <- drvSucc(rspl$x, rspl$y, nDeriv=2)
 
-## ---- eval = TRUE, fig.show='hold', fig.align='center'-------------------
+## ---- eval = TRUE, fig.show='hold', fig.align='center'------------------------
 # plot resulting output as a function of time
 # first derivative
 plot(drv1$tout, drv1$seriesDeriv[,2], type='l', xlab = 'time', 
@@ -81,7 +81,7 @@ lines(drv3$seriesDeriv[,2], drv3$seriesDeriv[,3], type='l', col = 'green')
 legend(1.3,18,c("original", "subsampled", "resampled"), 
        col=c('black', 'red', 'green'), lty=1, cex=0.5)
 
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 # load
 data("Ross76")
 # plot
@@ -98,7 +98,7 @@ plot(data[,1], data[,2], type='l', xlab = 'x(t)', ylab = 'y(t)')
 ## ---- eval = TRUE, fig.show='hold', fig.align='center', fig.width=4, fig.height=4----
 plot(data[,2], data[,3], type='l', xlab = 'x(t)', ylab = 'z(t)')
 
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 # plot
 tin <- Ross76[,1]
 data <- Ross76[,2:4]

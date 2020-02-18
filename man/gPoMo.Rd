@@ -4,10 +4,31 @@
 \alias{gPoMo}
 \title{Generalized Polynomial Modeling}
 \usage{
-gPoMo(data, tin = NULL, dtFixe = NULL, dMax = 2, nS = c(3), winL = 9,
-  weight = NULL, show = 1, verbose = 1, underSamp = NULL, EqS = NULL,
-  IstepMin = 2, IstepMax = 2000, nPmin = 1, nPmax = 14,
-  method = "lsoda")
+gPoMo(
+  data,
+  tin = NULL,
+  dtFixe = NULL,
+  dMax = 2,
+  nS = c(3),
+  winL = 9,
+  weight = NULL,
+  show = 1,
+  verbose = 1,
+  underSamp = NULL,
+  EqS = NULL,
+  AndManda = NULL,
+  OrMandaPerEq = NULL,
+  IstepMin = 2,
+  IstepMax = 2000,
+  nPmin = 1,
+  nPmax = 14,
+  tooFarThr = 4,
+  FxPtThr = 1e-08,
+  LimCyclThr = 1e-06,
+  nPminPerEq = 1,
+  nPmaxPerEq = NULL,
+  method = "rk4"
+)
 }
 \arguments{
 \item{data}{Input Time series: Each column is one time series
@@ -49,6 +70,12 @@ For \code{undersamp = 2}, only one data out of two is kept, etc.}
 Each column corresponds to one equation. Each line corresponds to one
 polynomial term as defined by function \code{poLabs}.}
 
+\item{AndManda}{AND-mandatory terms in the equations (all the provided
+terms should be in the equations).}
+
+\item{OrMandaPerEq}{OR-mandatory terms per equations (at least one of
+the provided terms should be in each equation).}
+
 \item{IstepMin}{The minimum number of integration step to start
 of the analysis (by default \code{IstepMin = 10}).}
 
@@ -60,6 +87,22 @@ of polynomial term) allowed.}
 
 \item{nPmax}{Corresponds to the maximum number of parameters (and thus
 of polynomial) allowed.}
+
+\item{tooFarThr}{Divergence threshold, maximum value
+of the model trajectory compared to the data standard
+deviation. By default a trjactory is too far if
+the distance to the center is larger than four times the variance
+of the input data.}
+
+\item{FxPtThr}{Threshold used to detect fixed points.}
+
+\item{LimCyclThr}{Threshold used to detect the limit cycle.}
+
+\item{nPminPerEq}{Corresponds to the minimum number of parameters (and thus
+of polynomial term) allowed per equation.}
+
+\item{nPmaxPerEq}{Corresponds to the maximum number of parameters (and thus
+of polynomial) allowed per equation.}
 
 \item{method}{The integration technique used for the numerical
 integration. By default, the fourth-order Runge-Kutta method
@@ -133,7 +176,7 @@ data <- Ross76[,3]
 dev.new()
 out1 <- gPoMo(data, tin = tin, dMax = 2, nS=c(3), show = 1,
               IstepMax = 1000, nPmin = 9, nPmax = 11)
-visuEq(3, 2, out1$models$model1, approx = 4)
+visuEq(out1$models$model1, approx = 4)
 
 
 \dontrun{
@@ -151,7 +194,7 @@ dev.new()
 out2 <- gPoMo(data, tin = tin, weight = W,
                  dMax = 2, nS=c(3), show = 1,
                  IstepMax = 6000, nPmin = 9, nPmax = 11)
-visuEq(3, 2, out2$models$model3, approx = 4)
+visuEq(out2$models$model3, approx = 4)
 }
 
 
@@ -164,7 +207,7 @@ dev.new()
 out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(1,1,1), show = 1,
               IstepMin = 10, IstepMax = 3000, nPmin = 7, nPmax = 8)
 # the simplest model able to reproduce the observed dynamics is model #5
-visuEq(3, 2, out3$models$model5, approx = 4) # the original Rossler system is thus retrieved
+visuEq(out3$models$model5, approx = 3, substit = 1) # the original Rossler system is thus retrieved
 }
 
 \dontrun{
@@ -177,11 +220,12 @@ EqS <- matrix(1, ncol = 3, nrow = 10)
 EqS[,1] <- c(0,0,0,1,0,0,0,0,0,0)
 EqS[,2] <- c(1,1,0,1,0,1,1,1,1,1)
 EqS[,3] <- c(0,1,0,0,0,0,1,1,0,0)
-visuEq(3, 2, EqS, substit = c('X','Y','Z'))
+visuEq(EqS, substit = c('X','Y','Z'))
 dev.new()
 out4 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), show = 1,
       EqS = EqS, IstepMin = 10, IstepMax = 2000,
       nPmin = 9, nPmax = 11)
+visuEq(out4$models$model2, approx = 2, substit = c("Y","Y2","Z"))
 }
 
 \dontrun{
@@ -202,7 +246,7 @@ out5 <- gPoMo(data, tin = tin, dMax = 2, nS = c(1,1,1,1,1,1),
 
 # the original Rossler (variables x, y and z) and Sprott (variables u, v and w)
 # systems are retrieved:
-visuEq(6, 2, out5$models$model347, approx = 4,
+visuEq(out5$models$model347, approx = 4,
        substit = c('x', 'y', 'z', 'u', 'v', 'w'))
 # to check the robustness of the model, the integration duration
 # should be chosen longer (at least IstepMax = 4000)

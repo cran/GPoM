@@ -92,7 +92,12 @@ autoGPoMoSearch <- function (data, dt, nVar = nVar, dMax = dMax, weight = NULL,
   tab <- regSeries(nVar, dMax, reg$init[,1:nVar])[, reg$filterReg ==  1]
   coeff <- lsfit(tab, reg$init[, nVar + 1], intercept = F)$coefficients
   KMemo[dim(KMemo)[1],][reg$filterReg ==  1] <- coeff
-
+  #
+  # ajout 17/10/2018 (to have all the monomial equal to 0)
+  # modified for test 21/03/2019
+  KMemo <- rbind(KMemo, Ktmp * 0)
+  filtMemo <- rbind(filtMemo, Ktmp * 0)
+  
   # preparing data to return back
   Memo$filtMemo <- filtMemo
   Memo$KMemo <- KMemo

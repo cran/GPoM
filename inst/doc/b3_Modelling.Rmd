@@ -149,11 +149,11 @@ value of `approx`):
 
 ```{r, eval = FALSE}
 # obtained model #3
-visuEq(nVar, dMax, out1$models$model3, approx = 1)
+visuEq(out1$models$model3, nVar, dMax, approx = 1)
 ```
 ```{r, eval = TRUE, echo = FALSE}
 # obtained model #3
-visuEq(nVar, dMax, data_vignetteIII$out1_m3, approx = 1)
+visuEq(data_vignetteIII$out1_m3, nVar, dMax, approx = 1)
 ```
 Various methods may be used to validate such a model.
 In practice, note that validation may depend on the
@@ -247,10 +247,10 @@ legend(3,2,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
 The equations of the obtained model are given by:
 
 ```{r, eval = FALSE}
-visuEq(3, 2, out2$models$model5, approx = 4)
+visuEq(out2$models$model5, 3, 2, approx = 4)
 ```
 ```{r, eval = TRUE, echo = FALSE}
-visuEq(3, 2, data_vignetteIII$out2_m5, approx = 4)
+visuEq(data_vignetteIII$out2_m5, 3, 2, approx = 4)
 ```
 
 The original Rössler system is thus retrieved.
@@ -401,7 +401,7 @@ EqS <- matrix(1, ncol = 3, nrow = 10)
 EqS[,1] <- c(0,0,0,1,0,0,0,0,0,0)
 EqS[,2] <- c(1,1,0,1,0,1,1,1,1,1)
 EqS[,3] <- c(0,1,0,0,0,0,1,1,0,0)
-visuEq(3, 2, EqS, substit = c('X1','X2','Y1'))
+visuEq(EqS, 3, 2, substit = c('X1','X2','Y1'))
 ```
 
 Each term of this template can be used by the global model
@@ -445,10 +445,10 @@ legend(-3,-5,c("original", "model"), col=c('black', 'red'), lty=1, cex=0.5)
 The equations of the obtained model are the following :
 
 ```{r, eval = FALSE}
-visuEq(3, 2, out3$models$model2, approx = 4, substit = c('X1','X2','Y1'))
+visuEq(out3$models$model2, 3, 2, approx = 4, substit = c('X1','X2','Y1'))
 ```
 ```{r, eval = TRUE, echo = FALSE}
-visuEq(3, 2, data_vignetteIII$out3_m2, approx = 4, substit = c('X1','X2','Y1'))
+visuEq(data_vignetteIII$out3_m2, 3, 2, approx = 4, substit = c('X1','X2','Y1'))
 ```
 When no information is available about the polynomial
 structure, the model search can be launched without using
@@ -600,11 +600,11 @@ legend(-3,1,c("original", "model"), col=c('black', 'green'), lty=1, cex=0.5)
 The estimated model reads
 
 ```{r, eval = FALSE}
-visuEq(6, 2, out4$models$model347, approx = 2, 
+visuEq(out4$models$model347, 6, 2, approx = 2, 
        substit = c("x", "y", "z", "u", "v", "w"))
 ```
 ```{r, eval = TRUE, echo = FALSE}
-visuEq(6, 2, data_vignetteIII$out4_m347, approx = 2, 
+visuEq(data_vignetteIII$out4_m347, 6, 2, approx = 2, 
        substit = c("x", "y", "z", "u", "v", "w"))
 ```
 
@@ -694,7 +694,7 @@ indicates when the observations provides in `series` should
 be considered in the analysis, or not):
 
 ```{r, eval = TRUE}
-visuEq(3, 2, GPout1$models$model7, approx = 2)
+visuEq(GPout1$models$model7, 3, 2, approx = 2)
 ```
 
 This set of equations can then be integrated numerically.
@@ -729,7 +729,7 @@ Note that model #3 also produces a good approximation
 of the original system.
 
 ```{r, eval = TRUE}
-visuEq(3, 2, GPout1$models$model3, approx = 2)
+visuEq(GPout1$models$model3, 3, 2, approx = 2)
 ```
 
 This model converges to a periodic attractor but

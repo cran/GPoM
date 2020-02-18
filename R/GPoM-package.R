@@ -119,6 +119,10 @@
 #'
 #' @docType package
 #' @name GPoM-package
-#' @keywords global modeling, nonlinear dynamical systems, chaos,
-#' causal inference, time series analysis, data learning
+#' @concept global modeling
+#' @concept nonlinear dynamical systems
+#' @concept chaos
+#' @concept causal inference
+#' @concept time series analysis
+#' @concept data learning
 NA

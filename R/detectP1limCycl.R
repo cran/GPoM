@@ -4,9 +4,6 @@
 #' from trajectories in the phase sapce considered in a
 #' bidimensional projection.
 #'
-#' @inheritParams autoGPoMoSearch
-#' @inheritParams autoGPoMoTest
-#'
 #' @param data A matrix of the trajectory in a 2D space (if more than
 #' two columns are provided, only the two first columns are considered)
 #' @param LimCyclThreshold The detection threshold

@@ -33,7 +33,7 @@ data <- Ross76[seq(1, 3000, by = 8), 3]
 # global modelling
 # results are put in list outputGPoM
 outputGPoM <- gPoMo(data, tin=tin, dMax = 2, nS=c(3), show = 0, method = 'rk4',
-                    nPmax = 12, IstepMin = 400, IstepMax = 401)
+                    nPmin = 3, nPmax = 12, IstepMin = 400, IstepMax = 401)
 ```
 
 To test the potential of a given model to reproduce
@@ -184,9 +184,9 @@ nVar <- dim(outputGPoM$models$model7)[2]
 pMax <- dim(outputGPoM$models$model7)[1]
 dMax <- p2dMax(nVar,pMaxKnown = pMax)
 # See equations
-visuEq(nVar, dMax, outputGPoM$models$model7, approx = 2)
+visuEq(outputGPoM$models$model7, approx = 2)
 #
-visuEq(nVar, dMax, outputGPoM$models$model9, approx = TRUE)
+visuEq(outputGPoM$models$model9, approx = TRUE)
 ```
 
 By default, a large number of digits is provided for each

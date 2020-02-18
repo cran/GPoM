@@ -4,10 +4,6 @@
 #' @description Generates time series from Ordinary Differential Equations
 #' perturbed by dynamical and/or measurement noises
 #'
-#' @inheritParams poLabs
-#' @inheritParams gloMoId
-#' @inheritParams derivODE2
-#'
 #' @importFrom stats sd rnorm
 #'
 #' @param x0 The initial conditions. Should be a vector which size must be equal
@@ -78,11 +74,11 @@
 #' Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
 #' K <- cbind(Eq1, Eq2, Eq3)
 #' # Edit the equations
-#' visuEq(nVar, dMax, K)
+#' visuEq(K, nVar, dMax)
 #' # initial conditions
 #' v0 <- c(-0.6, 0.6, 0.4)
 #' # output time required
-#' timeOut = (0:1000)/50
+#' timeOut = (0:800)/50
 #' # variance of additive noise
 #' varBruitA = c(0,0,0)^2
 #' # variance of multiplitive noise
@@ -110,9 +106,15 @@
 #'
 #' @export
 numinoisy <- function(x0, t, K,
-                             varData = NULL, txVarBruitA = NULL, txVarBruitM = NULL,
-                             varBruitA = NULL, varBruitM = NULL, taux=NULL, freq=NULL,
-                             variables=NULL, method=NULL){
+                      varData = NULL, txVarBruitA = NULL, txVarBruitM = NULL,
+                      varBruitA = NULL, varBruitM = NULL, taux=NULL, freq=NULL,
+                      variables=NULL, method=NULL){
+  
+  # check dimensions
+  if (length(x0) != dim(K)[2]) {
+    stop("v0 length (=",length(x0),") does not match with the model dimension (=",dim(K)[2],")")
+  }
+  
   # slvn 24/09/2015
   # EITHER txVarBruitM OR sigBruitM should be given
 

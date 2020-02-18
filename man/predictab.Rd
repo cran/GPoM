@@ -5,8 +5,18 @@
 \title{Estimate the models performance obtained with \code{GPoMo}
 in term of predictability}
 \usage{
-predictab(ogp, fullt = NULL, fulldata = NULL, hp = NULL, Nech = 50,
-  show = 1, selecmod = NULL, id = 1, selV = 1, na.rm = FALSE)
+predictab(
+  ogp,
+  fullt = NULL,
+  fulldata = NULL,
+  hp = NULL,
+  Nech = 50,
+  show = 1,
+  selecmod = NULL,
+  id = 1,
+  selV = 1,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{ogp}{The output list obtained from function \code{gPoMo}.}

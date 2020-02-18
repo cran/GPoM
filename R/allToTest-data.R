@@ -21,7 +21,7 @@
 #' nVar <- dim(allToTest$mToTest6)[2]
 #' dMax <- p2dMax(nVar = 3, pMaxKnown = dim(allToTest$mToTest6)[1])
 #' # Their equation can be edited as follows:
-#' visuEq(nVar, dMax, allToTest$mToTest6, approx = 2)
+#' visuEq(allToTest$mToTest6, nVar, dMax, approx = 2)
 #'
 #' @keywords data
 "allToTest"

@@ -3,8 +3,6 @@
 #' @description Computes the successive derivatives from one single time series,
 #' with the Savitzky-Golay approach (1964).
 #'
-#' @inheritParams gloMoId
-#'
 #' @param TS A single time series provided as a single vector.
 #' @param nDrv The number of derivatives to be computed from the input
 #' \code{series}. The resulting number of outpout time series

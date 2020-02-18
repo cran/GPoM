@@ -111,7 +111,7 @@ data <- Ross76[seq(1, 3000, by = 8), 3]
 # results are put in list outputGPoM
 outputGPoM <- gPoMo(data[1:300], tin = tin[1:300], dMax = 2, nS=c(3),
                     show = 0, method = 'rk4',
-                    nPmax = 12, IstepMin = 400, IstepMax = 401)
+                    nPmin = 3, nPmax = 12, IstepMin = 400, IstepMax = 401)
 ```
 
 Eight models are here obtained:
@@ -136,7 +136,7 @@ one model, starting from one chosen initial state.
 Model #1 is defined by the following set of equations:
 
 ```{r, eval = TRUE}
-visuEq(3, 2, outputGPoM$models$model1)
+visuEq(outputGPoM$models$model1)
 ```
 
 The initial state can be chosen as:

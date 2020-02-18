@@ -4,8 +4,16 @@
 \alias{numicano}
 \title{Numerical Integration of models in ODE of polynomial form}
 \usage{
-numicano(nVar, dMax, Istep = 1000, onestep = 1/125, KL = NULL,
-  PolyTerms = NULL, v0 = NULL, method = "rk4")
+numicano(
+  nVar,
+  dMax,
+  Istep = 1000,
+  onestep = 1/125,
+  KL = NULL,
+  PolyTerms = NULL,
+  v0 = NULL,
+  method = "rk4"
+)
 }
 \arguments{
 \item{nVar}{Number of variables considered in the polynomial formulation.}
@@ -61,7 +69,7 @@ Eq2 <- c(0, 0, 0, a, 0, 0, 1, 0, 0, 0)
 Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0)
 K <- cbind(Eq1, Eq2, Eq3)
 # Edition of the equations
-visuEq(nVar, dMax, K)
+visuEq(K, nVar, dMax)
 # initial conditions
 v0 <- c(-0.6, 0.6, 0.4)
 # model integration
@@ -97,7 +105,7 @@ reconstr <- numicano(nVar, dMax, Istep=500, onestep=1/250, PolyTerms=PolyTerms,
 plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l',
      main='phase portrait', xlab='x', ylab = 'dx/dt')
 # Edition of the equations
-visuEq(nVar, dMax, reconstr$KL)
+visuEq(reconstr$KL, nVar, dMax)
 }
 
 }

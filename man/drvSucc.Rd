@@ -4,8 +4,7 @@
 \alias{drvSucc}
 \title{drvSucc : Computes the successive derivatives of a time series}
 \usage{
-drvSucc(tin = NULL, serie, nDeriv, weight = NULL, tstep = NULL,
-  winL = 9)
+drvSucc(tin = NULL, serie, nDeriv, weight = NULL, tstep = NULL, winL = 9)
 }
 \arguments{
 \item{tin}{Input date vector which length should correspond to

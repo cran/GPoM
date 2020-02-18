@@ -63,7 +63,7 @@ findAllSets <- function (allFilt, nS=c(3), nPmin=1, nPmax=14)
   propMod[1:nVar, 1] <- 1:nVar
   Np <- NULL
   for (i in 1:nVar) {
-    block <- paste("propMod[i,2:3] <- dim(allFilt$X", i, ")",sep="")
+    block <- paste("propMod[i,2:3] <- dim(as.matrix(allFilt$X", i, "))",sep="")
     eval((parse(text = block)))
     block <- paste("Np <- allFilt$Np", i, "",sep="")
     eval((parse(text = block)))

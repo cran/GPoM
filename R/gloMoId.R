@@ -126,7 +126,7 @@
 #' W[1:100] <- 0  # the first hundred values will not be considered
 #' W[301:320] <- 0  # twenty other values will not be considered either
 #' reg <- gloMoId(series, dt=1/100, weight = W, nVar=3, dMax=2, show=1)
-#' visuEq(3, 2, reg$K, approx = 4)
+#' visuEq(reg$K, 3, 2, approx = 4)
 #' # first weight which value not equal to zero:
 #' i1 = which(reg$finalWeight == 1)[1]
 #' v0 <-  reg$init[i1,1:3]

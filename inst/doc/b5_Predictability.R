@@ -1,4 +1,4 @@
-## ---- eval = TRUE, include=FALSE-----------------------------------------
+## ---- eval = TRUE, include=FALSE----------------------------------------------
 # load data
 data("Ross76")
 # time vector
@@ -9,21 +9,21 @@ data <- Ross76[seq(1, 3000, by = 8), 3]
 # results are put in list outputGPoM
 outputGPoM <- gPoMo(data[1:300], tin = tin[1:300], dMax = 2, nS=c(3),
                     show = 0, method = 'rk4',
-                    nPmax = 12, IstepMin = 400, IstepMax = 401)
+                    nPmin = 3, nPmax = 12, IstepMin = 400, IstepMax = 401)
 
-## ---- eval = TRUE--------------------------------------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 sum(outputGPoM$okMod)
 
-## ---- eval = TRUE--------------------------------------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 which(outputGPoM$okMod == 1)
 
-## ---- eval = TRUE--------------------------------------------------------
-visuEq(3, 2, outputGPoM$models$model1)
+## ---- eval = TRUE-------------------------------------------------------------
+visuEq(outputGPoM$models$model1)
 
-## ---- eval = TRUE--------------------------------------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 x0 <- head(outputGPoM$filtdata, 1)[1:3]
 
-## ---- eval = TRUE, fig.align='center'------------------------------------
+## ---- eval = TRUE, fig.align='center'-----------------------------------------
 ###############
 # forecasting #
 ###############
@@ -44,13 +44,13 @@ lines(outNumi$reconstr[,1] + t0, outNumi$reconstr[,2] - outputGPoM$filtdata[1:nb
 legend(0,-4, c("simulated", "observed", "difference"), col=c('red', 'black', 'green'), 
        lty=1, cex = 0.6)
 
-## ---- eval = TRUE--------------------------------------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 #######################
 # test predictability #
 #######################
 outpred <- predictab(outputGPoM, hp = 15, Nech = 30, selecmod = 9, show = 0)
 
-## ---- eval = TRUE, fig.show='hold'---------------------------------------
+## ---- eval = TRUE, fig.show='hold'--------------------------------------------
 # manual visualisation of the outputs (e.g. for model 9):
 plot(c(outpred$hpE[1], max(outpred$hpE)), c(0,0),
      type='l', main = 'Error growth',
@@ -74,13 +74,13 @@ for (i in 1:dim(outpred$Errmod9)[2]) {
 }
 lines(c(outpred$hpE[1], max(outpred$hpE)), c(0,0), type='l')
 
-## ---- eval = TRUE--------------------------------------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 #######################
 # test predictability #
 #######################
 outpred <- predictab(outputGPoM, hp = 15, Nech = 30, selecmod = c(1,9), show = 0)
 
-## ---- eval = TRUE, fig.show='hold'---------------------------------------
+## ---- eval = TRUE, fig.show='hold'--------------------------------------------
 # manual visualisation of the outputs (e.g. for model 1):
 image(outpred$tE, outpred$hpE, t(outpred$Errmod1),
       xlab = expression(italic(t)), ylab = expression(italic(h)),
@@ -90,7 +90,7 @@ image(outpred$tE, outpred$hpE, t(outpred$Errmod9),
       xlab = expression(italic(t)), ylab = expression(italic(h)),
       main = expression(italic(e[model9])(italic(t),italic(h))))
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  #######################
 #  # test predictability #
 #  #######################

@@ -22,7 +22,7 @@
 #' # Convert this vector into a matrix formulation with all the equations: 
 #' K <- cano2M(3,2,polyTerms)
 #' # Visualize the equations:
-#' visuEq(3,2,K)
+#' visuEq(K,3,2)
 #' 
 #' @export
 cano2M <- function(nVar, dMax, poly) {
