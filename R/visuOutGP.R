@@ -98,73 +98,12 @@ visuOutGP <- function (ogp, selecmod = NULL, id = 1,
 
   
 
-#   if (nmod <= 24) {
-#    # plot data and models time series
-#    dev.new()
-#    op <- par(mfrow = c(4, 6), pty = "m")
-#    if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
-#    if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
-#    if (nmod <= 15) op <- par(mfrow = c(3, 5), pty = "m")
-#    if (nmod <= 12) op <- par(mfrow = c(3, 4), pty = "m")
-#    if (nmod <= 9)  op <- par(mfrow = c(3, 3), pty = "m")
-#    if (nmod <= 6)  op <- par(mfrow = c(3, 2), pty = "m")
-#    if (nmod <= 4)  op <- par(mfrow = c(2, 2), pty = "m")
-#    if (nmod == 2)  op <- par(mfrow = c(2, 1), pty = "m")
-#    if (nmod == 1)  op <- par(mfrow = c(1, 1), pty = "m")
-#    for (imod in seemod)  {
-#      block0 <- paste("Model ", imod, " (Np = ", modInfo[imod, 2], ")", sep="")
-#      #
-#      inputseries <- as.matrix(ogp$inputdata)[,1]
-#      if (prioMinMax == 'data') {
-#        plot(ogp$tin, inputseries, cex = 0.7, col='black',
-#             main = block0, xlab='t', ylab='y(t)')
-#        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
-#        #
-#        block <- paste(
-#          "lines(ogp$tout[1:modInfo[", imod,
-#          ",3]], ogp$stockoutreg$model", imod,
-#          "[,1], type='l', col='red')", sep="")
-#        eval((parse(text = block)))
-#      }
-#      else if (prioMinMax == 'dataonly') {
-#        plot(ogp$tin, inputseries, cex = 0.7, col='black',
-#             main = block0, xlab='t', ylab='y(t)')
-#        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
-#      }
-#      else if (prioMinMax == 'model') {
-#        #
-#        block <- paste(
-#          "plot(ogp$tout[1:modInfo[", imod,
-#          ",3]], ogp$stockoutreg$model", imod,
-#          "[,1], type='l', col='red', main = block0, xlab='t', ylab='y(t)')", sep="")
-#        eval((parse(text = block)))
-#        lines(ogp$tin, inputseries, cex = 0.7, col='black', type='o')
-#        lines(ogp$tfiltdata, ogp$filtdata[,1], type='l', col='green')
-#      }
-#      else if (prioMinMax == 'modelonly') {
-#        #
-#        block <- paste(
-#          "plot(ogp$tout[1:modInfo[", imod,
-#          ",3]], ogp$stockoutreg$model", imod,
-#          "[,1], type='l', col='red', main = block0, xlab='t', ylab='y(t)')", sep="")
-#        eval((parse(text = block)))
-#      }
-#    }
-#  }
-#  else {
-#    stop('Too many models nmod = ', nmod, ', the fonction 
-#         can apply to maximum nmod = 24 models.
-#         It may be applied by selecting the models by hand, in several steps such as e.g.
-#         visuOutGP(outputGPoM, selecmod = which(outputGPoM$okMod == 1)[1:24])
-#         and then
-#         visuOutGP(outputGPoM, selecmod = which(outputGPoM$okMod == 1)[24:',
-#         nmod,'])')
-#  }
-  
 
   if (nmod <= 24) {
     # plot data and models phase portraits
     dev.new()
+    oldpar <- par(no.readonly = TRUE)    
+    on.exit(par(oldpar))  
     op <- par(mfrow = c(4, 6), pty = "s")
     if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "s")
     if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "s")

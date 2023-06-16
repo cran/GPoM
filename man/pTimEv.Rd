@@ -10,6 +10,7 @@ pTimEv(
   dMax,
   TSdate,
   whatTerms = NULL,
+  weight = NULL,
   wlength = 1000,
   onestep = 100,
   removeExtr = 1
@@ -28,6 +29,10 @@ pTimEv(
 that these are organised following the convention defined by
 poLabs(nVar,dMax). Since only the structure is required, if
 coefficients are provided, these are transformed to 1.}
+
+\item{weight}{A vector providing the binary weighting function
+of the input data series (0 or 1). By default, all the values
+are set to 1.}
 
 \item{wlength}{The window length}
 

@@ -20,14 +20,14 @@
 #' nVar <- dim(sprottK)[2]
 #'
 #' #Example 1
-#' polySeries2 <- regSeries(nVar, dMax, sprottK)
+#' polySeries1 <- regSeries(nVar, dMax, sprottK)
 #'
 #' #Example 2
 #' p <- c(1,3,1)
 #' polySeries2 <- regSeries(nVar, dMax, sprottK, pReg=p)
 #'
 #' @export
-regSeries <- function(nVar, dMax, series, pReg = NULL) {
+regSeries <- function(nVar, dMax, series, dMin = 0, pReg = NULL) {
 
   #
   if (is.vector(series)) {
@@ -42,7 +42,7 @@ regSeries <- function(nVar, dMax, series, pReg = NULL) {
     if (is.null(dMax)) {
       stop("'dMax' or 'pReg' is required.")
     }
-    pReg <- regOrd(nVar,dMax)
+    pReg <- regOrd(nVar,dMax, dMin=dMin)
   } else {
     if (is.vector(pReg)) {
       pReg <- as.matrix(pReg)

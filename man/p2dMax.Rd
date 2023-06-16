@@ -6,12 +6,15 @@
 given the number of variables \code{nVar} and the number of possible
 polynomial terms \code{pMax}.}
 \usage{
-p2dMax(nVar, pMaxKnown)
+p2dMax(nVar, pMaxKnown, dMin = 0)
 }
 \arguments{
 \item{nVar}{Number of variables considered in the polynomial formulation.}
 
 \item{pMaxKnown}{The number of polynomial terms}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 }
 \value{
 \code{dMax} The maximum polynomial degree

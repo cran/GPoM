@@ -68,11 +68,12 @@
 #'        xlab='date', ylab='Epsilon', main='Resid', log = 'y')
 #'        
 #' @export
-pTimEv <- function(TS, nVar, dMax, TSdate, whatTerms = NULL, 
+pTimEv <- function(TS, nVar, dMax, TSdate, whatTerms = NULL, weight = NULL,
                        wlength = 1000, onestep = 100, removeExtr = 1) {
     #
     pMax <- choose(nVar+dMax,dMax)
     if (is.null(whatTerms) ) {whatTerms <- rep(1,pMax)}
+    if (is.null(weight) ) weight <- TSdate * 0 + 1
     #
     # Calculate the number of time steps
     nw <- floor((length(TS) - wlength) / onestep) + 1
@@ -85,12 +86,14 @@ pTimEv <- function(TS, nVar, dMax, TSdate, whatTerms = NULL,
       #
       # Extracts the local time series
       series <- TS[(((i-1)*onestep + 1) : ((i-1)*onestep + wlength))]
+      W  <- weight[(((i-1)*onestep + 1) : ((i-1)*onestep + wlength))]
       #
       # Estimates the local coefficients
-      outGM <- gloMoId(series, dt = TSdate[2]-TSdate[1], nVar = nVar, dMax = dMax, filterReg = whatTerms)
+      outGM <- gloMoId(series, dt = TSdate[2]-TSdate[1], nVar = nVar, dMax = dMax, filterReg = whatTerms, weight = W)
       #
       # Keep the results in the analysis matrix
-      slidingoutGM[i,] <- cbind(TSdate[(i-1)*onestep + 1], t(c(outGM$K,outGM$resTot)))
+      slidingoutGM[i,] <- cbind(TSdate[(i-1)*onestep + 1] + (TSdate[2]-TSdate[1])*wlength/2,
+                                t(c(outGM$K,outGM$resTot)))
     }
     
     W <- rep(1, dim(slidingoutGM)[1])

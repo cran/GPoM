@@ -125,6 +125,8 @@ dev.new()
 plot(intgr$donnees[,2], intgr$donnees[,3], type='l',
       main='phase portrait', xlab='x(t)', ylab = 'y(t)')
 dev.new()
+oldpar <- par(no.readonly = TRUE)    
+on.exit(par(oldpar))  
 par(mfrow = c(3, 1))
 plot(intgr$donnees[,1], intgr$donnees[,2], type='l',
       main='phase portrait', xlab='x(t)', ylab = 'y(t)')

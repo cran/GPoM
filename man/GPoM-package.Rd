@@ -120,7 +120,7 @@ Chaos, Solitons & Fractals, in press. \cr
 Sylvain Mangiarotti, Flavie Le Jean,
 Malika Chassan, Laurent Drapeau, Mireille Huc.
 
-Maintainer: M. Huc <mireille.huc@cesbio.cnes.fr>
+Maintainer: M. Huc <mireille.huc@u-paris2.fr>
 }
 \concept{causal inference}
 \concept{chaos}

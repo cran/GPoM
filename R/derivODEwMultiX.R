@@ -69,6 +69,7 @@
 #' nVarExt <- dim(extF)[2] - 1
 #' reconstr2[,(nVar - nVarExt + 2):(nVar + 1)] <- extF[(0:Istep+1)*2, 2:(nVarExt+1)]
 #' 
+#' @return xxx
 derivODEwMultiX <- function(t, x, K, extF, regS = NULL) {
 
     nVar <- length(x)

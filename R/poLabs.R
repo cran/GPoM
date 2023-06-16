@@ -35,7 +35,7 @@
 #' poLabs(2, 2, findIt = Pvec!=0, Xnote = c('x','y'))
 #'
 #' @export
-poLabs <- function(nVar, dMax, findIt = NULL, Xnote = 'X') {
+poLabs <- function(nVar, dMax, dMin = 0, findIt = NULL, Xnote = 'X') {
 
   # notation
   if (length(Xnote) == 1) {
@@ -49,9 +49,11 @@ poLabs <- function(nVar, dMax, findIt = NULL, Xnote = 'X') {
     stop('Xnote should be either one single character or a  nVar length vector of character')
   }
   # number of regressors
-  pMax <- d2pMax(nVar, dMax)
+  ##pMax <- d2pMax(nVar, dMax)
   # regressors Order :
-  pExpo <- regOrd(nVar, dMax)
+  pExpo <- regOrd(nVar, dMax, dMin = dMin)
+  # number of regressors
+  pMax <- dim(pExpo)[2]
   #
   lbls <- vector("character",pMax)
   #
@@ -62,13 +64,21 @@ poLabs <- function(nVar, dMax, findIt = NULL, Xnote = 'X') {
   for (i in 2:pMax) {
     # each factor of the regressor
     for (j in 1:nVar) {
-      if (pExpo[j,i] != 0) {
+      if (pExpo[j,i] > 0) {
         # exponent equal to 1 are eluded
         if (pExpo[j,i] == 1)
             lbls[i] <- paste(lbls[i],Xnote[j]," ",sep="")
         # exponent greater than 1 are noted
         if (pExpo[j,i] > 1)
            lbls[i] <- paste(lbls[i],Xnote[j],"^",pExpo[j,i]," ",sep="")
+      }
+    }
+  }
+  if (dMin < 0) {
+    for (i in 2:pMax) {
+      if (pExpo[1,i] == -1) {
+        if (lbls[i] == "") {lbls[i] = "1"}
+        lbls[i] <- paste(lbls[i], "/", Xnote[1])
       }
     }
   }

@@ -35,7 +35,7 @@
 #' visuEq(K = allK[[1]], substit = inXnote[[1]])
 #' visuEq(K = allK[[2]], substit = inXnote[[2]])
 #' XnoteOut = c('u', 'X', 'v', 'Y', 'w', 'Z')
-#' Knew3 <- combiEq(allK, inXnote = inXnote, XnoteOut = XnoteOut, dMaxOut = 3)
+#' Knew3 <- combiEq(allK,dMaxOut = 3, eqOrder = c(1,4,2,5,3,6))
 #' visuEq(K = Knew3, substit = XnoteOut)
 #' # Disentangle the subsystems from the mixed equations
 #' dstgl <- subSysD(Knew3, inXnote = XnoteOut)
@@ -56,6 +56,9 @@
 #' dstgl2 <- subSysD(Kduff, inXnote = Xnote)
 #' 
 #' @export
+#' 
+#' @return subS A matrix with the extracted subsystem
+#' 
 subSysD <- function(inK, inXnote = NULL) {
   
   #############################################################
@@ -136,13 +139,12 @@ subSysD <- function(inK, inXnote = NULL) {
   # Display the subsystems
   cat(length(allSubS), 'sub-systems can be distinguished:', "\n")
   for (isys in 1:length(allSubS)) {
-    #vlab <- rev(poLabs(nVar,1)[-1])
-    Eq <- combiEq(inK = inK,
-                  inXnote = varLab,
-                  XnoteOut = varLab[which(allSubS[[isys]]!=0)])
+
+    Eq <- extractEq(inK, which(allSubS[[isys]]!=0))
     # Display
     cat('### Sub-system', isys, ':', "\n")
     visuEq(K = Eq, substit = varLab[which(allSubS[[isys]]!=0)])
+
   }
   
   subS <- list()

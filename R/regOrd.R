@@ -10,7 +10,8 @@
 #'
 #' @param nVar The number of variables
 #' @param dMax The maximum degree allowed in the formulation
-#'
+#' @param dMin The minimum negative degree of the polynomial
+#' formulation (0 by default).
 #' @return A matrix of exponents. Each column corresponds to one
 #' polynomial term. Each line correspond to the exponent of one
 #' variable.
@@ -22,11 +23,10 @@
 #' @author Sylvain Mangiarotti
 #'
 #' @export
-regOrd <- function(nVar,dMax) {
+regOrd <- function(nVar,dMax,dMin=0) {
   # total number of regressors
-  pMax <- d2pMax(nVar, dMax)
+  pMax <- d2pMax(nVar, dMax,dMin=0)
   # prepare the matrix of exponents
-  #
   pExpo <- as.matrix(0:dMax)
   for (i in 1:(nVar-1)) {
     pExpotmp <- pExpo
@@ -45,6 +45,19 @@ regOrd <- function(nVar,dMax) {
   noms <- c("X1")
   for (i in 2:nVar) noms <- c(noms, paste("X", i, sep=""))
   rownames(pExpo) <- noms
+  
+  if (dMin <0) {
+    pExpoMin <- pExpo
+    pExpo <- cbind(pExpo, pExpoMin)
+    for (i in (pMax+1):(2*pMax)) {
+      pExpo[1,i] <- pExpo[1,i]  -1
+    }    
+    for (i in (pMax+1):(2*pMax)) {
+      pExpo[1,i] <- pExpo[1,i-pMax]  -1
+    }     
+    pExpo <- pExpo[,!duplicated(t(pExpo))]
+  }
+  
   # return
   pExpo
 }

@@ -59,6 +59,8 @@ using the Savitzky-Golay algorithm (1964).
 tin <- seq(0, 5, by = 0.01)
 data <- 2 * sin(5*tin)
 dev.new()
+oldpar <- par(no.readonly = TRUE)    
+on.exit(par(oldpar))  
 par(mfrow = c(3, 1))
 # Compute its derivatives:
 drv <- drvSucc(tin = tin, nDeriv = 2, serie = data, winL = 5)
@@ -90,6 +92,8 @@ data <- Ross76[,2]
 # Compute the derivatives
 drvOut <- drvSucc(tin, data, nDeriv=4)
 dev.new()
+oldpar <- par(no.readonly = TRUE)    
+on.exit(par(oldpar))  
 par(mfrow = c(3, 1))
 # original and smoothed variable:
 plot(drvOut$tin, drvOut$serie,

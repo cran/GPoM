@@ -7,8 +7,9 @@
 autoGPoMoSearch(
   data,
   dt,
-  nVar = nVar,
-  dMax = dMax,
+  nVar,
+  dMax,
+  dMin = 0,
   weight = NULL,
   show = 0,
   underSamp = NULL,
@@ -24,6 +25,9 @@ that corresponds to one variable.}
 \item{nVar}{Number of variables considered in the polynomial formulation.}
 
 \item{dMax}{Maximum degree of the polynomial formulation.}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{weight}{A vector providing the binary weighting function
 of the input data series (0 or 1). By default, all the values

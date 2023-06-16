@@ -5,7 +5,9 @@
 \alias{allToTest}
 \title{A list providing the description of six models tested by
 the function \code{autoGPoMoTest}.}
-\format{An object of class \code{list} of length 6.}
+\format{
+An object of class \code{list} of length 6.
+}
 \usage{
 allToTest
 }

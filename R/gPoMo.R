@@ -47,7 +47,7 @@
 #' visuEq(out1$models$model1, approx = 4)
 #' 
 #' 
-#'\dontrun{
+#'\donttest{
 #' #Example 2
 #' data("Ross76")
 #' tin <- Ross76[,1]
@@ -66,7 +66,7 @@
 #'}
 #'
 #'
-#'\dontrun{
+#'\donttest{
 #' #Example 3
 #' data("Ross76")
 #' tin <- Ross76[,1]
@@ -78,7 +78,7 @@
 #' visuEq(out3$models$model5, approx = 3, substit = 1) # the original Rossler system is thus retrieved
 #'}
 #'
-#'\dontrun{
+#'\donttest{
 #' #Example 4
 #' data("Ross76")
 #' tin <- Ross76[,1]
@@ -96,7 +96,7 @@
 #' visuEq(out4$models$model2, approx = 2, substit = c("Y","Y2","Z"))
 #'}
 #'
-#'\dontrun{
+#'\donttest{
 #' #Example 5
 #' # load data
 #' data("TSallMod_nVar3_dMax2")
@@ -188,7 +188,8 @@
 #' @seealso \code{\link{autoGPoMoSearch}}, \code{\link{autoGPoMoTest}}, \code{\link{visuOutGP}},
 #'          \code{\link{poLabs}}, \code{\link{predictab}}, \code{\link{drvSucc}}
 #'
-gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
+gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, dMin = 0,
+                   nS=c(3), winL = 9,
                    weight = NULL, show = 1, verbose = 1,
                    underSamp = NULL,
                    EqS = NULL,
@@ -201,7 +202,7 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
 {
 
   nVar = sum(nS)
-  pMax <- d2pMax(nVar, dMax)
+  pMax <- d2pMax(nVar, dMax, dMin=dMin)
 
   if (is.vector(data)) data <- as.matrix(data)
 
@@ -210,8 +211,8 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
   }
   
   if (is.null(tin) & is.null(dtFixe)) {
-    cat("when neither input time vector 'tin' nor time step 'dtFixe' are given")
-    cat("'dtFixe' is taken such as dtFixe=0.01")
+    message("when neither input time vector 'tin' nor time step 'dtFixe' are given")
+    message("'dtFixe' is taken such as dtFixe=0.01")
     dtFixe = 0.01
     tin = 0:(dim(data)[1]-1)*dtFixe
   }
@@ -219,11 +220,19 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
     tin = 0:(dim(data)[1]-1)*dtFixe
   }
   else if (!is.null(tin) & is.null(dtFixe)) {
+    if (is.matrix(tin)) {
+      if(dim(tin)[1] == 1 | dim(tin)[2] == 1) {
+        tin <- as.vector(tin)
+      }
+      else {
+        stop("Input time vector dimension 'tin': (", dim(tin)[1], " ", dim(tin)[2],") incompatible")
+      }
+    }
     # if time step is regular
     if (max(abs(diff(tin))) != 0) dtFixe = tin[3] - tin[2]
   }
   else if (!is.null(tin) & !is.null(dtFixe)) {
-    cat("input time vector 'tin' and  time step 'dtFixe' are inconsistent")
+    message("Input time vector 'tin' and  time step 'dtFixe' are inconsistent")
     stop
   }
 
@@ -261,10 +270,10 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
       derivserie <- drvSucc(tin, objse, nDeriv=nS[i]+1, weight = weight,
                             tstep = dtFixe, winL = winL)
       derivdata <- derivserie$seriesDeriv
-      tout <- derivserie$tout
-      Wout <- derivserie$Wout
-      nfirst <- which(tout == toutref[1])
-      nlast <- which(tout == tail(toutref,1))
+      nfirst <- which(derivserie$tout == toutref[1])
+      nlast <- which(derivserie$tout == tail(toutref,1))
+      tout <- derivserie$tout[nfirst:nlast] # modified 11/07/2022
+      Wout <- derivserie$Wout[nfirst:nlast] # modified 11/07/2022
       derivedright <- cbind(derivedright, derivdata[nfirst:nlast,1:nS[i]])
       derivedleft <- cbind(derivedleft, derivdata[nfirst:nlast,(nS[i]+1)])
 
@@ -283,7 +292,12 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
   # equations resultating from canonical form: dXi/dt = Xi+1
   for (i in 1:nVar) {
     filt <- t(as.matrix(rep(0,pMax)))
-    nx <- sum((poLabs(nVar,dMax) == paste("X", quelco[i], " ", sep="")) * rep(1:pMax))
+    nx <- sum((poLabs(nVar,dMax,dMin = dMin) == paste("X", quelco[i], " ", sep="")) * rep(1:pMax))
+    
+    #nx <- sum((poLabs(nVar,dMax) == paste("X", i, " ", sep="")) * rep(1:pMax))
+    #reg = regOrd(nVar, dMax)
+    #nx = which((reg[quelco[i],] == 1) &  (colSums(reg) == 1)) 
+    
     filt[nx] = 1
     block <- paste("allFilt$X", i, " <- filt", sep="")
     eval((parse(text = block)))
@@ -309,7 +323,7 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
       filterReg <- as.vector(EqS[,sum(nS[1:i])])
     }
 
-    Memo = autoGPoMoSearch(coherentdata, dt=dtFixe, nVar = nVar, dMax = dMax, weight = Wout,
+    Memo = autoGPoMoSearch(coherentdata, dt=dtFixe, nVar = nVar, dMax = dMax, dMin = dMin, weight = Wout,
                            show = show, underSamp = underSamp, filterReg = filterReg)
     filt <- Memo$filtMemo
     K <- Memo$KMemo
@@ -401,7 +415,7 @@ gPoMo <- function (data, tin = NULL, dtFixe = NULL, dMax = 2, nS=c(3), winL = 9,
   numValidIC <- min(which(Wout == 1))
   # test integration
   out <- autoGPoMoTest(as.matrix(coherentdata),
-                       tin = NULL, dt=dtFixe, nVar = nVar, dMax = dMax,
+                       tin = NULL, dt=dtFixe, nVar = nVar, dMax = dMax, dMin = dMin,
                        show = show, verbose = verbose,
                        allKL = allToTest,
                        numValidIC = numValidIC,

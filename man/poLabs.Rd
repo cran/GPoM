@@ -4,12 +4,15 @@
 \alias{poLabs}
 \title{Polynomial labels order}
 \usage{
-poLabs(nVar, dMax, findIt = NULL, Xnote = "X")
+poLabs(nVar, dMax, dMin = 0, findIt = NULL, Xnote = "X")
 }
 \arguments{
 \item{nVar}{The number of variables}
 
 \item{dMax}{The maximum degree allowed in the formulation}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{findIt}{A vector of selected terms.}
 

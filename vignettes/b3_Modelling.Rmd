@@ -710,7 +710,7 @@ rcstr <- numicano(nVar=3, dMax=2, Istep=5000, onestep=1/250,
                   v0=v0, method="rk4")
 ```
 
-The best obtained model is #7 that efectively reproduces
+The best obtained model is #7 that effectively reproduces
 the dynamic of the original system:
 
 ```{r, eval = TRUE, fig.align='center', fig.width=4, fig.height=4}

@@ -4,7 +4,7 @@
 \alias{cano2M}
 \title{cano2M : Converts a model in canonical form into a matrix form}
 \usage{
-cano2M(nVar, dMax, poly)
+cano2M(nVar, dMax, poly, dMin = 0)
 }
 \arguments{
 \item{nVar}{The number of variables}
@@ -13,6 +13,14 @@ cano2M(nVar, dMax, poly)
 
 \item{poly}{A vector of coefficients corresponding to the regressor
 of the canonical function}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
+}
+\value{
+\code{Kmod} A matrix with nVar columns of the complete description of the equations.
+The first columns relates to the canonical part dX1/dt = X2, dX2/dt = X3 etc. and
+the column is the polynomial term itself
 }
 \description{
 Converts the vectorial formulation of canonical models

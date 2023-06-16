@@ -4,7 +4,7 @@
 \alias{regSeries}
 \title{Estimates the monomial time series}
 \usage{
-regSeries(nVar, dMax, series, pReg = NULL)
+regSeries(nVar, dMax, series, dMin = 0, pReg = NULL)
 }
 \arguments{
 \item{nVar}{Number of variables considered in the polynomial formulation.}
@@ -13,6 +13,9 @@ regSeries(nVar, dMax, series, pReg = NULL)
 
 \item{series}{A matrix containing the original time series from which
 the monomials are built. Each column corresponds to one given variable.}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{pReg}{A matrix filled, for each column, with powers of time series
 used to create.}
@@ -31,7 +34,7 @@ dMax <- 2
 nVar <- dim(sprottK)[2]
 
 #Example 1
-polySeries2 <- regSeries(nVar, dMax, sprottK)
+polySeries1 <- regSeries(nVar, dMax, sprottK)
 
 #Example 2
 p <- c(1,3,1)

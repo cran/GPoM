@@ -37,7 +37,7 @@ testP <- function(data, wthresh=0.1, fxPtThresh=1E-4, show=0) {
   lg=length(data[,2])
   periodic = list()
   periodic$status <- 1
-  if(is.na(data[lg,2])== TRUE  ) {
+  if(is.finite(data[lg,2]) == FALSE  ) {
     periodic$status <- 0
     return(periodic)
   }
@@ -135,9 +135,9 @@ testP <- function(data, wthresh=0.1, fxPtThresh=1E-4, show=0) {
         plot(loop1, type='l')
         lines(loop2, col='red')
         text("TEST FOR P1 \n")
-        cat("threshold = ", threshold, "\n")
-        cat("errorp1 = ", errorp1, "\n")
-        cat("DISTANCE < = ", fxPtThresh, "\n")
+        message("threshold = ", threshold, "\n")
+        message("errorp1 = ", errorp1, "\n")
+        message("DISTANCE < = ", fxPtThresh, "\n")
       }
     }
   }
@@ -271,16 +271,16 @@ testP <- function(data, wthresh=0.1, fxPtThresh=1E-4, show=0) {
       lines(loop2, type='b', col='red')
       lines(loop3, type='b', col='green')
       lines(loop4, type='b', col='blue')
-      cat("threshold = ", threshold, "\n")
-      cat("fxPtThresh = ",fxPtThresh, "\n" )
-      cat("errorp1 = ", errorp1, "\n")
-      cat("error1 = ", error1, "\n")
-      cat("error2 = ", error2, "\n")
-      cat("distance fp (last 100p) = ", distance, "\n")
-      if (periodic$status == -1) cat("-1: The trajectory is period-1", "\n")
-      if (periodic$status == -2) cat("-2: The trajectory is period-2", "\n")
-      if (periodic$status == 0) cat("0: The trajectory is diverging or undetermined", "\n")
-      if (periodic$status == 2) cat("2: The trajectory is a Fixed Point", "\n")
+      message("threshold = ", threshold, "\n")
+      message("fxPtThresh = ",fxPtThresh, "\n" )
+      message("errorp1 = ", errorp1, "\n")
+      message("error1 = ", error1, "\n")
+      message("error2 = ", error2, "\n")
+      message("distance fp (last 100p) = ", distance, "\n")
+      if (periodic$status == -1) message("-1: The trajectory is period-1", "\n")
+      if (periodic$status == -2) message("-2: The trajectory is period-2", "\n")
+      if (periodic$status == 0) message("0: The trajectory is diverging or undetermined", "\n")
+      if (periodic$status == 2) message("2: The trajectory is a Fixed Point", "\n")
     }
     
   }  

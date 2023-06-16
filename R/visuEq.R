@@ -60,10 +60,14 @@
 #'
 #' # A canonical model can be provided as a single vector
 #' polyTerms <- c(0.2,0,-1,0.5,0,0,0,0,0,0)
-#' visuEq(KL, 3,2)
+#' visuEq(polyTerms, 3,2)
 #'
 #' @export
-visuEq <- function (K, nVar=NULL, dMax=NULL, substit = 0, approx = FALSE, selecmod = NULL) {
+#' @return N A list of Nvar elements presenting a set of equtions,
+#' each equation being an element of this list and written as
+#' a character strings
+
+visuEq <- function (K, nVar=NULL, dMax=NULL, dMin = 0, substit = 0, approx = FALSE, selecmod = NULL) {
   if (is.list(K)) {
     if (is.null(selecmod)) {
       stop('The model number should be provided using option: selecmod = ')
@@ -76,11 +80,11 @@ visuEq <- function (K, nVar=NULL, dMax=NULL, substit = 0, approx = FALSE, selecm
 #    dMax <- p2dMax(nVar = nVar, pMaxKnown = dim(K)[1])
   }
   if (is.vector(K)) {
-    K <- cano2M(nVar, dMax, K)
+    K <- cano2M(nVar, dMax, K, dMin = dMin)
   }
   if (is.matrix(K)) {
     if (is.null(nVar)) nVar <- dim(K)[2]
-    if (is.null(dMax)) dMax <- p2dMax(nVar = nVar, pMaxKnown = dim(K)[1])
+    if (is.null(dMax)) dMax <- p2dMax(nVar = nVar, pMaxKnown = dim(K)[1], dMin=dMin)
   }
   # Check compatibility
   if (dim(K)[2] != nVar) {
@@ -88,7 +92,7 @@ visuEq <- function (K, nVar=NULL, dMax=NULL, substit = 0, approx = FALSE, selecm
          ' is not compatible with the model dimension dim(K)[2] = ',
          dim(K)[2])
   }
-  if (d2pMax(nVar,dMax) != dim(K)[1]) {
+  if (d2pMax(nVar,dMax, dMin=dMin) != dim(K)[1]) {
     stop('dMax = ', dMax,
          ' is not compatible with the model size dim(K)[1] = ',
          dim(K)[1])
@@ -129,7 +133,8 @@ visuEq <- function (K, nVar=NULL, dMax=NULL, substit = 0, approx = FALSE, selecm
       }
     }
     dN <- paste("d", varsList[i],"/dt =", sep="")
-    M <- cbind(K[K[,i]!=0,i], poLabs(nVar, dMax, K[,i]!=0, Xnote=varsList[1:nVar]), "+")
+
+    M <- cbind(K[K[,i]!=0,i], poLabs(nVar, dMax, dMin = dMin, findIt=K[,i]!=0, Xnote=varsList[1:nVar]), "+")
  
     M <- matrix(t(M), nrow=1, ncol=length(M))
     M <- M[,1:(dim(M)[2]-1)]
@@ -154,10 +159,9 @@ visuEq <- function (K, nVar=NULL, dMax=NULL, substit = 0, approx = FALSE, selecm
     }
 
     # plot expression ...
-    cat(M, "\n\n")
-    N[i] <- M
+    message(M, "\n\n")
+    N <- append(N, M)
   }
-
   invisible(N)
 }
 

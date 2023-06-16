@@ -19,14 +19,23 @@ will thus be \code{nVar = nDrv + 1}.}
 the derivatives [1-2].}
 }
 \value{
-A matrix containing the original variable (smoothed by the
-filtering process) and its \code{nDrv} first derivatives (note that
-\code{winL} values of the original time series will be lost both
-at the begining and the end of the time series due to boundary effect).
+drv A matrix containing the original variable (smoothed by the
+filtering process) in the first comlumn and its \code{nDrv}+1 first derivatives
+in the next columns (note that \code{winL} values of the original time series
+will be lost both at the begining and the end of the time series due to boundary
+effect).
 }
 \description{
 Computes the successive derivatives from one single time series,
 with the Savitzky-Golay approach (1964).
+}
+\examples{
+# load data:
+data(NDVI)
+
+# Compute the derivatives:
+drv <- compDeriv(NDVI[,1], nDrv = 3, tstep = 1/125)
+
 }
 \references{
 [1] Savitzky, A.; Golay, M.J.E.,

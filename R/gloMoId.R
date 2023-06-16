@@ -38,6 +38,7 @@
 #' A chaotic model for the epidemic of Ebola Virus Disease in West Africa (2013-2016).
 #' Chaos, 26, 113112, 2016. \cr
 #'
+#' @inheritParams regOrd
 #' @param series The original data set: either a single vector
 #' corresponding to the original variable; Or a matrix containing
 #' the original variable in the first column and its successive
@@ -103,12 +104,12 @@
 #'
 #' # Definition of the Model structure
 #' terms <- c(1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1)
-#' poLabs(3,3,terms==1)
+#' poLabs(3,3)[terms==1]
 #' reg <- gloMoId(NDVI [,1:1], dt=1/125, nVar=3, dMax=3,
 #'                show=0, filterReg=terms==1)
 #'
 #'
-#'\dontrun{
+#'\donttest{
 #' #############
 #' # Example 3 #
 #' #############
@@ -143,7 +144,7 @@
 #'
 #'}
 #' @export
-gloMoId <- function(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1,
+gloMoId <- function(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1, dMin = 0,
                     weight = NULL, show = 1, filterReg = NULL, winL = 9) {
 
   # If not provided, weight is set to one everywhere
@@ -194,9 +195,9 @@ gloMoId <- function(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1,
   # are provided in the nVar first columns
   seriesObs <- seriesObs[,1:nVar]
   # polynomyal regressor
-  nomPoly <- poLabs(nVar, dMax)
+  nomPoly <- poLabs(nVar, dMax, dMin = dMin)
   # maximum number of regressor
-  nReg <- d2pMax(nVar, dMax)
+  nReg <- d2pMax(nVar, dMax, dMin = dMin)
   # by default, all the regressor are considered
   if (length(filterReg) == 0) {
     filterReg <- rep(1,nReg)
@@ -217,7 +218,7 @@ gloMoId <- function(series, tin = NULL, dt = NULL, nVar = NULL, dMax = 1,
   # prepare regressors
     allForK <- list(phi = matrix(0, nrow = N, ncol = nRegModif),
                      A = matrix(0, nrow = nRegModif, ncol = nRegModif))
-    allForK$Y <- regSeries(nVar, dMax, seriesObs)[,filterReg==1]
+    allForK$Y <- regSeries(nVar, dMax, seriesObs, dMin=dMin)[,filterReg==1]
 
   # Parameter estimation
     allForK <- paramId(allForK = allForK, drv = drvS, weight = finalWeight)

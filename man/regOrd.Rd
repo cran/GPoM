@@ -5,12 +5,15 @@
 \title{Generate the conventional order for polynomial terms
 in a the polynomial formulation}
 \usage{
-regOrd(nVar, dMax)
+regOrd(nVar, dMax, dMin = 0)
 }
 \arguments{
 \item{nVar}{The number of variables}
 
 \item{dMax}{The maximum degree allowed in the formulation}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 }
 \value{
 A matrix of exponents. Each column corresponds to one

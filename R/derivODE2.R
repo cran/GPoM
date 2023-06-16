@@ -6,6 +6,8 @@
 #' polynomial Ordinary Differential Equations (ODE). This function
 #' requires the function \code{ode} (\code{deSolve} package).
 #'
+#' @inheritParams regOrd
+#'
 #' @param t All the dates for which the result of the numerical
 #' integration of the model must be provided
 #' @param x Current state vector (input from which the next state will
@@ -23,15 +25,16 @@
 #'
 #' @seealso \code{\link{numicano}}, \code{\link{numinoisy}}
 #'
-derivODE2 <- function(t, x, K, regS = NULL) {
+derivODE2 <- function(t, x, K, dMin = 0, regS = NULL) {
 
     if (is.null(regS)) {
       # if not provided regressors are recomputed
       # from state vector x:
       # nVar and dMax are required use the appropriate convention
-      dMax <- p2dMax(length(x), dim(K)[1])
+      dMax <- p2dMax(length(x), dim(K)[1], dMin=dMin)
+      ###dMax <- 2
       # compute the regressors values
-      regS <- regSeries(length(x), dMax, x)
+      regS <- regSeries(length(x), dMax, x, dMin = dMin)
       temp <- NULL
     }
     else {

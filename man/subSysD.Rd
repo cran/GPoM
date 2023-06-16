@@ -15,6 +15,9 @@ into a list containing a single matrix.}
 variables. If not provided, default notation
 is used: "X1", "X2", etc.}
 }
+\value{
+subS A matrix with the extracted subsystem
+}
 \description{
 Detect, disentangle and reformulate Sub-systems
 from an ensemble of equations.
@@ -39,7 +42,7 @@ inXnote[[2]] <- c('X', 'Y', 'Z')
 visuEq(K = allK[[1]], substit = inXnote[[1]])
 visuEq(K = allK[[2]], substit = inXnote[[2]])
 XnoteOut = c('u', 'X', 'v', 'Y', 'w', 'Z')
-Knew3 <- combiEq(allK, inXnote = inXnote, XnoteOut = XnoteOut, dMaxOut = 3)
+Knew3 <- combiEq(allK,dMaxOut = 3, eqOrder = c(1,4,2,5,3,6))
 visuEq(K = Knew3, substit = XnoteOut)
 # Disentangle the subsystems from the mixed equations
 dstgl <- subSysD(Knew3, inXnote = XnoteOut)

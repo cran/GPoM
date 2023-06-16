@@ -100,7 +100,9 @@ out <- numiMultiX(nVar, dMax, Istep=Istep, onestep=smpl, KDf=KDf,
 outrs <- numiMultiX(nVar, dMax, Istep=Istep, onestep=smpl, KDf=KDf,
                        extFrs,
                        v0=etatInit, method="rk4")
-dev.new()
+dev.new
+oldpar <- par(no.readonly = TRUE)    
+on.exit(par(oldpar))  
 par(mfrow = c(2, 2), # 2 x 2 pictures on one plot
     pty = "s")
 plot(out$reconstr[,2],out$reconstr[,3],

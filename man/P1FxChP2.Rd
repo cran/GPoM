@@ -4,7 +4,9 @@
 \name{P1FxChP2}
 \alias{P1FxChP2}
 \title{A data set for testing periodicity}
-\format{An object of class \code{matrix} with 1000 rows and 8 columns.}
+\format{
+An object of class \code{matrix} (inherits from \code{array}) with 1000 rows and 8 columns.
+}
 \usage{
 P1FxChP2
 }

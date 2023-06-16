@@ -7,7 +7,9 @@
 \alias{TSallMod_nVar3_dMax2}
 \title{Time series of three-dimensional chaotic sytems
 (for vignette \code{VII_Retro-Modelling})}
-\format{An object of class \code{list} of length 18.}
+\format{
+An object of class \code{list} of length 18.
+}
 \usage{
 TSallMod_nVar3_dMax2
 }

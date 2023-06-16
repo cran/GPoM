@@ -4,7 +4,9 @@
 \name{RosYco}
 \alias{RosYco}
 \title{Twelve Rossler-1976 time series (exclusively variable \eqn{y})}
-\format{An object of class \code{matrix} with 3000 rows and 12 columns.}
+\format{
+An object of class \code{matrix} (inherits from \code{array}) with 3000 rows and 12 columns.
+}
 \usage{
 RosYco
 }

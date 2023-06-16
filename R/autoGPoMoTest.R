@@ -67,8 +67,8 @@
 #'                         allKL = allToTest, IstepMax = 60)
 #'
 #' @export
-autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
-                           nVar = nVar, dMax = dMax,
+autoGPoMoTest <- function (data, nVar, dMax, dMin = 0, 
+                           tin = NULL, dt=NULL,
                            show = 1, verbose = 1,
                            allKL = allKL, numValidIC = 1, weight = NULL, IstepMin = 10,
                            IstepMax = 10000,
@@ -81,8 +81,8 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
     stop("Integration steps are inconsistent: IstepMax < IstepMin")
   }
   if (is.null(tin) & is.null(dt)) {
-    cat("when neither input time vector 'tin' nor time step 'dt' are given")
-    cat("'dtFixe' is taken such as dt=0.01")
+    message("when neither input time vector 'tin' nor time step 'dt' are given")
+    message("'dtFixe' is taken such as dt=0.01")
     dt = 0.01
     tin = 0:(dim(data)[1]-1)*dt
   }
@@ -94,7 +94,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
     if (max(abs(diff(tin))) != 0) dt = tin[2]-tin[1]
   }
   else if (!is.null(tin) & !is.null(dt)) {
-    cat("input time vector 'tin' and  time step 'dt' are inconsistent")
+    message("input time vector 'tin' and  time step 'dt' are inconsistent")
     stop
   }
   if (is.null(weight)) {
@@ -119,8 +119,8 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
   #        FxPtThr <- datasd[1] * 0.01
   #    }
   #
-  # Compute pMx
-  pMax <- d2pMax(nVar, dMax)
+  # Compute pMax
+  pMax <- d2pMax(nVar, dMax, dMin=dMin)
   # Not sure this is really necessary:
   listMod <- 1:length(allKL)
   # by default all the input models are unclassified (=1)
@@ -129,7 +129,8 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
   okVar <- matrix(1, ncol = length(allKL), nrow = nVar)
   # Open a new window for plotting the figures
   if (show == 1) dev.new()
-  #op <- par(mfrow = c(4, 6), pty = "s", mar=c(5,3,2,2)+0.1)
+  oldpar <- par(no.readonly = TRUE)    
+  on.exit(par(oldpar))  
   op <- par(mfrow = c(4, 6), mar=c(5,3,2,2)+0.1)
   #
   # Initiate the integration time step number
@@ -174,7 +175,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
                        sec, "s ",
                        sep="")
       }
-      cat(block, "\n")
+      message(block, "\n")
       ptm <- proc.time()[3]
       oldOkMod <- okMod
     }
@@ -201,7 +202,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
       #
       # Try integration and integrate
       outreg <- try(deSolve::ode(InitStates[iMod, ], (0:Istep) *
-                          dt, derivODE2, KL, verbose = 0,
+                          dt, derivODE2, KL, dMin=dMin, verbose = 0,
                           method = method), silent = TRUE)
       options(warn = 0)
       #
@@ -504,17 +505,16 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
     ### LOOP ON ALL THE MODELS (END)
     
     Istep <- 2 * Istep
+    oldpar <- par(no.readonly = TRUE)    
+    on.exit(par(oldpar))  
     if (show == 1) {
       if (nVar <= 3) nsubplot <- 2*sum(okMod == 1)
       else nsubplot <- 3* sum(okMod == 1)
       if (nsubplot > 16) {
-        #op <- par(mfrow = c(4, 6), pty = "s")
         op <- par(mfrow = c(4, 6))
       }
       else {
         if (nsubplot > 0) {
-          #op <- par(mfrow = c(ceiling(sqrt(nsubplot)),
-          #                    ceiling(sqrt(nsubplot))), pty = "s")
           op <- par(mfrow = c(ceiling(sqrt(nsubplot)),
                               ceiling(sqrt(nsubplot))))
         }
@@ -528,7 +528,7 @@ autoGPoMoTest <- function (data, tin = NULL, dt=NULL,
     # Number of unclassified models
     block <- paste("### Number of unclassified models: ", sum(okMod == 1),
                    " / ", length(listMod), sep="")
-    cat(block, "\n")
+    message(block, "\n")
   }
   # return
   list(okMod = okMod, okVar = okVar, tout = tout,

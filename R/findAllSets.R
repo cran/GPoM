@@ -29,9 +29,9 @@
 #' # For equation 1 (variable X1)
 #' allFilt$Np1 <- 1         # only one formulation with one single parameter
 #' # For equation 2 (variable X2)
-#' allFilt$Np2 <- c(3, 4)   # two potential formulations, with respectively three and four parameters
+#' allFilt$Np2 <- c(3, 2)   # two potential formulations, with respectively three and four parameters
 #' # For equation 3 (variable X3)
-#' allFilt$Np3 <- c(2, 4)   # two potential formulations, with respectively two and four parameters
+#' allFilt$Np3 <- c(4, 2)   # two potential formulations, with respectively two and four parameters
 #' # Formulations for variables Xi:
 #' # For X1:
 #' allFilt$X1 <- t(as.matrix(c(0,0,0,1,0,0,0,0,0,0)))
@@ -51,6 +51,15 @@
 #' @seealso \code{\link{autoGPoMoSearch}}
 #'
 #' @export
+#' 
+#' @return SetsNp A list of two matrices
+#' $Sets A matrix defining all the sets the equation combination
+#' (each line provides a combination, for instance, a line with 1,2,2
+#' means the first equation of allFilt$X1, the second one of allFilt$X2
+#' and the second one of allFilt$X3)
+#' $Np  A matrix providing the number of parameters of all equation
+#' combination (each line provides the number of parameter of the selected
+#' equations)
 findAllSets <- function (allFilt, nS=c(3), nPmin=1, nPmax=14)
 {
   nVar <- sum(nS)

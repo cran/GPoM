@@ -9,6 +9,7 @@ gPoMo(
   tin = NULL,
   dtFixe = NULL,
   dMax = 2,
+  dMin = 0,
   nS = c(3),
   winL = 9,
   weight = NULL,
@@ -43,6 +44,9 @@ Note that for very large and very small time steps, alternative units
 may be used in order to stabilize the numerical computation.}
 
 \item{dMax}{Maximum degree of the polynomial formulation.}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{nS}{A vector providing the number of dimensions used for each
 input variables (see Examples 1 and 2). The dimension of the resulting
@@ -179,7 +183,7 @@ out1 <- gPoMo(data, tin = tin, dMax = 2, nS=c(3), show = 1,
 visuEq(out1$models$model1, approx = 4)
 
 
-\dontrun{
+\donttest{
 #Example 2
 data("Ross76")
 tin <- Ross76[,1]
@@ -198,7 +202,7 @@ visuEq(out2$models$model3, approx = 4)
 }
 
 
-\dontrun{
+\donttest{
 #Example 3
 data("Ross76")
 tin <- Ross76[,1]
@@ -210,7 +214,7 @@ out3 <- gPoMo(data, tin=tin, dMax = 2, nS=c(1,1,1), show = 1,
 visuEq(out3$models$model5, approx = 3, substit = 1) # the original Rossler system is thus retrieved
 }
 
-\dontrun{
+\donttest{
 #Example 4
 data("Ross76")
 tin <- Ross76[,1]
@@ -228,7 +232,7 @@ out4 <- gPoMo(data, tin=tin, dMax = 2, nS=c(2,1), show = 1,
 visuEq(out4$models$model2, approx = 2, substit = c("Y","Y2","Z"))
 }
 
-\dontrun{
+\donttest{
 #Example 5
 # load data
 data("TSallMod_nVar3_dMax2")

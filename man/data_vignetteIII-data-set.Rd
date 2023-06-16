@@ -5,7 +5,9 @@
 \alias{data_vignetteIII data set}
 \alias{data_vignetteIII}
 \title{Output of the vignette \code{III_Modelling}}
-\format{An object of class \code{list} of length 12.}
+\format{
+An object of class \code{list} of length 12.
+}
 \usage{
 data_vignetteIII
 }

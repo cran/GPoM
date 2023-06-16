@@ -34,6 +34,9 @@ in \code{poLabs}. These states can be deduced from the current
 state vector x (using function \code{regSeries}). When available,
 it can be provided as an input to avoid unecessary computation.}
 }
+\value{
+xxx
+}
 \description{
 This function provides the one step integration of
 polynomial Ordinary Differential Equations (ODE). This function

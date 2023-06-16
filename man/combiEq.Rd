@@ -4,43 +4,26 @@
 \alias{combiEq}
 \title{combiEq : Combine Equations from different sources}
 \usage{
-combiEq(
-  inK,
-  inXnote = NULL,
-  eqNum = NULL,
-  XnoteOut = NULL,
-  nVarOut = NULL,
-  dMaxOut = NULL
-)
+combiEq(allKL, eqOrder = NULL, dMaxOut = NULL)
 }
 \arguments{
-\item{inK}{A list of models, each provided as a matrix.
+\item{allKL}{A list of models, each provided as a matrix.
 A single matrix can also be provided, it will be transformed
 into a list containing a single matrix.}
 
-\item{inXnote}{A list of vectors with the names of the input
-variables for each model. If not provided, default notation
-is used: "X1", "X2", etc.
-A single matrix can also be provided, it will be transformed
-into a list containing a single matrix.}
-
-\item{eqNum}{A list of vector, providing each the equations
+\item{eqOrder}{A list of vector, providing each the equations
 number (relating to the input models) to be kept in the
 output equation system. If not provided, all the equations
 are kept.
 A single matrix can also be provided, it will be transformed
 into a list containing a single matrix.}
 
-\item{XnoteOut}{A vector with the names of the output variables.
-If not provided, default notation is used considering that
-the variables of the input models are all different}
-
-\item{nVarOut}{The dimension of the output equation system
-(if not provided, this degree is deduced from the input models)}
-
 \item{dMaxOut}{The maximal polynomial degree of the output
 equation system (if not provided, this degree is deduced
 from the input models)}
+}
+\value{
+KLout A matrix of the combined model
 }
 \description{
 Combines equations of different sources
@@ -74,7 +57,7 @@ inXnote[[2]] <- c('X', 'Y', 'Z')
 visuEq(K = allK[[1]], substit = inXnote[[1]])
 visuEq(K = allK[[2]], substit = inXnote[[2]])
 XnoteOut = c('X', 'Y', 'Z', 'u', 'v', 'w')
-Knew2 <- combiEq(allK, inXnote = inXnote, XnoteOut = XnoteOut)
+Knew2 <- combiEq(allK, eqOrder=c(4,5,6,1,2,3))
 visuEq(K = Knew2, substit = XnoteOut)
 
 # Example 3
@@ -84,18 +67,8 @@ inXnote[[2]] <- c('X', 'Y', 'Z')
 visuEq(K = allK[[1]], substit = inXnote[[1]])
 visuEq(K = allK[[2]], substit = inXnote[[2]])
 XnoteOut = c('u', 'X', 'v', 'Y', 'w', 'Z')
-Knew3 <- combiEq(allK, inXnote = inXnote, XnoteOut = XnoteOut, dMaxOut = 3)
+Knew3 <- combiEq(allK, eqOrder=c(1,4,2,5,3,6), dMaxOut = 3)
 visuEq(K = Knew3, substit = XnoteOut)
-
-# Example 4
-dim(Knew3)
-inXnote = c('x', 'X', 'y', 'Y', 'z', 'Z')
-visuEq(K = Knew3, substit = inXnote)
-XnoteOut = c('X', 'Y', 'Z')
-Knew4 <- combiEq(Knew3, inXnote = inXnote, XnoteOut = XnoteOut)
-dim(Knew4)
-visuEq(K = Knew4, substit = XnoteOut)
-
 }
 \seealso{
 \code{\link{gPoMo}}, \code{\link{poLabs}}

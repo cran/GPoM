@@ -8,6 +8,7 @@
 #'              following the conventions as defined by fuction \code{poLabs}.
 #'
 #' @inheritParams gloMoId
+#' @inheritParams regOrd
 #' @param dMaxKnown The maximum polynomial degree \code{dMax}
 #'
 #' @return The number \code{pMax} of polynomial terms used to code
@@ -31,9 +32,13 @@
 #'
 #' @export
 #'
-d2pMax <- function(nVar, dMaxKnown) {
+d2pMax <- function(nVar, dMaxKnown, dMin = 0) {
+
+    if (dMin == 0) {
+      pM <- choose(nVar + dMaxKnown, nVar)}
+    else {
+      pM = dim(regOrd(nVar, dMaxKnown, dMin=dMin))[2]
+    }
   
-  pM <- choose(nVar + dMaxKnown, nVar)
-  
-  pM
+    pM
 }

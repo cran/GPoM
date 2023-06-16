@@ -6,7 +6,7 @@
 of polynomial equations provided in a generic form
 following the convetion defined by function \code{poLabs}.}
 \usage{
-derivODE2(t, x, K, regS = NULL)
+derivODE2(t, x, K, dMin = 0, regS = NULL)
 }
 \arguments{
 \item{t}{All the dates for which the result of the numerical
@@ -18,6 +18,9 @@ be estimated)}
 \item{K}{A matrix providing the model description:
 each column corresponds to one equation which polynomial organisation
 is following the convention defined by function \code{poLabs}.}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{regS}{Current states of each polynomial terms used
 in \code{poLabs}. These states can be deduced from the current

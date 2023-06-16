@@ -25,10 +25,14 @@
 #' visuEq(K,3,2)
 #' 
 #' @export
-cano2M <- function(nVar, dMax, poly) {
+#' 
+#' @return \code{Kmod} A matrix with nVar columns of the complete description of the equations.
+#' The first columns relates to the canonical part dX1/dt = X2, dX2/dt = X3 etc. and
+#' the column is the polynomial term itself 
+cano2M <- function(nVar, dMax, poly, dMin = 0) {
   # check
   pMax <- length(poly)
-  if (pMax != d2pMax(nVar, dMax))
+  if (pMax != d2pMax(nVar, dMax, dMin = dMin))
     stop('Polynomial function size incompatible with formulation poLabs(nVar, dMax).')
   # initiate the output
   Kmod <- matrix(0, ncol = nVar, nrow = pMax)

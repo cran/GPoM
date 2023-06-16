@@ -17,6 +17,7 @@
 #' @param fulldata Data set for which predictability will be tested
 #' @param hp Time vector of the horizon of prediction
 #' @param Nech Number of simulations
+#' @param intSimStep Internal number of simulation steps
 #' @param selV Selected variable for the analysis
 #' @param na.rm Indicates if the \code{NA} should be removed
 #' (\code{na.rm = TRUE}) or not (\code{na.rm = FALSE}).
@@ -31,6 +32,9 @@
 #' Vectors corresponding to the initial condition time \code{tE}
 #' and the horizon of prediction \code{hpE} are also provided
 #' in \code{$tE} and \code{$hpE}, respectively.
+#' The percentiles of the distributions of error growth
+#' are provided in \code{qt} (0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95)
+#' and of absolute error growth in \code{qt2} (0.5, 0.75, 0.9, 0.95, 0.98, 0.99).
 #'
 #'
 #' @importFrom grDevices dev.new
@@ -71,14 +75,14 @@
 #' @export
 #'
 predictab <- function (ogp, fullt = NULL, fulldata = NULL,
-                        hp = NULL, Nech = 50,
+                        hp = NULL, Nech = 50, intSimStep = NULL,
                         show = 1, selecmod = NULL, id = 1,
                         selV = 1,na.rm = FALSE){
 
   if (is.null(selecmod)) {
     # How many models could not be identified as non-chaotic
     nmod <- sum(ogp$okMod == id)
-    cat(nmod, 'models identified as id = ', id, "\n")
+    message(nmod, 'models identified as id = ', id, "\n")
     #
     # what is the reference number of these models?
     which(ogp$okMod == id)
@@ -87,6 +91,16 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
   else {
     nmod <- length(selecmod)
     seemod <- selecmod
+  }
+  #
+  if (is.null(Nech) & is.null(hp) & is.null(intSimStep)) {
+    Nech <- 10
+    hp <- floor(dim(fulldata)[1] / Nech)
+    intSimStep <- floor((dim(fulldata)[1] - hp) / Nech)
+  }
+  if (is.null(hp) & is.null(intSimStep)) {
+    hp <- floor(dim(fulldata)[1] / Nech)
+    intSimStep <- floor((dim(fulldata)[1] - hp) / Nech)
   }
   #
   nVar <- dim(ogp$models$mToTest1)[2]
@@ -112,6 +126,8 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
     if (show == 1) {
       # plot data and models time series
       dev.new()
+      oldpar <- par(no.readonly = TRUE)    
+      on.exit(par(oldpar))            
       op <- par(mfrow = c(4, 6), pty = "m")
       if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
       if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
@@ -143,7 +159,10 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
         }
       }
       # maximum prediction steps
-      if (is.null(hp)) hp <- round(dim(fulldata)[1] / (Nech + 1))
+#      if (is.null(hp)) hp <- round(dim(fulldata)[1] / (Nech + 1))
+      if (is.null(hp)) hp <- floor( dim(fulldata)[1] - Nech*intSimStep + 1 )
+      if (is.null(intSimStep)) intSimStep <- floor( (dim(fulldata)[1] - hp) / Nech )
+      if (is.null(Nech)) Nech <- floor( (dim(fulldata)[1] - hp + 1) / intSimStep )
       # nombre of sample to consider
       if (Nech > (dim(fulldata)[1] - hp - 1)) {
         warning('Nech and hp values is uncoherent: Nech is modified in Nech = ', Nech)
@@ -159,8 +178,9 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
         lines(fullt, fulldata[, selV], type = "p", cex = 0.5)
       }
       iinit <- seq(1, length(fullt) - hp,
-                   by = floor((length(fullt) - hp - 1)/Nech))[1:Nech] #changed line
+                   by = intSimStep)[1:Nech] #changed line
       Errmod = c()
+      rErrmod = c()
       Predmod = c()
       for (i in 1:Nech) {
         outNumi <- numicano(nVar = nVar, dMax = dMax, KL = Kmod,
@@ -168,20 +188,28 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
                             method = 'rk4',
                             onestep = ogp$tfiltdata[2] - ogp$tfiltdata[1])
         selV1 <- selV +1
-        Err1 <- outNumi$reconstr[,selV1] - fulldata[iinit[i]:(iinit[i] + hp - 1), selV]
-        Err <- outNumi$reconstr[,2] - fulldata[iinit[i]:(iinit[i] + hp - 1),1]
+        originalDat <- fulldata[iinit[i]:(iinit[i] + hp - 1), selV]
+        Err1 <- outNumi$reconstr[,selV1] - originalDat
+#        Err <- outNumi$reconstr[,2] - fulldata[iinit[i]:(iinit[i] + hp - 1),1]
+        rErr1 <- (outNumi$reconstr[,selV1] - originalDat) / originalDat * 100
         Pred <- outNumi$reconstr[,2:(nVar+1)]
         if (show == 1) {
-          lines(fullt[iinit[i]] + outNumi$reconstr[,1], outNumi$reconstr[, selV1], type = "l", col = "red")
-          lines(fullt[iinit[i]] + outNumi$reconstr[,1], outNumi$reconstr[, selV1], type = "p", col = "red")
-          lines(fullt[iinit[i]] + outNumi$reconstr[,1], Err1, col = "green")
+          lines(fullt[iinit[i]] + outNumi$reconstr[,1], outNumi$reconstr[, selV1],
+                type = "l", col = "red")
+          lines(fullt[iinit[i]] + outNumi$reconstr[,1], outNumi$reconstr[, selV1],
+                type = "p", col = "red", cex = 0.5)
+          lines(fullt[iinit[i]] + outNumi$reconstr[,1], Err1,
+                col = "green")
         }
         #
         # stockage
-        Errmod <- cbind(Errmod, Err)
+        Errmod <- cbind(Errmod, Err1)
+        rErrmod <- cbind(rErrmod, rErr1)
         Predmod <- cbind(Predmod, Pred)
       }
       block <- paste("ErrmodAll$Errmod", imod," <- Errmod", sep="")
+      eval((parse(text = block)))
+      block <- paste("ErrmodAll$rErrmod", imod," <- rErrmod", sep="")
       eval((parse(text = block)))
       block <- paste("ErrmodAll$Predmod", imod," <- Predmod", sep="")
       eval((parse(text = block)))
@@ -189,6 +217,8 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
 
     if (show == 1) {
       dev.new()
+      oldpar <- par(no.readonly = TRUE)    
+      on.exit(par(oldpar))
       op <- par(mfrow = c(4, 6), pty = "m")
       if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
       if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
@@ -220,6 +250,8 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
 
     if (show == 1) {
       dev.new()
+      oldpar <- par(no.readonly = TRUE)    
+      on.exit(par(oldpar))
       op <- par(mfrow = c(4, 6), pty = "m")
       if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
       if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
@@ -253,6 +285,16 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
                      ", 1, stats::quantile, probs = c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), na.rm=na.rm)",
                      sep="")
       eval((parse(text = block)))
+      block <- paste("ErrmodAll$QTmod", imod,"$qt <- qt", sep="")
+      eval((parse(text = block)))
+      #
+      block <- paste("rqt <- apply(ErrmodAll$rErrmod", imod,
+                     ", 1, stats::quantile, probs = c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), na.rm=na.rm)",
+                     sep="")
+      eval((parse(text = block)))
+      block <- paste("ErrmodAll$QTmod", imod,"$rqt <- rqt", sep="")
+      eval((parse(text = block)))
+      #
       if (show == 1) {
         lines(hpE, qt[1,], lty = 2, lwd = 2)
         lines(hpE, qt[2,], lty = 4, lwd = 2)
@@ -266,6 +308,8 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
 
     if (show == 1) {
       dev.new()
+      oldpar <- par(no.readonly = TRUE)    
+      on.exit(par(oldpar))
       op <- par(mfrow = c(4, 6), pty = "m")
       if (nmod <= 20) op <- par(mfrow = c(4, 5), pty = "m")
       if (nmod <= 18) op <- par(mfrow = c(3, 6), pty = "m")
@@ -296,14 +340,26 @@ predictab <- function (ogp, fullt = NULL, fulldata = NULL,
           eval((parse(text = block)))
         }
       }
-      block <- paste("qt <- apply(abs(ErrmodAll$Errmod", imod,
+      qt2 <- NULL
+      block <- paste("qt2 <- apply(abs(ErrmodAll$Errmod", imod,
                      "), 1, stats::quantile, probs = c(0.5, 0.75, 0.9, 0.95, 0.98, 0.99), na.rm = na.rm)",
                      sep="")
+      eval((parse(text = block)))
+      block <- paste("ErrmodAll$QTmod", imod,"$qt2 <- qt2", sep="")
+      eval((parse(text = block)))
+      #
+      block <- paste("rqt2 <- apply(abs(ErrmodAll$rErrmod", imod,
+                     "), 1, stats::quantile, probs = c(0.5, 0.75, 0.9, 0.95, 0.98, 0.99), na.rm = na.rm)",
+                     sep="")
+      eval((parse(text = block)))
+      block <- paste("ErrmodAll$QTmod", imod,"$rqt2 <- rqt2", sep="")
+      eval((parse(text = block)))
+      #
       if (show == 1) {
         eval((parse(text = block)))
-        lines(hpE, qt[2,], lty = 2, lwd = 2)
-        lines(hpE, qt[3,], lty = 1, lwd = 2)
-        lines(hpE, qt[4,], lty = 2, lwd = 2)
+        lines(hpE, qt2[2,], lty = 2, lwd = 2)
+        lines(hpE, qt2[3,], lty = 1, lwd = 2)
+        lines(hpE, qt2[4,], lty = 2, lwd = 2)
       }
     }
 

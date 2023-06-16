@@ -4,7 +4,9 @@
 \name{NDVI}
 \alias{NDVI}
 \title{A time series of vegetation index measured from satellite}
-\format{An object of class \code{data.frame} with 9618 rows and 4 columns.}
+\format{
+An object of class \code{data.frame} with 1000 rows and 4 columns.
+}
 \usage{
 NDVI
 }

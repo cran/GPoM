@@ -5,7 +5,9 @@
 \alias{data_vignetteVI data set}
 \alias{data_vignetteVI}
 \title{Output of the vignette \code{VI_Sensitivity}}
-\format{An object of class \code{list} of length 6.}
+\format{
+An object of class \code{list} of length 6.
+}
 \usage{
 data_vignetteVI
 }

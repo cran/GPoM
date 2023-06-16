@@ -30,7 +30,7 @@
 #' lines(concaTS$sglTS$TS[concaTS$sglTS$W == 0,1],
 #'       concaTS$sglTS$TS[concaTS$sglTS$W == 0,2], type = 'p', col = 'red', cex = 0.5)
 #' lines(concaTS$sglTS$TS[,1], concaTS$sglTS$W, type = 'l')
-#' \dontrun{
+#' \donttest{
 #' # The concatenated data set can be used for global modelling:
 #' GPout1 <- gPoMo(data = concaTS$sglTS$TS[,2], tin = concaTS$sglTS$TS[,1],
 #'                 dMax = 2, nS = 3, winL = winL, weight = concaTS$sglTS$W, show = 1,

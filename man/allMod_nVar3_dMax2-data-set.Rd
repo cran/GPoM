@@ -7,7 +7,9 @@
 \alias{allMod_nVar3_dMax2}
 \title{Numerical description of a list of eighteen three-dimensional chaotic
 sytems (see vignette \code{7_Retro-Modelling})}
-\format{An object of class \code{list} of length 18.}
+\format{
+An object of class \code{list} of length 18.
+}
 \usage{
 allMod_nVar3_dMax2
 }

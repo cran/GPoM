@@ -7,10 +7,11 @@ classify their dynamical regime}
 \usage{
 autoGPoMoTest(
   data,
+  nVar,
+  dMax,
+  dMin = 0,
   tin = NULL,
   dt = NULL,
-  nVar = nVar,
-  dMax = dMax,
   show = 1,
   verbose = 1,
   allKL = allKL,
@@ -28,14 +29,17 @@ autoGPoMoTest(
 \item{data}{Input Time series: Each column is one time series
 that corresponds to one variable.}
 
+\item{nVar}{Number of variables considered in the polynomial formulation.}
+
+\item{dMax}{Maximum degree of the polynomial formulation.}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
+
 \item{tin}{Input date vector which length should correspond to
 the input time series.}
 
 \item{dt}{Sampling time of the input time series.}
-
-\item{nVar}{Number of variables considered in the polynomial formulation.}
-
-\item{dMax}{Maximum degree of the polynomial formulation.}
 
 \item{show}{Provide (2) or not (0-1) visual output during
 the running process.}

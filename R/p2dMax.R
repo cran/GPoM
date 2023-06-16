@@ -37,7 +37,7 @@
 #'
 #' @export
 #'
-p2dMax <- function(nVar, pMaxKnown) {
+p2dMax <- function(nVar, pMaxKnown, dMin=0) {
 
   # initialisation
   pM <- dM <- 0
@@ -46,7 +46,7 @@ p2dMax <- function(nVar, pMaxKnown) {
   # iterative searching loop
   while (pM != pMaxKnown & dM != nIter) {
     dM <- dM + 1
-    pM <- d2pMax(nVar, dM)
+    pM <- d2pMax(nVar, dM, dMin)
   }
 
   # stop if pM was not found

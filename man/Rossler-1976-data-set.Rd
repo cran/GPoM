@@ -6,7 +6,9 @@
 \alias{Rossler-1976 data set}
 \alias{Ross76}
 \title{Time series of the Rossler-1976 system}
-\format{An object of class \code{deSolve} (inherits from \code{matrix}) with 4000 rows and 4 columns.}
+\format{
+An object of class \code{deSolve} (inherits from \code{matrix}) with 4000 rows and 4 columns.
+}
 \usage{
 Ross76
 }

@@ -20,6 +20,8 @@
 # dFlt <- bDrvFilt(nDrv = 3, tstep = 0.1, winL = 5)
 #'
 #' @export
+#' 
+#' @return dFlt A matrix of size (nDrv+1) * winL
 bDrvFilt <- function(nDrv, tstep, winL = 9) {
   
   if (winL %% 2 == 0) {

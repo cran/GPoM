@@ -8,6 +8,7 @@ visuEq(
   K,
   nVar = NULL,
   dMax = NULL,
+  dMin = 0,
   substit = 0,
   approx = FALSE,
   selecmod = NULL
@@ -21,6 +22,9 @@ is following the convention defined by function \code{poLabs}.}
 \item{nVar}{The number of variables}
 
 \item{dMax}{The maximum degree allowed in the formulation}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{substit}{Applies subtitutions to the default values:
 for \code{substit = 0} (default value), variables are chosen
@@ -46,6 +50,11 @@ to \code{approx = TRUE}.}
 \item{selecmod}{An integer providing the number in the sublist
 when the model matrix is provided in a list. Should not be
 provided (or NULL) if the model matrix is provided directly.}
+}
+\value{
+N A list of Nvar elements presenting a set of equtions,
+each equation being an element of this list and written as
+a character strings
 }
 \description{
 Displays the model equations for a polynomial model
@@ -79,7 +88,7 @@ visuEq(KL, nVar, dMax, approx = 3, substit=c('U', 'V', 'W'))
 
 # A canonical model can be provided as a single vector
 polyTerms <- c(0.2,0,-1,0.5,0,0,0,0,0,0)
-visuEq(KL, 3,2)
+visuEq(polyTerms, 3,2)
 
 }
 \author{

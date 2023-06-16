@@ -43,7 +43,7 @@
 #' # which coefficients correspond to
 #' cbind(filt$KMemo[5,], poLabs(nVar = 3, dMax = 2))[filt$filtMemo[5,] != 0,]
 #'
-autoGPoMoSearch <- function (data, dt, nVar = nVar, dMax = dMax, weight = NULL,
+autoGPoMoSearch <- function (data, dt, nVar, dMax, dMin = 0, weight = NULL,
                              show = 0, underSamp = NULL, filterReg = NULL)
 {
   if (!is.null(underSamp)) {
@@ -53,18 +53,17 @@ autoGPoMoSearch <- function (data, dt, nVar = nVar, dMax = dMax, weight = NULL,
     sechdata = data
   }
   if (min(dim(as.matrix(sechdata))) == 1) {
-    reg <- gloMoId(sechdata, nVar= nVar, dt = dt, dMax = dMax, weight = weight,
+    reg <- gloMoId(sechdata, nVar= nVar, dt = dt, dMax = dMax, dMin = dMin, weight = weight,
                  show = 0, filterReg = filterReg == 1)
   }
   else {
-    reg <- gloMoId(sechdata, dt = dt, dMax = dMax, weight = weight,
+    reg <- gloMoId(sechdata, dt = dt, dMax = dMax, dMin = dMin, weight = weight,
                  show = 0, filterReg = filterReg == 1)
   }
   testFin = 0
-  Memo <<- list()
   filtMemo <- matrix(1, nrow = 1, ncol = length(reg$filterReg))
   filtMemo[1,] <- reg$filterReg
-  reg <- gloMoId(reg$init, dt = dt, dMax = dMax, weight = weight,
+  reg <- gloMoId(reg$init, dt = dt, dMax = dMax, dMin = dMin, weight = weight,
                show = 0, filterReg = reg$filterReg == 1)
   KMemo <- reg$K
   while (!testFin) {
@@ -72,7 +71,7 @@ autoGPoMoSearch <- function (data, dt, nVar = nVar, dMax = dMax, weight = NULL,
     if (sum(getRidOf) > 0 & sum(reg$filterReg[reg$filterReg == 1]) > 2) {
       reg$filterReg[reg$filterReg == 1][getRidOf == 1] = 0
       #            poLabs(nVar, dMax, reg$filterReg == 0)
-      reg <- gloMoId(reg$init, dt = dt, dMax = dMax, weight = weight, show = 0,
+      reg <- gloMoId(reg$init, dt = dt, dMax = dMax, dMin = dMin, weight = weight, show = 0,
                    filterReg = reg$filterReg == 1)
     }
     else if (sum(getRidOf) > 0 & sum(reg$filterReg[reg$filterReg == 1]) == 2) {
@@ -89,7 +88,7 @@ autoGPoMoSearch <- function (data, dt, nVar = nVar, dMax = dMax, weight = NULL,
     }
   }
   #
-  tab <- regSeries(nVar, dMax, reg$init[,1:nVar])[, reg$filterReg ==  1]
+  tab <- regSeries(nVar, dMax, reg$init[,1:nVar], dMin=dMin)[, reg$filterReg ==  1]
   coeff <- lsfit(tab, reg$init[, nVar + 1], intercept = F)$coefficients
   KMemo[dim(KMemo)[1],][reg$filterReg ==  1] <- coeff
   #
@@ -99,8 +98,9 @@ autoGPoMoSearch <- function (data, dt, nVar = nVar, dMax = dMax, weight = NULL,
   filtMemo <- rbind(filtMemo, Ktmp * 0)
   
   # preparing data to return back
-  Memo$filtMemo <- filtMemo
-  Memo$KMemo <- KMemo
+  
+  Memo <- list(filtMemo = filtMemo, KMemo = KMemo)
+  
   Memo
 }
 

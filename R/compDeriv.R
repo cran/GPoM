@@ -11,10 +11,11 @@
 #' @param winL The local window length used for computing
 #' the derivatives [1-2].
 #'
-#' @return A matrix containing the original variable (smoothed by the
-#' filtering process) and its \code{nDrv} first derivatives (note that
-#' \code{winL} values of the original time series will be lost both
-#' at the begining and the end of the time series due to boundary effect).
+#' @return drv A matrix containing the original variable (smoothed by the
+#' filtering process) in the first comlumn and its \code{nDrv}+1 first derivatives
+#' in the next columns (note that \code{winL} values of the original time series
+#' will be lost both at the begining and the end of the time series due to boundary
+#' effect).
 #'
 #' @references
 #' [1] Savitzky, A.; Golay, M.J.E.,
@@ -28,15 +29,14 @@
 #'
 #' @seealso \code{\link{gloMoId}}, \code{\link{gPoMo}}, \code{\link{poLabs}}
 #'
-# #############
-# # Example 1 #
-# #############
-# # load data:
-# data(NDVI)
-#
-# # Compute the derivatives:
-# drv <- compDeriv(NDVI[,1], nDrv = 3, tstep = 1/125)
-#
+#'
+#' @examples
+#' # load data:
+#' data(NDVI)
+#'
+#' # Compute the derivatives:
+#' drv <- compDeriv(NDVI[,1], nDrv = 3, tstep = 1/125)
+#'
 #' @export
 compDeriv <- function(TS, nDrv, tstep, winL = 9) {
 
@@ -52,5 +52,6 @@ compDeriv <- function(TS, nDrv, tstep, winL = 9) {
                  factorial(0:nDrv) * (dFlt %*% TS[i:(i + winL - 1), 1])
                  )
   }
-  t(drv)
+  drv <- t(drv)
+  drv
 }

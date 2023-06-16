@@ -13,6 +13,9 @@ bDrvFilt(nDrv, tstep, winL = 9)
 
 \item{winL}{The local window length to be used for computing the derivatives [1].}
 }
+\value{
+dFlt A matrix of size (nDrv+1) * winL
+}
 \description{
 Build the Savitzky-Golay derivative filter (Savitzky-Golay, 1964).
 }

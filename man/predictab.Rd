@@ -11,6 +11,7 @@ predictab(
   fulldata = NULL,
   hp = NULL,
   Nech = 50,
+  intSimStep = NULL,
   show = 1,
   selecmod = NULL,
   id = 1,
@@ -29,6 +30,8 @@ will be tested}
 \item{hp}{Time vector of the horizon of prediction}
 
 \item{Nech}{Number of simulations}
+
+\item{intSimStep}{Internal number of simulation steps}
 
 \item{show}{Provide (2) or not (0-1) visual output during
 the running process.}
@@ -54,6 +57,9 @@ one horizon of prediction.
 Vectors corresponding to the initial condition time \code{tE}
 and the horizon of prediction \code{hpE} are also provided
 in \code{$tE} and \code{$hpE}, respectively.
+The percentiles of the distributions of error growth
+are provided in \code{qt} (0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95)
+and of absolute error growth in \code{qt2} (0.5, 0.75, 0.9, 0.95, 0.98, 0.99).
 }
 \description{
 The algorithm aims to estimate automatically the forecasting

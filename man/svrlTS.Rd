@@ -4,7 +4,9 @@
 \name{svrlTS}
 \alias{svrlTS}
 \title{A data set for the global modeling of time series in association}
-\format{An object of class \code{list} of length 4.}
+\format{
+An object of class \code{list} of length 4.
+}
 \usage{
 svrlTS
 }

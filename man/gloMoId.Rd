@@ -10,6 +10,7 @@ gloMoId(
   dt = NULL,
   nVar = NULL,
   dMax = 1,
+  dMin = 0,
   weight = NULL,
   show = 1,
   filterReg = NULL,
@@ -37,6 +38,9 @@ the input time series.}
 \item{nVar}{Number of variables considered in the polynomial formulation.}
 
 \item{dMax}{Maximum degree of the polynomial formulation.}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 
 \item{weight}{A vector providing the binary weighting function
 of the input data series (0 or 1). By default, all the values
@@ -113,12 +117,12 @@ data(NDVI)
 
 # Definition of the Model structure
 terms <- c(1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1)
-poLabs(3,3,terms==1)
+poLabs(3,3)[terms==1]
 reg <- gloMoId(NDVI [,1:1], dt=1/125, nVar=3, dMax=3,
                show=0, filterReg=terms==1)
 
 
-\dontrun{
+\donttest{
 #############
 # Example 3 #
 #############

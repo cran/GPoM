@@ -5,7 +5,9 @@
 \alias{data_vignetteVII data set}
 \alias{data_vignetteVII}
 \title{Output of the vignette \code{VII_Retro-Modelling}}
-\format{An object of class \code{list} of length 29.}
+\format{
+An object of class \code{list} of length 29.
+}
 \usage{
 data_vignetteVII
 }

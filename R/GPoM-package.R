@@ -30,7 +30,7 @@
 #' @author Sylvain Mangiarotti, Flavie Le Jean,
 #' Malika Chassan, Laurent Drapeau, Mireille Huc.
 #'
-#' Maintainer: M. Huc <mireille.huc@@cesbio.cnes.fr>
+#' Maintainer: M. Huc <mireille.huc@@u-paris2.fr>
 #'
 #' @references
 #' [1] J. P. Crutchfield and B. S. McNamara, 1987.

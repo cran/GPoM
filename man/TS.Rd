@@ -5,7 +5,9 @@
 \name{TS}
 \alias{TS}
 \title{Time series resulting from the integration of a non stationary system}
-\format{An object of class \code{matrix} with 6001 rows and 2 columns.}
+\format{
+An object of class \code{matrix} (inherits from \code{array}) with 6001 rows and 2 columns.
+}
 \usage{
 TS
 }

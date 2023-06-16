@@ -5,12 +5,15 @@
 \title{Provides the number of polynomial terms \code{pMax}
 given \code{dMax} and \code{nVar}}
 \usage{
-d2pMax(nVar, dMaxKnown)
+d2pMax(nVar, dMaxKnown, dMin = 0)
 }
 \arguments{
 \item{nVar}{Number of variables considered in the polynomial formulation.}
 
 \item{dMaxKnown}{The maximum polynomial degree \code{dMax}}
+
+\item{dMin}{The minimum negative degree of the polynomial
+formulation (0 by default).}
 }
 \value{
 The number \code{pMax} of polynomial terms used to code

@@ -54,7 +54,7 @@
 #' plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l',
 #'       main='phase portrait', xlab='x(t)', ylab = 'y(t)')
 #'
-#' \dontrun{
+#' \donttest{
 #' #############
 #' # Example 2 #
 #' #############
@@ -69,7 +69,7 @@
 #' PolyTerms <- c(281000, 0, 0, 0, -2275, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'                861, 0, 0, 0, -878300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 #' # terms used in the model
-#' poLabs(nVar, dMax, PolyTerms!=0)
+#' poLabs(nVar, dMax, findIt=(PolyTerms!=0))
 #' # initial conditions
 #' v0 <- c(0.54, 3.76, -90, -5200)
 #' # model integration
@@ -82,20 +82,54 @@
 #' visuEq(reconstr$KL, nVar, dMax)
 #'}
 #'
+#'
+#'
+#' \donttest{
+#' #############
+#' # Example 3 #
+#' #############
+#' # For a model of general form (here the rossler model)
+#' # model dimension:
+#' nVar = 3
+#' # maximal polynomial degree
+#' dMax = 2
+#' dMin = -1
+#' # Number of parameter number (by default)
+#' pMax <- regOrd(nVar, dMax, dMin)[2]
+#' # convention used for the model formulation
+#' poLabs(nVar, dMax, dMin)
+#' # Definition of the Model Function
+#' a = 0.520
+#' b = 2
+#' c = 4
+#' Eq1 <- c(0,-1, 0,-1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0)
+#' Eq2 <- c(0, 0, 0, a, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+#' Eq3 <- c(b,-c, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0)
+#' K <- cbind(Eq1, Eq2, Eq3)
+#' # Edition of the equations
+#' #visuEq(K, nVar, dMax)
+#' # initial conditions
+#' v0 <- c(-0.6, 0.6, 0.4)
+#' # model integration
+#' reconstr <- numicano(nVar, dMax, dMin, Istep=1000, onestep=1/50, KL=K,
+#'                       v0=v0, method="ode45")
+#' # Plot of the simulated time series obtained
+#' dev.new()
+#' plot(reconstr$reconstr[,2], reconstr$reconstr[,3], type='l',
+#'       main='phase portrait', xlab='x(t)', ylab = 'y(t)')
+#'
+#'}
+#'
 #' @seealso \code{\link{derivODE2}}, \code{\link{numinoisy}}
 #'
 #' @export
-numicano = function(nVar, dMax, Istep=1000, onestep=1/125, KL=NULL, PolyTerms=NULL,
-                    v0=NULL, method="rk4") {
+numicano = function(nVar, dMax, dMin = 0, Istep=1000, onestep=1/125, KL=NULL, 
+                    PolyTerms=NULL, v0=NULL, method="rk4") {
 
-  pMax <- d2pMax(nVar, dMax)
-  # check dimensions
-  if (dim(KL)[2] != nVar) {
-    stop("nVar (=",nVar,") does not match with the model dimension (=",dim(KL)[2],")")
-  }
-  if (length(v0) != nVar) {
-    stop("v0 length (=",length(v0),") does not match with the model dimension (=",dim(KL)[2],")")
-  }
+
+  pMax <- d2pMax(nVar, dMax, dMin)
+
+
   # check integer
   if (is.null(KL) & is.null(PolyTerms)) {
     stop("more information is required (either KL or PolyTerms)")
@@ -108,13 +142,21 @@ numicano = function(nVar, dMax, Istep=1000, onestep=1/125, KL=NULL, PolyTerms=NU
     KL <- matrix(0, nrow=pMax, ncol=nVar)
     KL[,nVar] <- PolyTerms
     for (i in 2:nVar) {
-      nx <- sum((poLabs(nVar,dMax) == paste("X", i, " ", sep="")) * rep(1:pMax))
+      #nx <- sum((poLabs(nVar,dMax) == paste("X", i, " ", sep="")) * rep(1:pMax))
+      reg = regOrd(nVar, dMax)
+      nx = which((reg[i,] == 1) &  (colSums(reg) == 1)) 
       KL[nx,i-1] = 1
     }
   }
-
+  # check dimensions
+  if (dim(KL)[2] != nVar) {
+    stop("nVar (=",nVar,") does not match with the model dimension (=",dim(KL)[2],")")
+  }
+  if (length(v0) != nVar) {
+    stop("v0 length (=",length(v0),") does not match with the model dimension (=",dim(KL)[2],")")
+  }
   # numerical integration:
-  reconstr <- ode(v0, (0:(Istep-1))*onestep, derivODE2, KL, method=method)
+  reconstr <- ode(v0, (0:(Istep-1))*onestep, derivODE2, KL, dMin=dMin, method=method)
 
   outNumicano <- list()
   outNumicano$KL <- KL
